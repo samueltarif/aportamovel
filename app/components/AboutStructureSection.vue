@@ -63,11 +63,11 @@
           </div>
           <h3 class="text-lg sm:text-xl font-bold text-gray-900">Equipe Especializada</h3>
           <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-            Técnicos treinados continuamente nos equipamentos mais modernos de controle de acesso e CFTV do mercado.
+            Serralheiros e técnicos qualificados para manutenção preventiva e corretiva em portões de garagem, gradis, substituição de cabos por correntes, troca de trilhos e roldanas duplas truck.
           </p>
         </div>
 
-        <!-- Card 4: Laboratório Técnico Interno -->
+        <!-- Card 4: Laboratório Técnico & Oficina Interna -->
         <div class="md:col-span-1 lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-blue-100/80 shadow-sm space-y-3 sm:space-y-4 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3 gap-2">
@@ -80,9 +80,9 @@
                 PRONTIDÃO 24/7
               </span>
             </div>
-            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Laboratório Técnico Interno</h3>
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Oficina de Serralheria & Laboratório Interno</h3>
             <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-              Possuímos bancadas de teste e estoque estratégico de peças de reposição na nossa sede, minimizando o tempo de inatividade dos sistemas de segurança do seu prédio.
+              Possuímos oficina completa para fabricação e reforma, bancadas de teste e estoque estratégico de peças (kits de corrente, roldanas duplas truck, trilhos e automatizadores), minimizando o tempo de inatividade no seu condomínio.
             </p>
           </div>
         </div>

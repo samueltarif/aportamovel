@@ -72,7 +72,7 @@ interface TimelineItem {
 const timeline: TimelineItem[] = [
   {
     year: '1986',
-    description: 'Início das atividades com o objetivo de oferecer soluções em segurança eletrônica para condomínios.'
+    description: 'Início das atividades com o objetivo de oferecer soluções em serralheria, manutenção e segurança para condomínios.'
   },
   {
     year: '1996',
