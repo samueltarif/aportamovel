@@ -7,6 +7,7 @@
     <main>
       <HeroSection />
       <ServicesSection />
+      <TechComplementarySection />
       <InfrastructureSection />
       <TestimonialsSection />
     </main>
@@ -27,17 +28,18 @@ import { ref } from 'vue'
 import AppHeader from '~/components/AppHeader.vue'
 import HeroSection from '~/components/HeroSection.vue'
 import ServicesSection from '~/components/ServicesSection.vue'
+import TechComplementarySection from '~/components/TechComplementarySection.vue'
 import InfrastructureSection from '~/components/InfrastructureSection.vue'
 import TestimonialsSection from '~/components/TestimonialsSection.vue'
 import AppFooter from '~/components/AppFooter.vue'
 import EmergencyModal from '~/components/EmergencyModal.vue'
 
 useHead({
-  title: 'A Portamóvel - Segurança Institucional com Precisão Técnica',
+  title: 'A Portamóvel - Manutenção de Portões, Serralheria & Segurança para Condomínios',
   meta: [
     {
       name: 'description',
-      content: 'Há quase 40 anos entregando soluções robustas em CFTV, Controle de Acesso e Interfonia para condomínios.'
+      content: 'Soluções completas em serralheria, recuperação e repintura de gradis, troca de cabo de aço por kit de corrente, manutenção de portões e segurança eletrônica para condomínios.'
     }
   ]
 })
