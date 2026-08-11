@@ -96,7 +96,7 @@ const services: ServiceItem[] = [
     title: 'MANUTENÇÃO DE PORTÕES DE GARAGEM E PEDESTRES',
     description: 'Preventiva e corretiva',
     image: '/images/services/manutencao-portoes.webp',
-    alt: 'Portão automático de garagem de condomínio e pedestres',
+    alt: 'Técnicos da A Portamóvel realizando manutenção de portão automático de garagem com veículo de apoio',
     iconSvg: 'M19 13H5v-2h14v2zM12 4L4 8v2h16V8l-8-4zM4 19h16v-4H4v4z'
   },
   {
