@@ -10,24 +10,24 @@
           Sistemas Integrados Complementares
         </h3>
         <p class="mt-2 text-sm sm:text-base text-gray-600 font-medium">
-          Tecnologia avançada de CFTV, controle de acesso e interfonia para integrar com a proteção física do condomínio.
+          Tecnologia e automação integradas à serralheria e à proteção física do condomínio.
         </p>
       </div>
 
       <!-- Grid of 3 Digital Tech Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- CFTV -->
+        <!-- Automação de Portões -->
         <ServiceCard
-          title="CFTV HD/IP & Nuvem"
+          title="Automação & Motorização"
           :items="[
-            'Câmeras de alta definição HD e IP',
-            'Gravação contínua com armazenamento em nuvem',
-            'Monitoramento remoto via aplicativo e central'
+            'Automatizadores ultra rápidos para portões',
+            'Sistemas de no-break para queda de energia',
+            'Fotocélulas e sensores ante-esmagamento'
           ]"
         >
           <template #icon>
             <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-              <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+              <path d="M19 13H5v-2h14v2zM12 4L4 8v2h16V8l-8-4zM4 19h16v-4H4v4z"/>
             </svg>
           </template>
         </ServiceCard>

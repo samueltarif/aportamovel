@@ -77,7 +77,7 @@
                 </svg>
               </div>
               <span class="inline-block bg-blue-50 text-[#09357a] text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded">
-                PRONTIDÃO 24/7
+                ASSISTÊNCIA 24/7
               </span>
             </div>
             <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Oficina de Serralheria & Laboratório Interno</h3>

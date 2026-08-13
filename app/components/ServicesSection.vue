@@ -2,30 +2,7 @@
   <section id="servicos" class="py-16 md:py-24 bg-slate-50 border-y border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Promotional Header Banner -->
-      <div class="bg-gradient-to-r from-[#09357a] via-[#1e40af] to-[#09357a] text-white rounded-3xl p-6 sm:p-10 shadow-xl mb-12 text-center relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
-          <svg class="w-72 h-72 fill-current" viewBox="0 0 24 24">
-            <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.4-2.4c.4-.4.4-1 0-1.3z"/>
-          </svg>
-        </div>
-        
-        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-600/90 text-white text-xs sm:text-sm font-black uppercase tracking-widest mb-4 shadow-sm">
-          <span>SERRALHERIA ESPECIALIZADA</span>
-        </div>
 
-        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white mb-3">
-          MANUTENÇÃO • REFORMA • RECUPERAÇÃO • REPINTURA
-        </h2>
-
-        <p class="text-lg sm:text-2xl font-extrabold text-red-200 tracking-wide max-w-4xl mx-auto mb-4">
-          "Não Substitua. Recupere, renove e valorize o patrimônio do seu condomínio."
-        </p>
-
-        <p class="text-sm sm:text-base text-blue-100 max-w-3xl mx-auto font-medium">
-          Com tecnologia, experiência e uma equipe especializada, a Aportamóvel oferece serviços que garantem mais segurança, funcionalidade, durabilidade e tranquilidade no dia a dia do seu condomínio.
-        </p>
-      </div>
 
       <!-- Section Title -->
       <div class="text-center max-w-3xl mx-auto mb-12">

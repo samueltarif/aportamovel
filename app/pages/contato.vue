@@ -15,7 +15,7 @@
             Conexão Direta.
           </h1>
           <p class="text-base sm:text-lg text-gray-600 font-medium leading-relaxed">
-            Prontidão técnica 24 horas. Preencha o formulário para solicitações formais ou utilize nossos canais diretos para atendimento imediato.
+            Assistência técnica 24 horas. Preencha o formulário para solicitações formais ou utilize nossos canais diretos para atendimento imediato.
           </p>
         </div>
 

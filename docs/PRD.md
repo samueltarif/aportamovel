@@ -31,7 +31,7 @@ A plataforma web institucional tem como objetivo transmitir solidez, transparên
 1. **Apresentação Institucional de Alto Impacto**: Destacar a história desde 1986, a infraestrutura operacional própria (laboratório e frota) e a identidade de serralheria técnica e engenharia de segurança.
 2. **Exibição Detalhada dos Serviços**:
    - **Controle de Acesso**: Biometria facial, eclusas, catracas e tags veiculares.
-   - **CFTV (Prontidão 24h)**: Câmeras IP 4K e análise inteligente de vídeo.
+   - **CFTV (Assistência 24h)**: Câmeras IP 4K e análise inteligente de vídeo.
    - **Comunicação / Interfonia**: Centrais analógicas/IP e videoporteiros.
    - **Contratos de Manutenção**: Atendimento preventivo e **SLA emergencial de até 6 horas**.
 3. **Conversão Direta para WhatsApp & Central Telefônica**:

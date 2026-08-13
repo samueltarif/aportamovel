@@ -42,7 +42,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Protegendo condomínios desde 1986. Conheça nossa história, frota própria e laboratório técnico de ponta.'
+      content: 'Desde 1986, confiança construída com experiência. Conheça nossa história, frota própria e laboratório técnico de ponta.'
     }
   ]
 })

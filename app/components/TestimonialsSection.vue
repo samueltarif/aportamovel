@@ -16,7 +16,7 @@
         />
 
         <TestimonialCard
-          quote="Desde a modernização do nosso CFTV pela A Portamóvel, o sistema nunca ficou fora do ar. A manutenção preventiva faz toda a diferença."
+          quote="Desde a reforma e manutenção dos nossos portões pela A Portamóvel, o acesso nunca mais ficou travado. A manutenção preventiva faz toda a diferença."
           author="Edifício Comercial Prime Tower - Administração"
         />
       </div>

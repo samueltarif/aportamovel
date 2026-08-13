@@ -3,9 +3,6 @@
     <!-- Header -->
     <AppHeader @open-emergency="isEmergencyOpen = true" />
 
-    <!-- Services Hero -->
-    <ServicesPageHero />
-
     <!-- 5 Key Services Showcase Grid -->
     <ServicesShowcaseSection @select-service="openQuoteModal" />
 
@@ -30,7 +27,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AppHeader from '~/components/AppHeader.vue'
-import ServicesPageHero from '~/components/ServicesPageHero.vue'
 import ServicesShowcaseSection from '~/components/ServicesShowcaseSection.vue'
 import VideoShowcaseSection from '~/components/VideoShowcaseSection.vue'
 import ApprovedTechSection from '~/components/ApprovedTechSection.vue'
@@ -44,7 +40,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Soluções Integradas em Segurança: Controle de Acesso, CFTV, Interfonia e Contratos de Manutenção.'
+      content: 'Serralheria Especializada para Condomínios: Manutenção, Reforma, Recuperação e Repintura de Portões e Gradis.'
     }
   ]
 })

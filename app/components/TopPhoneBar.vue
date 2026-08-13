@@ -23,8 +23,6 @@
         <a href="tel:1139910279" class="hover:text-white transition-colors min-h-[36px] flex items-center">3991-0279</a>
         <span class="text-blue-400/40">|</span>
         <a href="tel:1139910280" class="hover:text-white transition-colors min-h-[36px] flex items-center">3991-0280</a>
-        <span class="text-blue-400/40">|</span>
-        <a href="tel:1139910281" class="hover:text-white transition-colors min-h-[36px] flex items-center">3991-0281</a>
       </div>
     </div>
 
@@ -45,13 +43,6 @@
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
             <span>(11) 3991-0280</span>
-          </a>
-          <span class="text-blue-400/40">|</span>
-          <a href="tel:1139910281" class="flex items-center space-x-1.5 hover:text-white transition-colors">
-            <svg class="w-3.5 h-3.5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-            </svg>
-            <span>(11) 3991-0281</span>
           </a>
         </div>
 

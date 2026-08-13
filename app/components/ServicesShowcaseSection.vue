@@ -121,11 +121,11 @@ const services: ServiceItem[] = [
     iconSvg: 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z'
   },
   {
-    title: 'CFTV - CONTROLE DE ACESSO FACIAL E INFRAESTRUTURA BÁSICA PARA MAIS SEGURANÇA.',
-    description: '',
-    image: '/images/services/cftv-controle-acesso.webp',
-    alt: 'Câmera de segurança CFTV e sistema de controle de acesso facial',
-    iconSvg: 'M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z'
+    title: 'PORTAS CORTA-FOGO E ESTRUTURAS METÁLICAS',
+    description: 'Ajustes, manutenção preventiva e adequação às normas',
+    image: '/images/services/portas-corta-fogo.webp',
+    alt: 'Porta corta-fogo para condomínios e edifícios',
+    iconSvg: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z'
   }
 ]
 </script>

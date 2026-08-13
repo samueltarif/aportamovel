@@ -14,7 +14,7 @@
 
           <!-- Main Title -->
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            Protegendo Condomínios desde <span class="text-[#09357a]">1986</span>.
+            Desde <span class="text-[#09357a]">1986</span>, confiança construída com experiência
           </h1>
 
           <!-- Description Paragraphs -->

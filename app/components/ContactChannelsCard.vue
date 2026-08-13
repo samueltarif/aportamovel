@@ -10,20 +10,17 @@
         </div>
         <div>
           <h3 class="font-bold text-lg text-white">Central de Atendimento</h3>
-          <p class="text-xs text-blue-200 uppercase font-semibold tracking-wider">Prontidão Técnica 24h</p>
+          <p class="text-xs text-blue-200 uppercase font-semibold tracking-wider">Assistência Técnica 24h</p>
         </div>
       </div>
 
       <!-- Telephones Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 py-2 border-y border-blue-400/20">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 py-2 border-y border-blue-400/20">
         <a href="tel:1139910279" class="flex items-center justify-center sm:justify-start text-sm sm:text-base font-extrabold text-white hover:text-blue-200 transition-colors min-h-[48px] px-2">
           (11) 3991-0279
         </a>
         <a href="tel:1139910280" class="flex items-center justify-center sm:justify-start text-sm sm:text-base font-extrabold text-white hover:text-blue-200 transition-colors min-h-[48px] px-2">
           (11) 3991-0280
-        </a>
-        <a href="tel:1139910281" class="flex items-center justify-center sm:justify-start text-sm sm:text-base font-extrabold text-white hover:text-blue-200 transition-colors min-h-[48px] px-2">
-          (11) 3991-0281
         </a>
       </div>
 
