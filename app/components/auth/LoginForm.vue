@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { loginSchema } from '../../../shared/schemas/auth'
+import { loginSchema } from '~~/shared/schemas/auth'
 import { useAuth } from '~/composables/useAuth'
 import { Eye, EyeOff } from '@lucide/vue'
 import Button from '~/components/ui/button/Button.vue'

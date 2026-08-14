@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { recoverPasswordSchema } from '../../../shared/schemas/auth'
+import { recoverPasswordSchema } from '~~/shared/schemas/auth'
 import { useAuth } from '~/composables/useAuth'
 import Button from '~/components/ui/button/Button.vue'
 import Input from '~/components/ui/input/Input.vue'

@@ -1,4 +1,4 @@
-import type { LoginInput, RecoverPasswordInput } from '../../shared/schemas/auth'
+import type { LoginInput, RecoverPasswordInput } from '~~/shared/schemas/auth'
 
 // Mensagens amigáveis — nunca revela detalhes internos
 const MSG_LOGIN_ERROR = 'E-mail ou senha inválidos.'
