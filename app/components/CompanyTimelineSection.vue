@@ -107,7 +107,7 @@ onMounted(() => {
   if (typeof IntersectionObserver !== 'undefined' && sectionRef.value) {
     observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0]?.isIntersecting) {
           isVisible.value = true
           if (observer && sectionRef.value) {
             observer.unobserve(sectionRef.value)

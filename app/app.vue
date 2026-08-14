@@ -1,8 +1,10 @@
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <NuxtPage />
-    <WhatsAppFloat />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <WhatsAppFloat v-if="!$route.path.startsWith('/gestao')" />
   </div>
 </template>
 
