@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useAnalytics } from '~/composables/useAnalytics'
+
+const { trackWhatsAppClick } = useAnalytics()
+</script>
+
 <template>
   <footer id="contato" class="bg-blue-50/80 border-t border-blue-100 py-10 md:py-16 text-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,6 +67,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-emerald-700 font-bold hover:underline"
+                @click="trackWhatsAppClick({ cta_location: 'footer', channel_type: 'commercial' })"
               >
                 WhatsApp: (11) 91298-4416
               </a>

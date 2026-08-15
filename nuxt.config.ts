@@ -35,7 +35,7 @@ export default defineNuxtConfig({
       mask_all_element_attributes: true,
       respect_dnt: true,
       person_profiles: 'identified_only',
-      opt_out_capturing_by_default: process.env.NODE_ENV === 'development' && !process.env.NUXT_PUBLIC_POSTHOG_TEST,
+      opt_out_capturing_by_default: !process.env.NUXT_PUBLIC_POSTHOG_KEY && (process.env.NODE_ENV === 'development' && !process.env.NUXT_PUBLIC_POSTHOG_TEST),
     },
   },
 

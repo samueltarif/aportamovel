@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useAnalytics } from '~/composables/useAnalytics'
+
+const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
+</script>
+
 <template>
   <div class="bg-[#002d6b] text-white border-b border-blue-900/40">
     <!-- Mobile: WhatsApp primary + phones folded -->
@@ -9,6 +15,7 @@
         rel="noopener noreferrer"
         class="flex items-center space-x-1.5 text-emerald-400 font-bold text-xs min-h-[36px]"
         aria-label="WhatsApp: (11) 91298-4416"
+        @click="trackWhatsAppClick({ cta_location: 'topbar', channel_type: 'commercial' })"
       >
         <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
           <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
@@ -20,9 +27,17 @@
 
       <!-- Fixed phones compact row -->
       <div class="flex items-center gap-2 text-blue-200 text-[10px] font-semibold">
-        <a href="tel:1139910279" class="hover:text-white transition-colors min-h-[36px] flex items-center">3991-0279</a>
+        <a
+          href="tel:1139910279"
+          class="hover:text-white transition-colors min-h-[36px] flex items-center"
+          @click="trackPhoneClick({ cta_location: 'topbar', phone_type: 'fixed_primary' })"
+        >3991-0279</a>
         <span class="text-blue-400/40">|</span>
-        <a href="tel:1139910280" class="hover:text-white transition-colors min-h-[36px] flex items-center">3991-0280</a>
+        <a
+          href="tel:1139910280"
+          class="hover:text-white transition-colors min-h-[36px] flex items-center"
+          @click="trackPhoneClick({ cta_location: 'topbar', phone_type: 'fixed_secondary' })"
+        >3991-0280</a>
       </div>
     </div>
 
@@ -31,14 +46,22 @@
       <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
         <!-- Landlines list -->
         <div class="flex items-center space-x-3 sm:space-x-5 text-blue-100">
-          <a href="tel:1139910279" class="flex items-center space-x-1.5 hover:text-white transition-colors">
+          <a
+            href="tel:1139910279"
+            class="flex items-center space-x-1.5 hover:text-white transition-colors"
+            @click="trackPhoneClick({ cta_location: 'topbar', phone_type: 'fixed_primary' })"
+          >
             <svg class="w-3.5 h-3.5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
             <span>(11) 3991-0279</span>
           </a>
           <span class="text-blue-400/40">|</span>
-          <a href="tel:1139910280" class="flex items-center space-x-1.5 hover:text-white transition-colors">
+          <a
+            href="tel:1139910280"
+            class="flex items-center space-x-1.5 hover:text-white transition-colors"
+            @click="trackPhoneClick({ cta_location: 'topbar', phone_type: 'fixed_secondary' })"
+          >
             <svg class="w-3.5 h-3.5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
@@ -53,6 +76,7 @@
           rel="noopener noreferrer"
           class="flex items-center space-x-2 text-emerald-400 hover:text-emerald-300 font-bold transition-colors"
           aria-label="WhatsApp: (11) 91298-4416"
+          @click="trackWhatsAppClick({ cta_location: 'topbar', channel_type: 'commercial' })"
         >
           <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs flex-shrink-0">
             <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">

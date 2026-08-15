@@ -1,9 +1,77 @@
+<script setup lang="ts">
+import { useAnalytics } from '~/composables/useAnalytics'
+
+const { trackWhatsAppClick } = useAnalytics()
+
+interface ServiceItem {
+  title: string
+  description: string
+  image: string
+  slug: string
+}
+
+const services: ServiceItem[] = [
+  {
+    title: 'Manutenção de Portões de Garagem e Pedestres',
+    description: 'Manutenção preventiva e corretiva em portões de garagem e pedestres de todos os modelos e marcas, garantindo o perfeito funcionamento, segurança e conforto dos usuários.',
+    image: '/images/services/manutencao-portoes.webp',
+    slug: 'manutencao-portoes',
+  },
+  {
+    title: 'Recuperação, Fabricação e Repintura de Gradis',
+    description: 'Recuperamos e fabricamos gradis danificados por ferrugem, impactos ou desgaste do tempo, com repintura profissional que devolve a beleza, proteção e durabilidade.',
+    image: '/images/services/recuperacao-gradis.webp',
+    slug: 'recuperacao-gradis',
+  },
+  {
+    title: 'Troca de Cabo de Aço por Kit de Corrente',
+    description: 'Substituímos cabos de aço por kits de corrente, reduzindo quebras, ruídos e manutenções frequentes, aumentando a segurança e a durabilidade do portão.',
+    image: '/images/services/kit-corrente-portao.webp',
+    slug: 'kit-corrente-portao',
+  },
+  {
+    title: 'Troca de Trilhos Inferior e Superior',
+    description: 'A substituição de trilhos desgastados garante o deslizamento suave do portão, evitando desalinhamentos, ruídos e danos aos componentes.',
+    image: '/images/services/troca-trilhos.webp',
+    slug: 'troca-trilhos',
+  },
+  {
+    title: 'Serralheria em Geral',
+    description: 'Serviços de serralheria para portões, portas, grades, corrimãos e estruturas metálicas em geral. Recuperação, fabricação e acabamento com qualidade que valorizam o patrimônio do condomínio.',
+    image: '/images/services/serralheria-geral.webp',
+    slug: 'serralheria-geral',
+  },
+  {
+    title: 'Portas Corta-Fogo',
+    description: 'Manutenção, ajuste e recuperação de portas corta-fogo, garantindo a conformidade com as normas de segurança e a proteção do seu condomínio.',
+    image: '/images/services/portas-corta-fogo.webp',
+    slug: 'portas-corta-fogo',
+  },
+  {
+    title: 'Troca de Roldanas Simples por Roldanas Duplas (Truck)',
+    description: 'A troca proporciona menor desgaste, mais estabilidade e maior vida útil para portões deslizantes, evitando travamentos e manutenções constantes.',
+    image: '/images/services/roldanas-duplas-truck.webp',
+    slug: 'roldanas-duplas-truck',
+  },
+]
+
+function getWhatsappUrl(serviceTitle: string): string {
+  const text = encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para o serviço: ${serviceTitle}.`)
+  return `https://wa.me/5511912984416?text=${text}`
+}
+
+function handleServiceClick(service: ServiceItem) {
+  trackWhatsAppClick({
+    cta_location: 'service_card',
+    channel_type: 'commercial',
+    service_slug: service.slug,
+  })
+}
+</script>
+
 <template>
   <section id="servicos" class="py-16 md:py-24 bg-slate-50 border-y border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-
-
       <!-- Section Title -->
       <div class="text-center max-w-3xl mx-auto mb-12">
         <h3 class="text-2xl sm:text-3xl font-extrabold text-[#09357a]">
@@ -28,7 +96,7 @@
               :alt="service.title"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
-            />
+            >
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
 
@@ -51,9 +119,10 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 class="w-full inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
+                @click="handleServiceClick(service)"
               >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
                 </svg>
                 <span>Solicitar Orçamento</span>
               </a>
@@ -64,54 +133,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-interface ServiceItem {
-  title: string
-  description: string
-  image: string
-}
-
-const services: ServiceItem[] = [
-  {
-    title: 'Manutenção de Portões de Garagem e Pedestres',
-    description: 'Manutenção preventiva e corretiva em portões de garagem e pedestres de todos os modelos e marcas, garantindo o perfeito funcionamento, segurança e conforto dos usuários.',
-    image: '/images/services/manutencao-portoes.webp'
-  },
-  {
-    title: 'Recuperação, Fabricação e Repintura de Gradis',
-    description: 'Recuperamos e fabricamos gradis danificados por ferrugem, impactos ou desgaste do tempo, com repintura profissional que devolve a beleza, proteção e durabilidade.',
-    image: '/images/services/recuperacao-gradis.webp'
-  },
-  {
-    title: 'Troca de Cabo de Aço por Kit de Corrente',
-    description: 'Substituímos cabos de aço por kits de corrente, reduzindo quebras, ruídos e manutenções frequentes, aumentando a segurança e a durabilidade do portão.',
-    image: '/images/services/kit-corrente-portao.webp'
-  },
-  {
-    title: 'Troca de Trilhos Inferior e Superior',
-    description: 'A substituição de trilhos desgastados garante o deslizamento suave do portão, evitando desalinhamentos, ruídos e danos aos componentes.',
-    image: '/images/services/troca-trilhos.webp'
-  },
-  {
-    title: 'Serralheria em Geral',
-    description: 'Serviços de serralheria para portões, portas, grades, corrimãos e estruturas metálicas em geral. Recuperação, fabricação e acabamento com qualidade que valorizam o patrimônio do condomínio.',
-    image: '/images/services/serralheria-geral.webp'
-  },
-  {
-    title: 'Portas Corta-Fogo',
-    description: 'Manutenção, ajuste e recuperação de portas corta-fogo, garantindo a conformidade com as normas de segurança e a proteção do seu condomínio.',
-    image: '/images/services/portas-corta-fogo.webp'
-  },
-  {
-    title: 'Troca de Roldanas Simples por Roldanas Duplas (Truck)',
-    description: 'A troca proporciona menor desgaste, mais estabilidade e maior vida útil para portões deslizantes, evitando travamentos e manutenções constantes.',
-    image: '/images/services/roldanas-duplas-truck.webp'
-  }
-]
-
-function getWhatsappUrl(serviceTitle: string): string {
-  const text = encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para o serviço: ${serviceTitle}.`)
-  return `https://wa.me/5511912984416?text=${text}`
-}
-</script>
