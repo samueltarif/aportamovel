@@ -1,4 +1,4 @@
-import { getHeader, type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
 import { getAdminUser, type AdminUser } from '../services/adminService'
 
@@ -24,7 +24,6 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
   // 1. Validar sessão no servidor
   const user = await serverSupabaseUser(event)
   if (!user) {
-    console.error('[requireAdmin] serverSupabaseUser returned null (401)')
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
@@ -32,36 +31,23 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
     })
   }
 
+  // Extrair UUID do usuário (suportando user.id ou user.sub do JWT)
   const userId = (user.id || (user as any).sub) as string
   if (!userId) {
-    console.error('[requireAdmin] User ID/sub não encontrado no objeto do usuário')
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
       message: 'Não autenticado.',
     })
   }
-
-  console.log('[requireAdmin] Authenticated user ID:', userId, 'email:', user.email)
 
   // 2. Criar cliente com contexto da sessão autenticada
   const client = await serverSupabaseClient(event)
 
-  // Garantir que o header Authorization recebido da requisição seja repassado ao PostgREST
-  const authHeader = getHeader(event, 'authorization')
-  if (authHeader) {
-    // @ts-expect-error Repassa o token para o PostgREST para manter o contexto authenticated na RLS
-    client.rest.headers = {
-      ...(client.rest?.headers || {}),
-      Authorization: authHeader,
-    }
-  }
-
   // 3. Consultar registro administrativo (RLS ativa)
   const adminUser: AdminUser | null = await getAdminUser(client, userId)
 
-  if (!adminUser) {
-    console.error('[requireAdmin] getAdminUser returned null for user.id:', userId)
+  if (!adminUser || !adminUser.is_active) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
@@ -69,16 +55,7 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
     })
   }
 
-  // 4. Verificar se o administrador está ativo
-  if (!adminUser.is_active) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'Você não possui autorização para acessar este painel.',
-    })
-  }
-
-  // 5. Retornar somente dados mínimos — sem tokens, sem segredos
+  // 4. Retornar somente dados mínimos — sem tokens, sem segredos
   return {
     userId,
     email: user.email ?? '',
