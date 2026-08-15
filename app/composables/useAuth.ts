@@ -28,20 +28,25 @@ export function useAuth() {
     error.value = null
 
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data: sessionData, error: authError } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password,
       })
 
-      if (authError) {
+      if (authError || !sessionData?.session) {
         // Nunca revelar se é o email ou a senha que está errado
         error.value = MSG_LOGIN_ERROR
         return false
       }
 
       // Validar imediatamente no servidor se o usuário é administrador ativo
+      // Enviando o token de acesso explicitamente no header para evitar corrida de cookies no browser
       try {
-        const adminData = await $fetch('/api/auth/me')
+        const adminData = await $fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${sessionData.session.access_token}`,
+          },
+        })
         if (!adminData) {
           await supabase.auth.signOut()
           error.value = 'Você não possui autorização para acessar este painel.'
