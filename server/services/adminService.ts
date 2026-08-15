@@ -24,6 +24,9 @@ export async function getAdminUser(
     .eq('user_id', userId)
     .single()
 
+  if (error) {
+    console.error('[getAdminUser] Supabase Query Error:', error)
+  }
   if (error || !data) {
     return null
   }

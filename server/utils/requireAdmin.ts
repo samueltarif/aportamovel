@@ -1,4 +1,4 @@
-import type { H3Event } from 'h3'
+import { getHeader, type H3Event } from 'h3'
 import { serverSupabaseUser, serverSupabaseClient } from '#supabase/server'
 import { getAdminUser, type AdminUser } from '../services/adminService'
 
@@ -24,6 +24,7 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
   // 1. Validar sessão no servidor
   const user = await serverSupabaseUser(event)
   if (!user) {
+    console.error('[requireAdmin] serverSupabaseUser returned null (401)')
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
@@ -31,13 +32,26 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
     })
   }
 
+  console.log('[requireAdmin] Authenticated user ID:', user.id, 'email:', user.email)
+
   // 2. Criar cliente com contexto da sessão autenticada
   const client = await serverSupabaseClient(event)
+
+  // Garantir que o header Authorization recebido da requisição seja repassado ao PostgREST
+  const authHeader = getHeader(event, 'authorization')
+  if (authHeader) {
+    // @ts-expect-error Repassa o token para o PostgREST para manter o contexto authenticated na RLS
+    client.rest.headers = {
+      ...(client.rest?.headers || {}),
+      Authorization: authHeader,
+    }
+  }
 
   // 3. Consultar registro administrativo (RLS ativa)
   const adminUser: AdminUser | null = await getAdminUser(client, user.id)
 
   if (!adminUser) {
+    console.error('[requireAdmin] getAdminUser returned null for user.id:', user.id)
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
