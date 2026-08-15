@@ -32,7 +32,17 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
     })
   }
 
-  console.log('[requireAdmin] Authenticated user ID:', user.id, 'email:', user.email)
+  const userId = (user.id || (user as any).sub) as string
+  if (!userId) {
+    console.error('[requireAdmin] User ID/sub não encontrado no objeto do usuário')
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+      message: 'Não autenticado.',
+    })
+  }
+
+  console.log('[requireAdmin] Authenticated user ID:', userId, 'email:', user.email)
 
   // 2. Criar cliente com contexto da sessão autenticada
   const client = await serverSupabaseClient(event)
@@ -48,10 +58,10 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
   }
 
   // 3. Consultar registro administrativo (RLS ativa)
-  const adminUser: AdminUser | null = await getAdminUser(client, user.id)
+  const adminUser: AdminUser | null = await getAdminUser(client, userId)
 
   if (!adminUser) {
-    console.error('[requireAdmin] getAdminUser returned null for user.id:', user.id)
+    console.error('[requireAdmin] getAdminUser returned null for user.id:', userId)
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
@@ -70,7 +80,7 @@ export async function requireAdmin(event: H3Event): Promise<AuthorizedAdmin> {
 
   // 5. Retornar somente dados mínimos — sem tokens, sem segredos
   return {
-    userId: user.id,
+    userId,
     email: user.email ?? '',
     role: adminUser.role,
   }
