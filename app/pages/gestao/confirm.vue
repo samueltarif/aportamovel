@@ -52,7 +52,10 @@ useHead({
 
 <template>
   <div class="w-full max-w-sm text-center">
-    <Card class="shadow-2xl border-0 bg-white">
+    <Card class="shadow-xl shadow-slate-900/5 border border-slate-200/80 bg-white rounded-2xl overflow-hidden relative">
+      <!-- Linha de destaque no topo do Card -->
+      <div class="h-1.5 w-full bg-gradient-to-r from-[#09357a] via-[#09357a] to-[#b91c1c]" />
+
       <CardContent class="pt-8 pb-8">
         <!-- Erro de callback -->
         <template v-if="error">
@@ -61,7 +64,7 @@ useHead({
           </Alert>
           <NuxtLink
             to="/gestao/recuperar-senha"
-            class="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+            class="text-sm font-semibold text-[#09357a] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09357a] rounded"
           >
             Solicitar novo link
           </NuxtLink>
@@ -70,12 +73,12 @@ useHead({
         <!-- Aguardando PKCE -->
         <template v-else>
           <div
-            class="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4"
+            class="h-10 w-10 animate-spin rounded-full border-4 border-[#09357a] border-t-transparent mx-auto mb-4"
             role="status"
             aria-label="Validando acesso…"
           />
-          <p class="text-sm font-medium text-foreground">Validando acesso…</p>
-          <p class="text-xs text-muted-foreground mt-1">Aguarde um momento.</p>
+          <p class="text-sm font-bold text-slate-800">Validando acesso…</p>
+          <p class="text-xs text-slate-500 mt-1">Aguarde um momento.</p>
         </template>
       </CardContent>
     </Card>

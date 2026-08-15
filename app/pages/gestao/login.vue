@@ -37,17 +37,20 @@ useHead({
 
 <template>
   <div class="w-full max-w-md">
-    <Card class="shadow-2xl border-0 bg-white">
-      <CardHeader class="text-center pb-2">
+    <Card class="shadow-xl shadow-slate-900/5 border border-slate-200/80 bg-white rounded-2xl overflow-hidden relative">
+      <!-- Linha de destaque no topo do Card com Azul (#09357a) e Vermelho (#b91c1c) -->
+      <div class="h-1.5 w-full bg-gradient-to-r from-[#09357a] via-[#09357a] to-[#b91c1c]" />
+
+      <CardHeader class="text-center pb-2 pt-6">
         <CardTitle class="text-2xl font-bold text-[#09357a]">
           Acesso Administrativo
         </CardTitle>
-        <CardDescription>
+        <CardDescription class="text-slate-500 font-medium">
           Painel restrito — somente administradores autorizados
         </CardDescription>
       </CardHeader>
 
-      <CardContent class="pt-4">
+      <CardContent class="pt-4 pb-6">
         <LoginForm @success="navigateTo('/gestao', { replace: true })" />
       </CardContent>
     </Card>

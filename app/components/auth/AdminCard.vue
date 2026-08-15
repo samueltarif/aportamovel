@@ -23,34 +23,37 @@ const roleLabel: Record<string, string> = {
 </script>
 
 <template>
-  <Card class="w-full max-w-md">
-    <CardHeader class="pb-2">
+  <Card class="w-full max-w-md border border-slate-200/80 shadow-md bg-white rounded-xl overflow-hidden">
+    <!-- Linha de acento de marca -->
+    <div class="h-1 w-full bg-gradient-to-r from-[#09357a] via-[#09357a] to-[#b91c1c]" />
+
+    <CardHeader class="pb-2 pt-5">
       <div class="flex items-center gap-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-          <ShieldCheck class="h-5 w-5 text-primary" aria-hidden="true" />
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#09357a] border border-blue-100">
+          <ShieldCheck class="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
-          <CardTitle class="text-base">Acesso autorizado</CardTitle>
-          <CardDescription>Painel Administrativo — A Portamóvel</CardDescription>
+          <CardTitle class="text-base font-bold text-[#09357a]">Acesso autorizado</CardTitle>
+          <CardDescription class="text-slate-500 text-xs">Painel Administrativo — A Portamóvel</CardDescription>
         </div>
       </div>
     </CardHeader>
 
-    <CardContent class="flex flex-col gap-3 pt-2">
-      <div class="rounded-lg bg-muted/50 px-4 py-3 flex flex-col gap-1">
-        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wider">E-mail</span>
-        <span class="text-sm font-semibold break-all">{{ email }}</span>
+    <CardContent class="flex flex-col gap-3 pt-3">
+      <div class="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 flex flex-col gap-1">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">E-mail</span>
+        <span class="text-sm font-semibold text-slate-800 break-all">{{ email }}</span>
       </div>
-      <div class="rounded-lg bg-muted/50 px-4 py-3 flex flex-col gap-1">
-        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wider">Perfil</span>
-        <span class="text-sm font-semibold">{{ roleLabel[role] ?? role }}</span>
+      <div class="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 flex flex-col gap-1">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Perfil</span>
+        <span class="text-sm font-bold text-[#09357a]">{{ roleLabel[role] ?? role }}</span>
       </div>
     </CardContent>
 
-    <CardFooter class="pt-2">
+    <CardFooter class="pt-2 pb-5">
       <Button
         variant="outline"
-        class="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+        class="w-full border-red-200 text-[#b91c1c] hover:bg-red-50 hover:text-red-700 font-semibold"
         :disabled="loading"
         @click="logout"
       >
