@@ -11,7 +11,7 @@ import {
 export interface NavItem {
   id: string
   title: string
-  href: string
+  to: string
   icon: Component
   disabled?: boolean
   badge?: string
@@ -22,14 +22,15 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
     id: 'visao-geral',
     title: 'Visão geral',
-    href: '/gestao',
+    to: '/gestao',
     icon: LayoutDashboard,
+    disabled: false,
     tooltip: 'Visão geral do painel',
   },
   {
     id: 'servicos',
     title: 'Serviços',
-    href: '/gestao/servicos',
+    to: '/gestao/servicos',
     icon: Wrench,
     disabled: true,
     badge: 'Em breve',
@@ -38,7 +39,7 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
     id: 'publicacoes',
     title: 'Publicações',
-    href: '/gestao/publicacoes',
+    to: '/gestao/publicacoes',
     icon: Images,
     disabled: true,
     badge: 'Em breve',
@@ -47,16 +48,15 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
     id: 'leads',
     title: 'Leads',
-    href: '/gestao/leads',
+    to: '/gestao/leads',
     icon: Users,
-    disabled: true,
-    badge: 'Em breve',
-    tooltip: 'Módulo de leads (Em breve)',
+    disabled: false,
+    tooltip: 'Gestão de Leads e Orçamentos',
   },
   {
     id: 'analytics',
     title: 'Analytics',
-    href: '/gestao/analytics',
+    to: '/gestao/analytics',
     icon: ChartNoAxesCombined,
     disabled: true,
     badge: 'Em breve',
@@ -65,7 +65,7 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
     id: 'configuracoes',
     title: 'Configurações',
-    href: '/gestao/configuracoes',
+    to: '/gestao/configuracoes',
     icon: Settings,
     disabled: true,
     badge: 'Em breve',
@@ -75,8 +75,8 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
 
 export function isNavItemActive(item: NavItem, currentPath: string): boolean {
   if (item.disabled) return false
-  if (item.href === '/gestao') {
+  if (item.to === '/gestao') {
     return currentPath === '/gestao' || currentPath === '/gestao/'
   }
-  return currentPath.startsWith(item.href)
+  return currentPath === item.to || currentPath.startsWith(`${item.to}/`)
 }

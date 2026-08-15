@@ -41,11 +41,7 @@ export default defineNuxtConfig({
 
   // Configuração do módulo Supabase
   supabase: {
-    // Desabilitar o redirecionamento global do Supabase.
-    // O site público (home, serviços, sobre-nós, contato) não exige autenticação.
-    // Apenas a área administrativa (/gestao) exige login, controlada pelo middleware 'gestao'.
     redirect: false,
-    // Tipos gerados do banco
     types: '~/types/database.types.ts',
   },
 
@@ -65,10 +61,19 @@ export default defineNuxtConfig({
 
   // Variáveis de ambiente
   runtimeConfig: {
-    // Variáveis privadas (server-only) — nenhuma nesta etapa
+    // Variáveis privadas (server-only) para consulta segura do PostHog
+    posthogPersonalApiKey: process.env.POSTHOG_PERSONAL_API_KEY || '',
+    posthogProjectId: process.env.POSTHOG_PROJECT_ID || '559598',
+    posthogApiHost: process.env.POSTHOG_API_HOST || 'https://us.posthog.com',
+
+    // Variáveis privadas (server-only) para o módulo de Leads e Turnstile
+    supabaseSecretKey: process.env.SUPABASE_SECRET_KEY || '',
+    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || '',
+    turnstileAllowedHostnames: process.env.TURNSTILE_ALLOWED_HOSTNAMES || 'aportamovel.com.br,www.aportamovel.com.br',
+    leadPrivacyNoticeVersion: process.env.LEAD_PRIVACY_NOTICE_VERSION || '',
+
     public: {
-      // Lidas de NUXT_PUBLIC_SUPABASE_URL e NUXT_PUBLIC_SUPABASE_KEY
-      // O módulo @nuxtjs/supabase as configura automaticamente
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     },
   },
 
@@ -83,5 +88,4 @@ export default defineNuxtConfig({
       ],
     },
   },
-
 })

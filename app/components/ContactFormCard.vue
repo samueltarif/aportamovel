@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { useLeadSubmission } from '~/composables/useLeadSubmission'
+import { buildCommercialWhatsAppUrl } from '~/utils/whatsappUrl'
+import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 
-const { trackQuoteFormStarted, trackQuoteFormSubmitted, trackWhatsAppClick } = useAnalytics()
+const { trackQuoteFormStarted } = useAnalytics()
+const { isSubmitting, errorMessage, isFallbackActive, submitLead } = useLeadSubmission()
 
 const form = reactive({
   name: '',
@@ -10,10 +14,13 @@ const form = reactive({
   email: '',
   phone: '',
   message: '',
+  consent: false,
+  _hp_company_title: '',
 })
 
+const turnstileToken = ref('')
+const turnstileWidgetRef = ref<InstanceType<typeof TurnstileWidget> | null>(null)
 const submitted = ref(false)
-const isSubmitting = ref(false)
 
 const handleFieldFocus = () => {
   trackQuoteFormStarted({
@@ -22,35 +29,39 @@ const handleFieldFocus = () => {
   })
 }
 
-const handleSubmit = () => {
-  if (isSubmitting.value) return
-  isSubmitting.value = true
-  submitted.value = true
+const getWhatsAppUrl = () => {
+  return buildCommercialWhatsAppUrl({
+    name: form.name,
+    phone: form.phone,
+    companyOrCondominium: form.company,
+    email: form.email,
+    message: form.message,
+  })
+}
 
-  // Disparar os dois eventos exigidos pela regra #3
-  trackQuoteFormSubmitted({
+const handleSubmit = async () => {
+  if (!form.consent) return
+
+  const res = await submitLead({
     form_id: 'contact_form',
-    form_location: 'contact_page',
-    submission_destination: 'whatsapp',
+    name: form.name,
+    phone: form.phone,
+    company_or_condominium: form.company,
+    email: form.email,
+    message: form.message,
+    turnstile_token: turnstileToken.value,
+    consent: true,
+    _hp_company_title: form._hp_company_title,
   })
 
-  trackWhatsAppClick({
-    cta_location: 'contact_form',
-    channel_type: 'commercial',
-  })
-
-  const messageText = `*Solicitação de Orçamento via Site - A Portamóvel*\n\n`
-    + `👤 *Nome:* ${form.name}\n`
-    + `🏢 *Condomínio / Empresa:* ${form.company || 'Não informado'}\n`
-    + `✉️ *E-mail:* ${form.email}\n`
-    + `📱 *Telefone / WhatsApp:* ${form.phone}\n\n`
-    + `📝 *Mensagem / Escopo Técnico:*\n${form.message || 'Sem descrição adicional'}`
-
-  window.open(`https://wa.me/5511912984416?text=${encodeURIComponent(messageText)}`, '_blank')
-
-  setTimeout(() => {
-    isSubmitting.value = false
-  }, 1000)
+  if (res.success) {
+    submitted.value = true
+    window.open(getWhatsAppUrl(), '_blank')
+  }
+  else if (!res.fallback) {
+    turnstileWidgetRef.value?.reset()
+    turnstileToken.value = ''
+  }
 }
 </script>
 
@@ -66,7 +77,15 @@ const handleSubmit = () => {
     </div>
 
     <form class="space-y-4 sm:space-y-5" @submit.prevent="handleSubmit">
-      <!-- Row 1: Name and Condo — stacked on mobile -->
+      <input
+        v-model="form._hp_company_title"
+        type="text"
+        name="_hp_company_title"
+        tabindex="-1"
+        autocomplete="off"
+        class="opacity-0 absolute -z-10 h-0 w-0 pointer-events-none"
+      >
+
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-700 mb-1.5" for="cf-name">Nome Completo</label>
@@ -77,7 +96,7 @@ const handleSubmit = () => {
             required
             autocomplete="name"
             placeholder="João da Silva"
-            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 outline-none"
             @focus="handleFieldFocus"
           >
         </div>
@@ -90,13 +109,12 @@ const handleSubmit = () => {
             type="text"
             autocomplete="organization"
             placeholder="Condomínio Alpha"
-            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 outline-none"
             @focus="handleFieldFocus"
           >
         </div>
       </div>
 
-      <!-- Row 2: Email and Phone — stacked on mobile -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-700 mb-1.5" for="cf-email">E-mail Profissional</label>
@@ -107,7 +125,7 @@ const handleSubmit = () => {
             required
             autocomplete="email"
             placeholder="joao@exemplo.com"
-            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 outline-none"
             @focus="handleFieldFocus"
           >
         </div>
@@ -121,13 +139,12 @@ const handleSubmit = () => {
             required
             autocomplete="tel"
             placeholder="(11) 99999-9999"
-            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 outline-none"
             @focus="handleFieldFocus"
           >
         </div>
       </div>
 
-      <!-- Row 3: Message -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-700 mb-1.5" for="cf-message">Mensagem / Escopo Técnico</label>
         <textarea
@@ -135,25 +152,54 @@ const handleSubmit = () => {
           v-model="form.message"
           rows="4"
           placeholder="Descreva sua necessidade estrutural ou de segurança..."
-          class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all resize-none"
+          class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
           @focus="handleFieldFocus"
         />
       </div>
 
-      <!-- Submit Button: full width on mobile -->
+      <TurnstileWidget
+        ref="turnstileWidgetRef"
+        action="contact_form"
+        @verify="turnstileToken = $event"
+        @expire="turnstileToken = ''"
+        @error="turnstileToken = ''"
+      />
+
+      <div class="flex items-start space-x-2.5">
+        <input
+          id="cf-consent"
+          v-model="form.consent"
+          type="checkbox"
+          required
+          class="mt-1 w-4 h-4 rounded text-emerald-600 border-gray-300 focus:ring-emerald-500 cursor-pointer"
+        >
+        <label for="cf-consent" class="text-xs text-gray-600 leading-tight cursor-pointer">
+          Li e concordo com o uso dos meus dados para o retorno desta solicitação.
+        </label>
+      </div>
+
+      <div v-if="errorMessage" class="p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs space-y-2">
+        <p>{{ errorMessage }}</p>
+        <a
+          v-if="isFallbackActive"
+          :href="getWhatsAppUrl()"
+          target="_blank"
+          class="inline-block px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors"
+        >
+          Continuar pelo WhatsApp mesmo assim →
+        </a>
+      </div>
+
       <button
         type="submit"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || !form.consent"
         class="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 min-h-[52px] disabled:opacity-50"
       >
-        <svg class="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24">
-          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-        </svg>
-        <span>ENVIAR SOLICITAÇÃO VIA WHATSAPP</span>
+        <span>{{ isSubmitting ? 'Preparando...' : 'ENVIAR SOLICITAÇÃO VIA WHATSAPP' }}</span>
       </button>
 
       <div v-if="submitted" class="p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-semibold text-center">
-        ✓ Redirecionando para o WhatsApp com os dados preenchidos...
+        ✓ Solicitação registrada! Redirecionando para o WhatsApp...
       </div>
     </form>
   </div>

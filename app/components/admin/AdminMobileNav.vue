@@ -95,9 +95,12 @@ onUnmounted(() => {
 
         <!-- Lista de itens -->
         <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          <div v-for="item in ADMIN_NAV_ITEMS" :key="item.id" @click="closeMobileNav">
-            <AdminNavItem :item="item" />
-          </div>
+          <AdminNavItem
+            v-for="item in ADMIN_NAV_ITEMS"
+            :key="item.id"
+            :item="item"
+            @navigate="closeMobileNav"
+          />
 
           <div class="my-3 border-t border-slate-100" />
 
@@ -105,11 +108,11 @@ onUnmounted(() => {
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-[#09357a] transition-all"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-[#09357a] transition-all cursor-pointer"
             @click="closeMobileNav"
           >
-            <ExternalLink class="h-4 w-4 text-slate-500" aria-hidden="true" />
-            <span>Ver site público</span>
+            <ExternalLink class="h-4 w-4 text-slate-500 pointer-events-none" aria-hidden="true" />
+            <span class="pointer-events-none">Ver site público</span>
           </a>
         </div>
 

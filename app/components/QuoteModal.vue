@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive, watch, ref } from 'vue'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { useLeadSubmission } from '~/composables/useLeadSubmission'
+import { buildCommercialWhatsAppUrl } from '~/utils/whatsappUrl'
+import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 
 const props = defineProps<{
   isOpen: boolean
@@ -10,15 +13,19 @@ const props = defineProps<{
 
 const emit = defineEmits(['close'])
 
-const { trackServiceView, trackQuoteFormStarted, trackQuoteFormSubmitted, trackWhatsAppClick, resetFormStarted } = useAnalytics()
+const { trackServiceView, trackQuoteFormStarted, resetFormStarted } = useAnalytics()
+const { isSubmitting, errorMessage, isFallbackActive, submitLead } = useLeadSubmission()
 
 const form = reactive({
   name: '',
   phone: '',
   condo: '',
+  consent: false,
+  _hp_company_title: '',
 })
 
-const isSubmitting = ref(false)
+const turnstileToken = ref('')
+const turnstileWidgetRef = ref<InstanceType<typeof TurnstileWidget> | null>(null)
 
 const getSlug = (): string | undefined => {
   if (props.serviceSlug) return props.serviceSlug
@@ -31,17 +38,13 @@ const getSlug = (): string | undefined => {
     .replace(/(^-|-$)/g, '')
 }
 
-// Controlar trava de scroll do body, reset do form e disparo condicional de service_view
 watch(() => props.isOpen, (open) => {
   if (import.meta.client) {
     document.body.style.overflow = open ? 'hidden' : ''
   }
 
   if (open) {
-    // Reiniciar flag do formulario para nova tentativa
     resetFormStarted('quote_modal')
-
-    // Regra #4: Registrar service_view APENAS se houver servico especifico
     const slug = getSlug()
     if (props.serviceName && slug) {
       trackServiceView({
@@ -60,33 +63,41 @@ const handleFieldFocus = () => {
   })
 }
 
-const handleSubmit = () => {
-  if (isSubmitting.value) return
-  isSubmitting.value = true
+const getWhatsAppUrl = () => {
+  return buildCommercialWhatsAppUrl({
+    name: form.name,
+    phone: form.phone,
+    companyOrCondominium: form.condo,
+    serviceName: props.serviceName,
+  })
+}
+
+const handleSubmit = async () => {
+  if (!form.consent) return
 
   const slug = getSlug()
-
-  // Regra #3: Disparar os dois eventos necessarios apos validacao
-  trackQuoteFormSubmitted({
+  const res = await submitLead({
     form_id: 'quote_modal',
-    form_location: 'quote_modal',
-    submission_destination: 'whatsapp',
+    name: form.name,
+    phone: form.phone,
+    company_or_condominium: form.condo,
+    service_name: props.serviceName,
     service_slug: slug,
+    turnstile_token: turnstileToken.value,
+    consent: true,
+    _hp_company_title: form._hp_company_title,
   })
 
-  trackWhatsAppClick({
-    cta_location: 'quote_modal',
-    channel_type: 'commercial',
-    service_slug: slug,
-  })
-
-  const text = `Olá, meu nome é ${form.name}. Gostaria de solicitar um orçamento para *${props.serviceName || 'Serviços'}* para o *${form.condo || 'meu condomínio'}*. Contato: ${form.phone}`
-  window.open(`https://wa.me/5511912984416?text=${encodeURIComponent(text)}`, '_blank')
-
-  setTimeout(() => {
-    isSubmitting.value = false
-    emit('close')
-  }, 300)
+  if (res.success) {
+    window.open(getWhatsAppUrl(), '_blank')
+    setTimeout(() => {
+      emit('close')
+    }, 400)
+  }
+  else if (!res.fallback) {
+    turnstileWidgetRef.value?.reset()
+    turnstileToken.value = ''
+  }
 }
 </script>
 
@@ -103,7 +114,6 @@ const handleSubmit = () => {
       <div
         class="bg-white w-full sm:w-[calc(100%-2rem)] sm:max-w-lg rounded-t-2xl sm:rounded-2xl p-5 sm:p-8 shadow-2xl border border-blue-100 relative max-h-[90dvh] overflow-y-auto"
       >
-        <!-- Close Button -->
         <button
           class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
           aria-label="Fechar modal"
@@ -114,7 +124,6 @@ const handleSubmit = () => {
           </svg>
         </button>
 
-        <!-- Header -->
         <div class="mb-5 sm:mb-6 pr-8">
           <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded">
             Orçamento Rápido
@@ -127,8 +136,16 @@ const handleSubmit = () => {
           </p>
         </div>
 
-        <!-- Form -->
         <form class="space-y-4" @submit.prevent="handleSubmit">
+          <input
+            v-model="form._hp_company_title"
+            type="text"
+            name="_hp_company_title"
+            tabindex="-1"
+            autocomplete="off"
+            class="opacity-0 absolute -z-10 h-0 w-0 pointer-events-none"
+          >
+
           <div>
             <label class="block text-xs font-bold uppercase text-gray-700 mb-1" for="modal-name">Nome Completo</label>
             <input
@@ -138,7 +155,7 @@ const handleSubmit = () => {
               required
               autocomplete="name"
               placeholder="Ex: João da Silva"
-              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] focus:border-[#09357a] outline-none"
+              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] outline-none"
               @focus="handleFieldFocus"
             >
           </div>
@@ -152,7 +169,7 @@ const handleSubmit = () => {
               required
               autocomplete="tel"
               placeholder="(11) 99999-9999"
-              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] focus:border-[#09357a] outline-none"
+              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] outline-none"
               @focus="handleFieldFocus"
             >
           </div>
@@ -165,20 +182,50 @@ const handleSubmit = () => {
               type="text"
               autocomplete="organization"
               placeholder="Ex: Condomínio Alpha"
-              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] focus:border-[#09357a] outline-none"
+              class="w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-[#09357a] outline-none"
               @focus="handleFieldFocus"
             >
           </div>
 
+          <TurnstileWidget
+            ref="turnstileWidgetRef"
+            action="quote_modal"
+            @verify="turnstileToken = $event"
+            @expire="turnstileToken = ''"
+            @error="turnstileToken = ''"
+          />
+
+          <div class="flex items-start space-x-2.5">
+            <input
+              id="modal-consent"
+              v-model="form.consent"
+              type="checkbox"
+              required
+              class="mt-1 w-4 h-4 rounded text-[#09357a] border-gray-300 focus:ring-[#09357a] cursor-pointer"
+            >
+            <label for="modal-consent" class="text-xs text-gray-600 leading-tight cursor-pointer">
+              Li e concordo com o uso dos meus dados para o retorno desta solicitação.
+            </label>
+          </div>
+
+          <div v-if="errorMessage" class="p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs space-y-2">
+            <p>{{ errorMessage }}</p>
+            <a
+              v-if="isFallbackActive"
+              :href="getWhatsAppUrl()"
+              target="_blank"
+              class="inline-block px-3 py-1.5 bg-[#09357a] hover:bg-[#07285c] text-white font-bold rounded-lg transition-colors"
+            >
+              Continuar pelo WhatsApp mesmo assim →
+            </a>
+          </div>
+
           <button
             type="submit"
-            :disabled="isSubmitting"
+            :disabled="isSubmitting || !form.consent"
             class="w-full py-3.5 bg-[#09357a] text-white font-bold text-sm uppercase tracking-wider rounded-xl hover:bg-[#07285c] transition-all shadow-md mt-2 flex items-center justify-center space-x-2 min-h-[52px] disabled:opacity-50"
           >
-            <span>Enviar via WhatsApp</span>
-            <svg class="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z" />
-            </svg>
+            <span>{{ isSubmitting ? 'Preparando...' : 'Enviar via WhatsApp' }}</span>
           </button>
         </form>
       </div>

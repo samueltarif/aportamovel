@@ -86,11 +86,15 @@ export function useAnalytics() {
   }
 
   const trackServiceView = (data: Omit<ServiceViewProps, 'page_path'> & { page_path?: string }) => {
-    if (!data.service_slug || !data.service_name) return
+    const slug = (data.service_slug || '').trim()
+    const name = (data.service_name || '').trim()
+    if (!slug || slug === 'null' || slug === 'undefined') return
+    if (!name || name === 'null' || name === 'undefined') return
+
     safeCapture('service_view', {
       page_path: data.page_path || getPagePath(),
-      service_slug: data.service_slug,
-      service_name: data.service_name,
+      service_slug: slug,
+      service_name: name,
       interaction_type: data.interaction_type,
     })
   }

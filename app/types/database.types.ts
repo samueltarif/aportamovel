@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.15"
   }
@@ -38,12 +36,158 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_notes: {
+        Row: {
+          author_id: string
+          created_at: string
+          id: string
+          lead_id: string
+          note: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          note: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_status_history: {
+        Row: {
+          changed_by: string
+          created_at: string
+          id: string
+          lead_id: string
+          new_status: string
+          old_status: string
+        }
+        Insert: {
+          changed_by: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          new_status: string
+          old_status: string
+        }
+        Update: {
+          changed_by?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          new_status?: string
+          old_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_status_history_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          archived_at: string | null
+          company_or_condominium: string | null
+          consent_at: string
+          contacted_at: string | null
+          created_at: string
+          email: string | null
+          form_id: string
+          full_name: string
+          id: string
+          idempotency_key: string
+          last_updated_by: string | null
+          message: string | null
+          phone: string
+          privacy_notice_version: string
+          service_name: string | null
+          service_slug: string | null
+          source_path: string
+          status: string
+          updated_at: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          company_or_condominium?: string | null
+          consent_at: string
+          contacted_at?: string | null
+          created_at?: string
+          email?: string | null
+          form_id: string
+          full_name: string
+          id?: string
+          idempotency_key: string
+          last_updated_by?: string | null
+          message?: string | null
+          phone: string
+          privacy_notice_version: string
+          service_name?: string | null
+          service_slug?: string | null
+          source_path: string
+          status?: string
+          updated_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          company_or_condominium?: string | null
+          consent_at?: string
+          contacted_at?: string | null
+          created_at?: string
+          email?: string | null
+          form_id?: string
+          full_name?: string
+          id?: string
+          idempotency_key?: string
+          last_updated_by?: string | null
+          message?: string | null
+          phone?: string
+          privacy_notice_version?: string
+          service_name?: string | null
+          service_slug?: string | null
+          source_path?: string
+          status?: string
+          updated_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       has_admin_access: { Args: never; Returns: boolean }
+      update_lead_status_atomic: {
+        Args: { p_lead_id: string; p_new_status: string; p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
