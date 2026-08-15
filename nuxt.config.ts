@@ -18,17 +18,10 @@ export default defineNuxtConfig({
 
   // Configuração do módulo Supabase
   supabase: {
-    // Redirecionar para login admin e processar PKCE no callback
-    redirectOptions: {
-      login: '/gestao/login',
-      callback: '/gestao/confirm',
-      exclude: [
-        '/gestao/login',
-        '/gestao/recuperar-senha',
-        '/gestao/redefinir-senha',
-        '/gestao/confirm',
-      ],
-    },
+    // Desabilitar o redirecionamento global do Supabase.
+    // O site público (home, serviços, sobre-nós, contato) não exige autenticação.
+    // Apenas a área administrativa (/gestao) exige login, controlada pelo middleware 'gestao'.
+    redirect: false,
     // Tipos gerados do banco
     types: '~/types/database.types.ts',
   },
