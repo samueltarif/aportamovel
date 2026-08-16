@@ -4,6 +4,7 @@ import {
   Wrench,
   Images,
   Users,
+  ShieldCheck,
   ChartNoAxesCombined,
   Settings,
 } from '@lucide/vue'
@@ -14,6 +15,7 @@ export interface NavItem {
   to: string
   icon: Component
   disabled?: boolean
+  adminOnly?: boolean
   badge?: string
   tooltip?: string
 }
@@ -32,18 +34,16 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     title: 'Serviços',
     to: '/gestao/servicos',
     icon: Wrench,
-    disabled: true,
-    badge: 'Em breve',
-    tooltip: 'Módulo de serviços (Em breve)',
+    disabled: false,
+    tooltip: 'Gestão de Serviços',
   },
   {
     id: 'publicacoes',
     title: 'Publicações',
     to: '/gestao/publicacoes',
     icon: Images,
-    disabled: true,
-    badge: 'Em breve',
-    tooltip: 'Módulo de publicações (Em breve)',
+    disabled: false,
+    tooltip: 'Gestão de Publicações e Portfólio',
   },
   {
     id: 'leads',
@@ -52,6 +52,15 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     icon: Users,
     disabled: false,
     tooltip: 'Gestão de Leads e Orçamentos',
+  },
+  {
+    id: 'administradores',
+    title: 'Administradores',
+    to: '/gestao/administradores',
+    icon: ShieldCheck,
+    disabled: false,
+    adminOnly: true,
+    tooltip: 'Gestão Segura de Administradores',
   },
   {
     id: 'analytics',

@@ -9,6 +9,15 @@ const roleLabel: Record<string, string> = {
   admin: 'Administrador',
   editor: 'Editor',
 }
+
+const visibleNavItems = computed(() => {
+  return ADMIN_NAV_ITEMS.filter((item) => {
+    if (item.adminOnly && adminData.value?.role !== 'admin') {
+      return false
+    }
+    return true
+  })
+})
 </script>
 
 <template>
@@ -49,7 +58,7 @@ const roleLabel: Record<string, string> = {
     <!-- Corpo: Lista de navegação -->
     <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
       <AdminNavItem
-        v-for="item in ADMIN_NAV_ITEMS"
+        v-for="item in visibleNavItems"
         :key="item.id"
         :item="item"
         :collapsed="isSidebarCollapsed"

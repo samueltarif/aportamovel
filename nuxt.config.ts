@@ -72,8 +72,22 @@ export default defineNuxtConfig({
     turnstileAllowedHostnames: process.env.TURNSTILE_ALLOWED_HOSTNAMES || 'aportamovel.com.br,www.aportamovel.com.br',
     leadPrivacyNoticeVersion: process.env.LEAD_PRIVACY_NOTICE_VERSION || '',
 
+    // Variáveis privadas (server-only) para Cloudflare R2 e Cron
+    cronSecret: process.env.CRON_SECRET || '',
+    r2AccountId: process.env.R2_ACCOUNT_ID || '',
+    r2AccessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+    r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+    r2BucketName: process.env.R2_BUCKET_NAME || '',
+    r2PublicBaseUrl: process.env.R2_PUBLIC_BASE_URL || '',
+
+    // Variáveis privadas (server-only) para Gestão Segura de Administradores
+    adminAuthConfirmUrl: process.env.ADMIN_AUTH_CONFIRM_URL || 'http://localhost:3000/auth/confirm',
+    allowedOrigins: process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000,https://www.aportamovel.com.br,https://aportamovel.com.br',
+    idempotencyHmacSecret: process.env.ADMIN_IDEMPOTENCY_HMAC_SECRET || 'dev_secret_hmac_must_be_at_least_32_bytes_long_1234567890',
+
     public: {
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
+      dynamicServicesEnabled: process.env.NUXT_PUBLIC_DYNAMIC_SERVICES_ENABLED || 'false',
     },
   },
 

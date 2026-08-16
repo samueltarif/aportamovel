@@ -5,6 +5,7 @@ export interface AdminUser {
   user_id: string
   role: string
   is_active: boolean
+  accepted_at: string | null
 }
 
 /**
@@ -20,7 +21,7 @@ export async function getAdminUser(
 ): Promise<AdminUser | null> {
   const { data, error } = await client
     .from('admin_users')
-    .select('user_id, role, is_active')
+    .select('user_id, role, is_active, accepted_at')
     .eq('user_id', userId)
     .single()
 
