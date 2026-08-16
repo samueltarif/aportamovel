@@ -26,6 +26,9 @@ const description = ref('')
 const displayOrder = ref(0)
 const localMedias = ref<ServiceMedia[]>([])
 
+const isSaving = ref(false)
+const saveSuccess = ref(false)
+
 const { reorderPublicationMedia, setPublicationCover, deletePublicationMedia } = useMediaUpload()
 
 watch(
@@ -38,6 +41,7 @@ watch(
     description.value = p?.description || ''
     displayOrder.value = p?.display_order || 0
     localMedias.value = p ? [...p.medias] : []
+    saveSuccess.value = false
   },
   { immediate: true }
 )
@@ -52,15 +56,25 @@ function autoSlug() {
   }
 }
 
-function handleSaveInfo() {
-  emit('save-info', {
-    service_id: serviceId.value,
-    title: title.value,
-    slug: slug.value,
-    summary: summary.value,
-    description: description.value,
-    display_order: displayOrder.value,
-  })
+async function handleSaveInfo() {
+  if (isSaving.value) return
+  isSaving.value = true
+  saveSuccess.value = false
+
+  try {
+    emit('save-info', {
+      service_id: serviceId.value,
+      title: title.value,
+      slug: slug.value,
+      summary: summary.value,
+      description: description.value,
+      display_order: displayOrder.value,
+    })
+    saveSuccess.value = true
+    setTimeout(() => { saveSuccess.value = false }, 4000)
+  } finally {
+    isSaving.value = false
+  }
 }
 
 async function handleMoveUp(index: number) {
@@ -122,32 +136,44 @@ async function handleDeleteMedia(mediaId: string) {
       </div>
 
       <!-- Conteúdo com Scroll -->
-      <div class="flex-1 overflow-y-auto p-6 space-y-6">
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <!-- Notificação de Sucesso ao Salvar Dados -->
+        <div v-if="saveSuccess" class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold flex items-center space-x-2 animate-in fade-in duration-200">
+          <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <span>Dados da publicação salvos com sucesso!</span>
+        </div>
+
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Serviço Vinculado</label>
-            <select v-model="serviceId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white">
+            <select v-model="serviceId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-[#09357a]/20">
               <option v-for="s in services" :key="s.id" :value="s.id">{{ s.name }}</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Título do Trabalho</label>
-            <input v-model="title" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" @input="autoSlug" />
+            <input v-model="title" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-[#09357a]/20" @input="autoSlug" />
           </div>
           <div>
             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Slug</label>
-            <input v-model="slug" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-mono" />
+            <input v-model="slug" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-mono focus:ring-2 focus:ring-[#09357a]/20" />
           </div>
           <div>
             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Resumo Curto (para o card)</label>
-            <input v-model="summary" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
+            <input v-model="summary" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-[#09357a]/20" />
           </div>
           <div>
             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Descrição Completa da Obra</label>
-            <textarea v-model="description" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
+            <textarea v-model="description" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-[#09357a]/20" />
           </div>
-          <button type="button" class="w-full py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]" @click="handleSaveInfo">
-            Salvar Dados da Publicação
+          <button
+            type="button"
+            :disabled="isSaving"
+            class="w-full py-3 px-4 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all min-h-[44px] flex items-center justify-center space-x-2 active:scale-[0.99] shadow-sm cursor-pointer disabled:opacity-50"
+            @click="handleSaveInfo"
+          >
+            <span v-if="isSaving" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            <span>{{ isSaving ? 'Salvando...' : 'Salvar Dados da Publicação' }}</span>
           </button>
         </div>
 
@@ -158,14 +184,24 @@ async function handleDeleteMedia(mediaId: string) {
         </div>
       </div>
 
-      <!-- Rodapé Fixo com Botão Voltar -->
-      <div class="sticky bottom-0 z-20 bg-white/95 backdrop-blur-xs border-t border-slate-200/80 px-6 py-3.5 flex items-center justify-between gap-3 shadow-lg">
-        <button type="button" class="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all min-h-[38px]" @click="$emit('close')">
+      <!-- Rodapé Fixo com Botões Responsivos -->
+      <div class="sticky bottom-0 z-20 bg-white/95 backdrop-blur-xs border-t border-slate-200/80 px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 shadow-lg">
+        <button
+          type="button"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all min-h-[44px] cursor-pointer active:scale-95"
+          @click="$emit('close')"
+        >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
           <span>Voltar ao Painel</span>
         </button>
-        <button type="button" class="px-5 py-2 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[38px]" @click="handleSaveInfo">
-          Salvar Dados
+        <button
+          type="button"
+          :disabled="isSaving"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all min-h-[44px] shadow-sm cursor-pointer active:scale-95 disabled:opacity-50"
+          @click="handleSaveInfo"
+        >
+          <span v-if="isSaving" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          <span>{{ isSaving ? 'Salvando...' : 'Salvar Dados' }}</span>
         </button>
       </div>
     </div>

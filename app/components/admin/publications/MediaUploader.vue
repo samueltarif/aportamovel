@@ -18,6 +18,7 @@ const altText = ref('')
 const caption = ref('')
 const mediaStage = ref<'before' | 'after' | 'general'>('general')
 const isCover = ref(false)
+const successMessage = ref<string | null>(null)
 
 const { uploading, progress, error, uploadPublicationMedia } = useMediaUpload()
 
@@ -26,6 +27,7 @@ function onFileSelected(e: Event) {
   if (target.files && target.files[0]) {
     selectedFile.value = target.files[0]
     selectedFilePreviewUrl.value = URL.createObjectURL(target.files[0])
+    successMessage.value = null
   } else {
     selectedFile.value = null
     selectedFilePreviewUrl.value = null
@@ -34,6 +36,7 @@ function onFileSelected(e: Event) {
 
 async function handleUpload() {
   if (!selectedFile.value || !altText.value) return
+  successMessage.value = null
 
   try {
     const media = await uploadPublicationMedia({
@@ -52,6 +55,8 @@ async function handleUpload() {
     caption.value = ''
     mediaStage.value = 'general'
     isCover.value = false
+    successMessage.value = 'Mídia enviada e vinculada com sucesso!'
+    setTimeout(() => { successMessage.value = null }, 4000)
   } catch (err) {
     console.error('[MediaUploader] Erro:', err)
   }
@@ -135,6 +140,11 @@ async function handleUpload() {
         />
       </div>
 
+      <div v-if="successMessage" class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold flex items-center space-x-2 animate-in fade-in duration-200">
+        <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        <span>{{ successMessage }}</span>
+      </div>
+
       <div v-if="uploading" class="space-y-1">
         <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
           <div class="bg-[#09357a] h-full transition-all duration-300" :style="{ width: `${progress}%` }" />
@@ -142,14 +152,15 @@ async function handleUpload() {
         <p class="text-[11px] text-slate-500 text-right">Enviando e validando segurança... {{ progress }}%</p>
       </div>
 
-      <p v-if="error" class="text-xs text-red-600 font-bold">{{ error }}</p>
+      <p v-if="error" class="text-xs text-red-600 font-bold p-2 bg-red-50 rounded-lg border border-red-200">{{ error }}</p>
 
       <button
         type="submit"
         :disabled="uploading || !selectedFile || !altText"
-        class="w-full py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50"
+        class="w-full py-3 px-4 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 min-h-[44px] flex items-center justify-center space-x-2 active:scale-[0.99] shadow-sm cursor-pointer disabled:cursor-not-allowed"
       >
-        {{ uploading ? 'Processando Upload...' : 'Adicionar Mídia' }}
+        <span v-if="uploading" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        <span>{{ uploading ? `Enviando Mídia (${progress}%)...` : 'Adicionar Mídia' }}</span>
       </button>
     </form>
   </div>

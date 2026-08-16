@@ -55,34 +55,34 @@ defineEmits<{
           </div>
         </div>
 
-        <div class="flex items-center space-x-1 flex-shrink-0">
+        <div class="flex items-center space-x-1.5 flex-shrink-0">
           <!-- Reordenar para cima -->
           <button
             type="button"
             :disabled="index === 0"
-            class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors"
+            class="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-25 transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed active:scale-95"
             title="Mover para cima"
             @click="$emit('move-up', index)"
           >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
           </button>
 
           <!-- Reordenar para baixo -->
           <button
             type="button"
             :disabled="index === medias.length - 1"
-            class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors"
+            class="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-25 transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed active:scale-95"
             title="Mover para baixo"
             @click="$emit('move-down', index)"
           >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
           </button>
 
           <!-- Definir Capa -->
           <button
             v-if="!media.is_cover"
             type="button"
-            class="px-2 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold transition-colors"
+            class="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold transition-all cursor-pointer active:scale-95 min-h-[32px]"
             @click="$emit('set-cover', media.id)"
           >
             Capa
@@ -91,7 +91,7 @@ defineEmits<{
           <!-- Excluir Mídia -->
           <button
             type="button"
-            class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
+            class="w-8 h-8 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 transition-all flex items-center justify-center cursor-pointer active:scale-95"
             title="Excluir mídia"
             @click="$emit('delete-media', media.id)"
           >

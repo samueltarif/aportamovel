@@ -40,6 +40,15 @@ const selectedPub = ref<any | null>(null)
 const isArchiveDialogOpen = ref(false)
 const pubToArchive = ref<ServicePublication | null>(null)
 
+const toastMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
+
+function showToast(text: string, type: 'success' | 'error' = 'success') {
+  toastMessage.value = { type, text }
+  setTimeout(() => {
+    if (toastMessage.value?.text === text) toastMessage.value = null
+  }, 4000)
+}
+
 onMounted(async () => {
   await Promise.all([fetchPublications(), fetchServices()])
 })
@@ -61,28 +70,32 @@ async function handleSaveInfo(payload: any) {
     if (selectedPub.value) {
       await updatePublication(selectedPub.value.id, payload)
       await fetchPublicationById(selectedPub.value.id)
+      showToast('Publicação atualizada com sucesso!')
     } else {
       const created = await createPublication(payload)
       selectedPub.value = created
       await fetchPublicationById(created.id)
+      showToast('Publicação criada com sucesso!')
     }
     await fetchPublications()
   } catch (err: any) {
-    alert(err?.message || 'Erro ao salvar dados da publicação.')
+    showToast(err?.message || 'Erro ao salvar publicação.', 'error')
   }
 }
 
 async function handleRefreshDetail(pubId: string) {
   await fetchPublicationById(pubId)
   await fetchPublications()
+  showToast('Galeria de mídias atualizada!')
 }
 
 async function handlePublish(pub: ServicePublication) {
   try {
     await publishPublication(pub.id)
     await fetchPublications()
+    showToast('Publicação publicada no site com sucesso!')
   } catch (err: any) {
-    alert(err?.message || 'Não foi possível publicar. Verifique se há de 1 a 6 mídias e 1 capa definida.')
+    showToast(err?.message || 'Não foi possível publicar. Verifique se há mídias e 1 capa.', 'error')
   }
 }
 
@@ -98,14 +111,25 @@ async function handleConfirmArchive() {
     isArchiveDialogOpen.value = false
     pubToArchive.value = null
     await fetchPublications()
+    showToast('Publicação arquivada com sucesso!')
   } catch (err: any) {
-    alert(err?.message || 'Erro ao arquivar publicação.')
+    showToast(err?.message || 'Erro ao arquivar publicação.', 'error')
   }
 }
 </script>
 
 <template>
   <div class="space-y-6">
+    <!-- Toast Global -->
+    <div
+      v-if="toastMessage"
+      class="fixed bottom-5 right-5 z-50 p-4 rounded-xl shadow-xl flex items-center space-x-3 text-xs font-bold transition-all animate-in slide-in-from-bottom-2"
+      :class="toastMessage.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'"
+    >
+      <svg v-if="toastMessage.type === 'success'" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      <svg v-else class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+      <span>{{ toastMessage.text }}</span>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Trabalhos &amp; Portfólio</h1>
