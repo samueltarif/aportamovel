@@ -50,14 +50,23 @@
         <!-- Emergency Callout Button (hidden on very small screens) -->
         <button
           @click="$emit('open-emergency')"
-          class="hidden sm:inline-flex items-center px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg bg-[#b91c1c] text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-[#991b1b] transition-all hover:scale-105 active:scale-95 space-x-1.5 min-h-[44px]"
+          class="hidden sm:inline-flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-[#b91c1c] text-white shadow-md hover:bg-[#991b1b] transition-all hover:scale-105 active:scale-95 space-x-2 text-center"
           aria-label="Abrir atendimento emergencial"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current animate-pulse" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current animate-pulse flex-shrink-0" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
           </svg>
-          <span class="hidden lg:inline">Atendimento Emergencial</span>
-          <span class="lg:hidden">Emergência</span>
+          <div class="flex flex-col items-center justify-center text-center">
+            <span class="text-xs font-bold uppercase tracking-wider hidden lg:inline leading-tight">
+              Atendimento Emergencial
+            </span>
+            <span class="text-xs font-bold uppercase tracking-wider lg:hidden leading-tight">
+              Emergência
+            </span>
+            <span class="text-[10px] sm:text-[11px] font-medium normal-case text-red-100 tracking-normal leading-tight mt-0.5">
+              Portão de garagem e Pedestre
+            </span>
+          </div>
         </button>
 
         <!-- Hamburger Button (mobile only) -->
@@ -121,12 +130,15 @@
           <div class="pt-2 border-t border-gray-100">
             <button
               @click="openEmergencyAndClose"
-              class="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-[#b91c1c] text-white text-sm font-bold uppercase tracking-wider transition-all active:scale-95 min-h-[48px]"
+              class="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-xl bg-[#b91c1c] text-white transition-all active:scale-95 min-h-[48px]"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current animate-pulse" viewBox="0 0 24 24">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current animate-pulse flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
               </svg>
-              <span>Atendimento Emergencial</span>
+              <div class="flex flex-col items-center justify-center text-center">
+                <span class="text-sm font-bold uppercase tracking-wider leading-tight">Atendimento Emergencial</span>
+                <span class="text-xs font-medium normal-case text-red-100 tracking-normal leading-tight mt-0.5">Portão de garagem e Pedestre</span>
+              </div>
             </button>
           </div>
         </div>
