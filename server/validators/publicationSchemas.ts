@@ -36,7 +36,7 @@ export const publicationUpdateSchema = z
 export const mediaPresignSchema = z
   .object({
     target_id: z.string().uuid(),
-    file_extension: z.enum(['jpg', 'jpeg', 'png', 'webp', 'avif', 'mp4', 'webm']),
+    file_extension: z.enum(['jpg', 'jpeg', 'jfif', 'png', 'webp', 'avif', 'mp4', 'webm']),
     mime_type: z.enum([
       'image/jpeg',
       'image/png',

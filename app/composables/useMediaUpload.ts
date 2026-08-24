@@ -3,6 +3,7 @@ import { ref } from 'vue'
 const EXT_MIME_MAP: Record<string, string> = {
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
+  jfif: 'image/jpeg',
   png: 'image/png',
   webp: 'image/webp',
   avif: 'image/avif',
@@ -26,7 +27,8 @@ export function useMediaUpload() {
     error.value = null
 
     try {
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      let ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      if (ext === 'jfif') ext = 'jpeg'
       const mimeType = resolveFileMime(file, ext)
 
       const presignRes = await $fetch<{ intent_id: string; presigned_url: string }>('/api/admin/services/card-image/presign', {
@@ -86,7 +88,8 @@ export function useMediaUpload() {
     error.value = null
 
     try {
-      const ext = params.file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      let ext = params.file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      if (ext === 'jfif') ext = 'jpeg'
       const mimeType = resolveFileMime(params.file, ext)
 
       const presignRes = await $fetch<{ intent_id: string; presigned_url: string }>('/api/admin/media/presign', {
