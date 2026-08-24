@@ -70,12 +70,12 @@ async function handleSaveInfo(payload: any) {
     if (selectedPub.value) {
       await updatePublication(selectedPub.value.id, payload)
       await fetchPublicationById(selectedPub.value.id)
-      showToast('Publicação atualizada com sucesso!')
+      showToast('Publicação salva em rascunho!')
     } else {
       const created = await createPublication(payload)
       selectedPub.value = created
       await fetchPublicationById(created.id)
-      showToast('Publicação criada com sucesso!')
+      showToast('Publicação salva em rascunho!')
     }
     await fetchPublications()
   } catch (err: any) {
