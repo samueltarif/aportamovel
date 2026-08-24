@@ -1,5 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import WebSocket from 'ws'
+
+if (typeof globalThis.WebSocket === 'undefined') {
+  // @ts-expect-error WebSocket polyfill for standalone script
+  globalThis.WebSocket = WebSocket
+}
+
 import { getPrivateSupabaseClient } from '../utils/supabasePrivate'
 import { presignPublicationMedia, finalizePublicationMedia, deleteMedia } from '../services/media/mediaAdminService'
 import { getAdminPublicationById } from '../services/publications/publicationAdminService'

@@ -79,7 +79,7 @@ async function handleUpload() {
         <label class="block text-xs font-bold text-slate-600 mb-1">Arquivo (Foto até 10MB, Vídeo até 100MB)</label>
         <input
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm"
+          accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,image/jfif,image/pjpeg,.jpg,.jpeg,.jfif,.png,.webp,.avif,.mp4,.webm"
           required
           class="text-xs w-full"
           @change="onFileSelected"

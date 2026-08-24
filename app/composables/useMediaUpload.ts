@@ -72,7 +72,7 @@ export function useMediaUpload() {
       progress.value = 100
       return finalizeRes.service
     } catch (err: any) {
-      error.value = err?.message || 'Erro durante o upload da imagem do card.'
+      error.value = err?.data?.message || err?.data?.statusMessage || err?.message || 'Erro durante o upload da imagem do card.'
       throw err
     } finally {
       uploading.value = false
@@ -136,7 +136,7 @@ export function useMediaUpload() {
       progress.value = 100
       return finalizeRes.media
     } catch (err: any) {
-      error.value = err?.message || 'Erro durante o upload da mídia.'
+      error.value = err?.data?.message || err?.data?.statusMessage || err?.message || 'Erro durante o upload da mídia.'
       throw err
     } finally {
       uploading.value = false
