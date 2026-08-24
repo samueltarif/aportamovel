@@ -55,8 +55,23 @@ export const serviceUpdateSchema = z
 export const serviceCardPresignSchema = z
   .object({
     target_id: z.string().uuid(),
-    file_extension: z.enum(['jpg', 'jpeg', 'jfif', 'png', 'webp', 'avif']),
-    mime_type: z.enum(['image/jpeg', 'image/png', 'image/webp', 'image/avif']),
+    file_extension: z
+      .string()
+      .transform((val) => {
+        const lower = val.toLowerCase()
+        return lower === 'jfif' || lower === 'pjpeg' ? 'jpeg' : lower
+      })
+      .pipe(z.enum(['jpg', 'jpeg', 'png', 'webp', 'avif'])),
+    mime_type: z
+      .string()
+      .transform((val) => {
+        const lower = val.toLowerCase()
+        if (lower === 'image/jfif' || lower === 'image/pjpeg' || lower === 'image/jpg') {
+          return 'image/jpeg'
+        }
+        return lower
+      })
+      .pipe(z.enum(['image/jpeg', 'image/png', 'image/webp', 'image/avif'])),
     expected_size_bytes: z.number().int().positive().max(10485760), // Max 10MB
   })
   .strict()

@@ -12,7 +12,11 @@ const EXT_MIME_MAP: Record<string, string> = {
 }
 
 function resolveFileMime(file: File, ext: string): string {
-  if (file.type && file.type.trim() !== '') return file.type
+  let mime = file.type ? file.type.trim().toLowerCase() : ''
+  if (mime === 'image/jfif' || mime === 'image/pjpeg' || mime === 'image/jpg' || mime === 'image/jpeg') {
+    return 'image/jpeg'
+  }
+  if (mime && mime !== 'application/octet-stream') return mime
   return EXT_MIME_MAP[ext] || 'application/octet-stream'
 }
 
