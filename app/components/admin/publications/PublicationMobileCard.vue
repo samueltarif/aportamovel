@@ -9,6 +9,8 @@ defineProps<{
 defineEmits<{
   (e: 'edit', pub: ServicePublication): void
   (e: 'publish', pub: ServicePublication): void
+  (e: 'unpublish', pub: ServicePublication): void
+  (e: 'delete', pub: ServicePublication): void
   (e: 'archive', pub: ServicePublication): void
 }>()
 </script>
@@ -26,21 +28,24 @@ defineEmits<{
 
       <span
         v-if="publication.status === 'published'"
-        class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700"
+        class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center space-x-1"
       >
-        Publicado
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span>Publicado</span>
       </span>
       <span
         v-else-if="publication.status === 'draft'"
-        class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700"
+        class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center space-x-1"
       >
-        Rascunho
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+        <span>Oculto / Rascunho</span>
       </span>
       <span
         v-else
-        class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600"
+        class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200 inline-flex items-center space-x-1"
       >
-        Arquivado
+        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+        <span>Arquivado</span>
       </span>
     </div>
 
@@ -48,31 +53,46 @@ defineEmits<{
       {{ publication.summary }}
     </p>
 
-    <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+    <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 flex-wrap">
+      <!-- Botão Publicar / Voltar a Publicar -->
       <button
-        v-if="publication.status === 'draft'"
+        v-if="publication.status !== 'published'"
         type="button"
-        class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold"
+        class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold transition-colors cursor-pointer"
+        title="Mostrar publicação no site"
         @click="$emit('publish', publication)"
       >
         Publicar
       </button>
 
+      <!-- Botão Ocultar -->
       <button
+        v-if="publication.status === 'published'"
         type="button"
-        class="px-3 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold"
-        @click="$emit('edit', publication)"
+        class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 text-xs font-bold transition-colors cursor-pointer"
+        title="Deixar de exibir para os clientes no site"
+        @click="$emit('unpublish', publication)"
       >
-        Mídias
+        Ocultar
       </button>
 
+      <!-- Botão Gerenciar -->
       <button
-        v-if="isAdmin && publication.status !== 'archived'"
         type="button"
-        class="px-3 py-2 rounded-xl bg-red-50 text-red-700 text-xs font-bold"
-        @click="$emit('archive', publication)"
+        class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+        @click="$emit('edit', publication)"
       >
-        Arquivar
+        Gerenciar
+      </button>
+
+      <!-- Botão Excluir Definitivamente -->
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-xl bg-red-50 text-red-700 text-xs font-bold transition-colors cursor-pointer"
+        title="Excluir publicação e mídias"
+        @click="$emit('delete', publication)"
+      >
+        Excluir
       </button>
     </div>
   </div>

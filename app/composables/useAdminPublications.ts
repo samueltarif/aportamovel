@@ -124,6 +124,38 @@ export function useAdminPublications() {
     }
   }
 
+  const unpublishPublication = async (id: string) => {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await $fetch<ServicePublication>(`/api/admin/publications/${id}/unpublish`, {
+        method: 'PATCH',
+      })
+      return data
+    } catch (err: any) {
+      error.value = err?.statusMessage || 'Erro ao ocultar publicação.'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deletePublication = async (id: string) => {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await $fetch<{ success: boolean }>(`/api/admin/publications/${id}`, {
+        method: 'DELETE',
+      })
+      return data
+    } catch (err: any) {
+      error.value = err?.statusMessage || 'Erro ao excluir publicação.'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     publications,
     currentPublication,
@@ -134,6 +166,8 @@ export function useAdminPublications() {
     createPublication,
     updatePublication,
     publishPublication,
+    unpublishPublication,
     archivePublication,
+    deletePublication,
   }
 }

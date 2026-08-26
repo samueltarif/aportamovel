@@ -1,5 +1,5 @@
 import { getPrivateSupabaseClient } from '../../utils/supabasePrivate'
-import { getR2PublicUrl } from '../../utils/r2Client'
+import { getR2PublicUrl, deleteR2Object } from '../../utils/r2Client'
 import type { ServicePublication, AdminPublicationDetail } from '~/../shared/types/publications'
 
 export async function getAdminPublicationsList(params?: {
@@ -144,4 +144,57 @@ export async function archiveAdminPublication(userId: string, id: string, archiv
   if (error) throw createError({ statusCode: 500, statusMessage: 'Falha ao arquivar publicação.' })
 
   return data as unknown as ServicePublication
+}
+
+export async function unpublishAdminPublication(userId: string, id: string): Promise<ServicePublication> {
+  const supabase = getPrivateSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('service_publications')
+    .update({
+      status: 'draft',
+      updated_by: userId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw createError({ statusCode: 500, statusMessage: 'Falha ao ocultar publicação.' })
+
+  return data as unknown as ServicePublication
+}
+
+export async function deleteAdminPublication(userId: string, id: string): Promise<{ success: boolean }> {
+  const supabase = getPrivateSupabaseClient()
+
+  // 1. Buscar todas as mídias para remover os arquivos do R2
+  const { data: medias } = await supabase
+    .from('service_media')
+    .select('storage_key, thumbnail_storage_key')
+    .eq('publication_id', id)
+
+  // 2. Excluir a publicação (o banco faz cascade automático nas service_media)
+  const { error } = await supabase
+    .from('service_publications')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    throw createError({ statusCode: 500, statusMessage: error.message || 'Falha ao excluir publicação.' })
+  }
+
+  // 3. Deletar objetos do storage Cloudflare R2
+  if (medias && medias.length > 0) {
+    for (const m of medias) {
+      if (m.storage_key) {
+        deleteR2Object(m.storage_key).catch((err) => console.error('[DeletePub] Erro ao deletar storage_key do R2:', err))
+      }
+      if (m.thumbnail_storage_key) {
+        deleteR2Object(m.thumbnail_storage_key).catch((err) => console.error('[DeletePub] Erro ao deletar thumbnail do R2:', err))
+      }
+    }
+  }
+
+  return { success: true }
 }

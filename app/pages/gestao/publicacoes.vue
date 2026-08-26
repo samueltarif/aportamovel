@@ -30,7 +30,9 @@ const {
   createPublication,
   updatePublication,
   publishPublication,
+  unpublishPublication,
   archivePublication,
+  deletePublication,
 } = useAdminPublications()
 
 const { services, fetchServices } = useAdminServices()
@@ -39,6 +41,9 @@ const isSheetOpen = ref(false)
 const selectedPub = ref<any | null>(null)
 const isArchiveDialogOpen = ref(false)
 const pubToArchive = ref<ServicePublication | null>(null)
+
+const isDeleteDialogOpen = ref(false)
+const pubToDelete = ref<ServicePublication | null>(null)
 
 const toastMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -99,6 +104,16 @@ async function handlePublish(pub: ServicePublication) {
   }
 }
 
+async function handleUnpublish(pub: ServicePublication) {
+  try {
+    await unpublishPublication(pub.id)
+    await fetchPublications()
+    showToast('Publicação ocultada do site com sucesso!')
+  } catch (err: any) {
+    showToast(err?.message || 'Erro ao ocultar publicação.', 'error')
+  }
+}
+
 function openArchiveDialog(pub: ServicePublication) {
   pubToArchive.value = pub
   isArchiveDialogOpen.value = true
@@ -114,6 +129,24 @@ async function handleConfirmArchive() {
     showToast('Publicação arquivada com sucesso!')
   } catch (err: any) {
     showToast(err?.message || 'Erro ao arquivar publicação.', 'error')
+  }
+}
+
+function openDeleteDialog(pub: ServicePublication) {
+  pubToDelete.value = pub
+  isDeleteDialogOpen.value = true
+}
+
+async function handleConfirmDelete() {
+  if (!pubToDelete.value) return
+  try {
+    await deletePublication(pubToDelete.value.id)
+    isDeleteDialogOpen.value = false
+    pubToDelete.value = null
+    await fetchPublications()
+    showToast('Publicação excluída com sucesso!')
+  } catch (err: any) {
+    showToast(err?.message || 'Erro ao excluir publicação.', 'error')
   }
 }
 </script>
@@ -140,7 +173,7 @@ async function handleConfirmArchive() {
 
       <button
         type="button"
-        class="inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
+        class="inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer"
         @click="openNewSheet"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -159,6 +192,8 @@ async function handleConfirmArchive() {
           :is-admin="isAdmin"
           @edit="openEditSheet"
           @publish="handlePublish"
+          @unpublish="handleUnpublish"
+          @delete="openDeleteDialog"
           @archive="openArchiveDialog"
         />
       </div>
@@ -171,6 +206,8 @@ async function handleConfirmArchive() {
           :is-admin="isAdmin"
           @edit="openEditSheet"
           @publish="handlePublish"
+          @unpublish="handleUnpublish"
+          @delete="openDeleteDialog"
           @archive="openArchiveDialog"
         />
       </div>
@@ -185,12 +222,22 @@ async function handleConfirmArchive() {
       @refresh-detail="handleRefreshDetail"
     />
 
+    <!-- Diálogo de Confirmação para Arquivar -->
     <ConfirmArchiveDialog
       :show="isArchiveDialogOpen"
       title="Arquivar Publicação"
       :message="`Tem certeza que deseja arquivar a publicação '${pubToArchive?.title}'?`"
       @confirm="handleConfirmArchive"
       @cancel="isArchiveDialogOpen = false"
+    />
+
+    <!-- Diálogo de Confirmação para Excluir Definitivamente -->
+    <ConfirmArchiveDialog
+      :show="isDeleteDialogOpen"
+      title="Excluir Publicação Definitivamente"
+      :message="`Tem certeza que deseja excluir a publicação '${pubToDelete?.title}' e todas as suas mídias associadas? Esta ação não pode ser desfeita.`"
+      @confirm="handleConfirmDelete"
+      @cancel="isDeleteDialogOpen = false"
     />
   </div>
 </template>
