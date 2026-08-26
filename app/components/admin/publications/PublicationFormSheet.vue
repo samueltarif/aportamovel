@@ -81,11 +81,7 @@ const isDirty = computed(() => {
 })
 
 function requestClose() {
-  if (isDirty.value && !saveSuccess.value) {
-    showUnsavedDialog.value = true
-  } else {
-    emit('close')
-  }
+  showUnsavedDialog.value = true
 }
 
 function confirmLeaveWithoutSaving() {
@@ -304,22 +300,22 @@ async function handleDeleteMedia(mediaId: string) {
               </svg>
             </div>
             <div>
-              <h4 class="text-base font-bold text-slate-800">Alterações Não Salvas</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Você possui modificações não salvas na publicação.</p>
+              <h4 class="text-base font-bold text-slate-800">Confirmação de Saída</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Você está prestes a fechar a tela de edição.</p>
             </div>
           </div>
 
-          <p class="text-sm font-medium text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100">
-            Deseja sair sem salvar as alterações?
+          <p class="text-sm font-semibold text-slate-800 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            Deseja realmente sair ou continuar editando?
           </p>
 
           <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-1">
             <button
               type="button"
-              class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold transition-all min-h-[42px] cursor-pointer"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold transition-all min-h-[42px] cursor-pointer"
               @click="confirmLeaveWithoutSaving"
             >
-              Sair sem salvar
+              Sair
             </button>
             <button
               type="button"
