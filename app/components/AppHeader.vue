@@ -11,13 +11,17 @@
           alt="A Portamóvel Serralheria"
           class="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
         />
-        <div class="flex flex-col justify-center leading-none">
+        <div class="flex flex-col justify-center items-center leading-none">
           <span class="text-lg sm:text-2xl font-extrabold text-[#09357a] tracking-tight">
             A Portamóvel
           </span>
-          <span class="text-sm sm:text-base font-extrabold text-[#b91c1c] tracking-wider uppercase mt-1">
-            Serralheria
-          </span>
+          <div class="flex items-center justify-center space-x-1.5 mt-1 text-[#b91c1c]">
+            <span class="w-2.5 sm:w-3.5 h-[2px] bg-[#b91c1c] rounded-full inline-block" />
+            <span class="text-xs sm:text-sm font-extrabold tracking-widest uppercase">
+              Serralheria
+            </span>
+            <span class="w-2.5 sm:w-3.5 h-[2px] bg-[#b91c1c] rounded-full inline-block" />
+          </div>
         </div>
       </NuxtLink>
 
