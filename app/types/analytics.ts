@@ -5,6 +5,7 @@ export type CtaLocation =
   | 'home_hero'
   | 'service_card'
   | 'service_modal'
+  | 'maintenance_contract'
   | 'contact_page'
   | 'contact_form'
   | 'quote_modal'

@@ -20,10 +20,33 @@
           author="Edifício Comercial Prime Tower - Administração"
         />
       </div>
+
+      <!-- Subtle Final Callout for Monthly Maintenance -->
+      <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-blue-50/70 border border-blue-100 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+        <div class="space-y-1">
+          <h3 class="text-base sm:text-lg font-bold text-[#09357a]">
+            Seu condomínio precisa de acompanhamento recorrente?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Conheça nossos contratos de manutenção preventiva com vistorias mensais programadas.
+          </p>
+        </div>
+        <button
+          type="button"
+          class="shrink-0 px-5 py-3 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-[0.99] cursor-pointer"
+          @click="$emit('request-quote', 'Contrato de Manutenção Preventiva', 'contrato-manutencao-preventiva')"
+        >
+          Solicitar Proposta
+        </button>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import TestimonialCard from './TestimonialCard.vue'
+
+defineEmits<{
+  (e: 'request-quote', serviceName: string, serviceSlug: string): void
+}>()
 </script>
