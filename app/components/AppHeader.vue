@@ -15,7 +15,7 @@
           <span class="text-lg sm:text-2xl font-extrabold text-[#09357a] tracking-tight">
             A Portamóvel
           </span>
-          <span class="text-xs sm:text-sm font-bold text-[#b91c1c] tracking-wider uppercase mt-1">
+          <span class="text-sm sm:text-base font-extrabold text-[#b91c1c] tracking-wider uppercase mt-1">
             Serralheria
           </span>
         </div>

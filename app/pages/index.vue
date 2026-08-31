@@ -7,6 +7,7 @@
     <main>
       <HeroSection />
       <ServicesSection />
+      <SolutionsShowcaseSection />
       <TechComplementarySection />
       <InfrastructureSection />
       <TestimonialsSection />
@@ -28,6 +29,7 @@ import { ref } from 'vue'
 import AppHeader from '~/components/AppHeader.vue'
 import HeroSection from '~/components/HeroSection.vue'
 import ServicesSection from '~/components/ServicesSection.vue'
+import SolutionsShowcaseSection from '~/components/services/SolutionsShowcaseSection.vue'
 import TechComplementarySection from '~/components/TechComplementarySection.vue'
 import InfrastructureSection from '~/components/InfrastructureSection.vue'
 import TestimonialsSection from '~/components/TestimonialsSection.vue'

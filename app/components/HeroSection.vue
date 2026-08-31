@@ -32,12 +32,19 @@
           </div>
 
           <!-- Red Tactical Commitment Banner -->
-          <div class="bg-[#d97768] text-white rounded-xl p-4 sm:p-5 shadow-lg border border-red-300 flex items-start space-x-3 sm:space-x-4">
-            <div class="p-2 sm:p-2.5 bg-white/20 rounded-lg flex-shrink-0">
-              <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current text-white" viewBox="0 0 24 24">
-                <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-              </svg>
+          <div class="bg-[#d97768] text-white rounded-xl p-4 sm:p-5 shadow-lg border border-red-300 flex items-center space-x-3 sm:space-x-4">
+            <!-- Lottie Siren Animation -->
+            <div class="w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 flex items-center justify-center">
+              <ClientOnly>
+                <DotLottieVue
+                  style="width: 100%; height: 100%;"
+                  autoplay
+                  loop
+                  src="/animation/Siren animation.json"
+                />
+              </ClientOnly>
             </div>
+
             <div class="min-w-0">
               <h3 class="font-black text-xs sm:text-sm uppercase tracking-wider text-white">
                 COMPROMISSO TÁTICO
@@ -103,82 +110,9 @@
           </div>
         </div>
 
-        <!-- Right Image Column (Automatic 3-Second Service Carousel) -->
+        <!-- Right Image Column (Carrossel Dinâmico de Fotos dos Serviços) -->
         <div class="lg:col-span-6">
-          <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
-            <!-- Carousel Container -->
-            <div class="relative w-full h-64 sm:h-80 lg:h-[440px]">
-              <div
-                v-for="(slide, index) in slides"
-                :key="slide.image"
-                class="absolute inset-0 transition-opacity duration-700 ease-in-out"
-                :class="currentIndex === index ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'"
-              >
-                <img
-                  :src="slide.image"
-                  :alt="slide.alt"
-                  class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
-                  :loading="index === 0 ? 'eager' : 'lazy'"
-                />
-                
-                <!-- Bottom Dark Gradient Caption Overlay -->
-                <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 sm:p-6 text-white flex flex-col justify-end">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="inline-block px-2.5 py-0.5 rounded bg-[#b91c1c] text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-xs">
-                      {{ index === 0 ? 'Frota Própria' : `Serviço ${index} de ${slides.length - 1}` }}
-                    </span>
-                    <span class="text-[10px] font-bold text-gray-300">
-                      {{ index + 1 }} / {{ slides.length }}
-                    </span>
-                  </div>
-
-                  <h3 class="font-extrabold text-sm sm:text-base lg:text-lg text-white leading-tight uppercase tracking-tight">
-                    {{ slide.title }}
-                  </h3>
-
-                  <p v-if="slide.subtitle" class="text-xs sm:text-sm text-gray-200 mt-1 font-medium leading-snug">
-                    {{ slide.subtitle }}
-                  </p>
-
-                  <p v-if="index === 0" class="text-[11px] sm:text-xs text-gray-300 mt-1 leading-snug font-semibold">
-                    Tel: (11) 3991-0279 / 3991-0280 | WhatsApp: (11) 91298-4416
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Navigation Arrows -->
-            <button
-              @click="prevSlide"
-              class="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/40 hover:bg-black/75 text-white transition-all backdrop-blur-xs min-w-[36px] min-h-[36px] flex items-center justify-center opacity-80 hover:opacity-100"
-              aria-label="Foto anterior"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              @click="nextSlide"
-              class="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/40 hover:bg-black/75 text-white transition-all backdrop-blur-xs min-w-[36px] min-h-[36px] flex items-center justify-center opacity-80 hover:opacity-100"
-              aria-label="Próxima foto"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            <!-- Indicators (Dots) -->
-            <div class="absolute bottom-2.5 right-4 z-20 flex space-x-1.5">
-              <button
-                v-for="(_, idx) in slides"
-                :key="idx"
-                @click="goToSlide(idx)"
-                class="h-2 rounded-full transition-all duration-300"
-                :class="currentIndex === idx ? 'bg-[#b91c1c] w-5' : 'bg-white/60 hover:bg-white w-2'"
-                :aria-label="`Ir para slide ${idx + 1}`"
-              />
-            </div>
-          </div>
+          <HeroCarousel :slides="effectiveSlides" :loading="loading" />
         </div>
       </div>
     </div>
@@ -186,99 +120,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+import { usePublicHeroSlides } from '~/composables/usePublicHeroSlides'
+import HeroCarousel from '~/components/hero/HeroCarousel.vue'
 
-interface SlideItem {
-  title: string
-  subtitle?: string
-  image: string
-  alt: string
-}
-
-const slides: SlideItem[] = [
-  {
-    title: 'Frota Própria & Sede Operacional',
-    subtitle: 'Rua Manoel Ramos, 26 - Jd. Maristela - Freguesia do Ó - São Paulo - SP',
-    image: '/images/real_fleet.jpg',
-    alt: 'A Portamóvel Instalações e Veículos'
-  },
-  {
-    title: 'Manutenção de Portões de Garagem e Pedestres',
-    subtitle: 'Manutenção preventiva e corretiva em portões de todos os modelos',
-    image: '/images/services/manutencao-portoes.webp',
-    alt: 'Manutenção de portões de garagem'
-  },
-  {
-    title: 'Recuperação, Fabricação e Repintura de Gradis',
-    subtitle: 'Beleza, proteção e valorização do patrimônio do condomínio',
-    image: '/images/services/recuperacao-gradis.webp',
-    alt: 'Recuperação e repintura de gradis'
-  },
-  {
-    title: 'Troca de Cabo de Aço por Kit de Corrente',
-    subtitle: 'Mais segurança, menos ruídos e quebras no acionamento',
-    image: '/images/services/kit-corrente-portao.webp',
-    alt: 'Kit de corrente para portão'
-  },
-  {
-    title: 'Troca de Trilhos Inferior e Superior',
-    subtitle: 'Deslizamento suave e prevenção de desalinhamentos',
-    image: '/images/services/troca-trilhos.webp',
-    alt: 'Troca de trilhos para portão'
-  },
-  {
-    title: 'Serralheria em Geral',
-    subtitle: 'Reformas, ajustes e fabricações de estruturas metálicas',
-    image: '/images/services/serralheria-geral.webp',
-    alt: 'Serviço de serralheria em geral'
-  },
-  {
-    title: 'Portas Corta-Fogo & Estruturas Metálicas',
-    subtitle: 'Adequação de portas corta-fogo às normas de segurança',
-    image: '/images/services/portas-corta-fogo.webp',
-    alt: 'Portas corta-fogo para condomínios'
-  },
-  {
-    title: 'Troca de Roldanas Simples por Roldanas Duplas (Truck)',
-    subtitle: 'Maior estabilidade e durabilidade para portões pesados',
-    image: '/images/services/roldanas-duplas-truck.webp',
-    alt: 'Troca de roldanas simples por roldanas duplas'
-  }
-]
-
-const currentIndex = ref(0)
-let timer: ReturnType<typeof setInterval> | null = null
-
-const startTimer = () => {
-  stopTimer()
-  timer = setInterval(() => {
-    nextSlide()
-  }, 3000)
-}
-
-const stopTimer = () => {
-  if (timer) clearInterval(timer)
-}
-
-const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % slides.length
-}
-
-const prevSlide = () => {
-  currentIndex.value = (currentIndex.value - 1 + slides.length) % slides.length
-  startTimer()
-}
-
-const goToSlide = (index: number) => {
-  currentIndex.value = index
-  startTimer()
-}
+const { effectiveSlides, loading, fetchHeroSlides } = usePublicHeroSlides()
 
 onMounted(() => {
-  startTimer()
-})
-
-onUnmounted(() => {
-  stopTimer()
+  fetchHeroSlides()
 })
 </script>

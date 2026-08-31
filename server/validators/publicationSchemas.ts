@@ -78,7 +78,11 @@ export const mediaPresignSchema = z
 export const mediaFinalizeSchema = z
   .object({
     intent_id: z.string().uuid(),
-    alt_text: z.string().trim().min(3).max(200),
+    alt_text: z
+      .string()
+      .trim()
+      .transform((val) => (val && val.length >= 3 ? val.slice(0, 200) : 'Foto do serviço'))
+      .default('Foto do serviço'),
     caption: z.string().trim().max(500).optional(),
     media_stage: z.enum(['before', 'after', 'general']).default('general'),
     is_cover: z.boolean().default(false),

@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Wrench,
   Images,
+  GalleryHorizontal,
   Users,
   ShieldCheck,
   ChartNoAxesCombined,
@@ -44,6 +45,14 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     icon: Images,
     disabled: false,
     tooltip: 'Gestão de Publicações e Portfólio',
+  },
+  {
+    id: 'hero',
+    title: 'Carrossel da Home',
+    to: '/gestao/hero',
+    icon: GalleryHorizontal,
+    disabled: false,
+    tooltip: 'Configurar fotos do Hero principal',
   },
   {
     id: 'leads',

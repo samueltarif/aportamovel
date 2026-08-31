@@ -35,14 +35,18 @@ function onFileSelected(e: Event) {
 }
 
 async function handleUpload() {
-  if (!selectedFile.value || !altText.value) return
+  if (!selectedFile.value) return
   successMessage.value = null
+
+  const resolvedAltText = altText.value.trim().length >= 3
+    ? altText.value.trim()
+    : (selectedFile.value.name.replace(/\.[^/.]+$/, '').slice(0, 100) || 'Foto do serviço')
 
   try {
     const media = await uploadPublicationMedia({
       publicationId: props.publicationId,
       file: selectedFile.value,
-      altText: altText.value,
+      altText: resolvedAltText,
       caption: caption.value || undefined,
       mediaStage: mediaStage.value,
       isCover: isCover.value,
@@ -120,14 +124,15 @@ async function handleUpload() {
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-slate-600 mb-1">Texto Alternativo (Alt Text obrigatório)</label>
+        <label class="block text-xs font-bold text-slate-600 mb-1">Texto Alternativo (Alt Text)</label>
         <input
           v-model="altText"
           type="text"
-          required
-          placeholder="Ex: Foto do portão enferrujado antes da reforma"
+          maxlength="200"
+          placeholder="Ex: Foto do portão antes da manutenção preventiva"
           class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white"
         />
+        <p class="text-[10px] text-slate-400 mt-0.5">Descrição para acessibilidade e SEO (mínimo 3 caracteres; gerado automaticamente se vazio).</p>
       </div>
 
       <div>
@@ -156,7 +161,7 @@ async function handleUpload() {
 
       <button
         type="submit"
-        :disabled="uploading || !selectedFile || !altText"
+        :disabled="uploading || !selectedFile"
         class="w-full py-3 px-4 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 min-h-[44px] flex items-center justify-center space-x-2 active:scale-[0.99] shadow-sm cursor-pointer disabled:cursor-not-allowed"
       >
         <span v-if="uploading" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

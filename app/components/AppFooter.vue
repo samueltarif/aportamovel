@@ -16,7 +16,7 @@ const { trackWhatsAppClick } = useAnalytics()
               <span class="text-xl font-extrabold text-[#09357a]">
                 A Portamóvel
               </span>
-              <span class="text-xs font-bold text-[#b91c1c] tracking-wider uppercase mt-1">
+              <span class="text-sm font-extrabold text-[#b91c1c] tracking-wider uppercase mt-1">
                 Serralheria
               </span>
             </div>

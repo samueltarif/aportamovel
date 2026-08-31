@@ -32,7 +32,7 @@ function handleRequestQuote(service: PublicServiceItem) {
           Serviços de Manutenção &amp; Serralheria Condominial
         </h3>
         <p class="mt-2 text-sm sm:text-base text-slate-600 font-medium">
-          Soluções de alta resistência técnica para preservar a segurança e o valor estético do seu imóvel.
+          Soluções técnicas para preservar a segurança do seu condominio
         </p>
       </div>
 

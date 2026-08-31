@@ -4,21 +4,21 @@
       <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-12">
         <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider mb-3">
-          <span>Segurança Eletrônica & Automação</span>
+          <span>Segurança Eletrônica &amp; Automação</span>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-[#09357a] tracking-tight">
-          Sistemas Integrados Complementares
+          Sistemas Integrados de Segurança
         </h3>
         <p class="mt-2 text-sm sm:text-base text-gray-600 font-medium">
           Tecnologia e automação integradas à serralheria e à proteção física do condomínio.
         </p>
       </div>
 
-      <!-- Grid of 3 Digital Tech Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Grid of 4 Tech Feature Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Automação de Portões -->
         <TechFeatureCard
-          title="Automação & Motorização"
+          title="Automação &amp; Motorização"
           :items="[
             'Automatizadores ultra rápidos para portões',
             'Sistemas de no-break para queda de energia',
@@ -50,7 +50,7 @@
 
         <!-- Interfonia -->
         <TechFeatureCard
-          title="Interfonia Digital & Telefonia"
+          title="Interfonia Digital &amp; Telefonia"
           :items="[
             'Centrais telefônicas e interfonia digital',
             'Cabeamento estruturado de alta performance',
@@ -60,6 +60,22 @@
           <template #icon>
             <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </template>
+        </TechFeatureCard>
+
+        <!-- Smart Sampa -->
+        <TechFeatureCard
+          title="Smart Sampa"
+          :items="[
+            'Sistema integrado ao videomonitoramento da Prefeitura de SP',
+            'Conexão com a segurança pública da Polícia Militar',
+            'Auxílio na segurança e monitoramento das áreas externas do condomínio'
+          ]"
+        >
+          <template #icon>
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l5.59-5.59L18 8l-7 7z"/>
             </svg>
           </template>
         </TechFeatureCard>

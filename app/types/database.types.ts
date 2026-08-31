@@ -210,6 +210,50 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_slides: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          media_id: string
+          sort_order: number
+          title_override: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          media_id: string
+          sort_order?: number
+          title_override?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          media_id?: string
+          sort_order?: number
+          title_override?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hero_slides_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: true
+            referencedRelation: "service_media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_notes: {
         Row: {
           author_id: string
@@ -849,6 +893,28 @@ export type Database = {
           p_status: string
         }
         Returns: boolean
+      }
+      create_hero_slide_atomic: {
+        Args: {
+          p_media_id: string
+          p_user_id: string
+          p_title_override?: string | null
+        }
+        Returns: string
+      }
+      delete_hero_slide_atomic: {
+        Args: {
+          p_slide_id: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      reorder_hero_slides_atomic: {
+        Args: {
+          p_slide_ids: string[]
+          p_user_id: string
+        }
+        Returns: undefined
       }
       reorder_media_atomic: {
         Args: {
