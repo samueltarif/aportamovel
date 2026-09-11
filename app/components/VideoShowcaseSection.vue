@@ -67,10 +67,14 @@
           <!-- Vertical Video Player -->
           <div class="w-full max-w-sm mx-auto rounded-xl overflow-hidden bg-black shadow-xl border border-gray-200 flex items-center justify-center">
             <video
+              ref="antesVideoRef"
               src="/videos/antes.mp4"
+              autoplay
+              muted
+              loop
               controls
               playsinline
-              preload="metadata"
+              preload="auto"
               class="w-full max-h-[520px] object-contain"
               aria-label="Vídeo do portão oxidado antes da reforma técnica"
             ></video>
@@ -99,10 +103,14 @@
           <!-- Horizontal Video Player -->
           <div class="w-full max-w-3xl mx-auto rounded-xl overflow-hidden bg-black shadow-xl border border-emerald-100 flex items-center justify-center">
             <video
+              ref="resultadoVideoRef"
               src="/videos/resultado final.mp4"
+              autoplay
+              muted
+              loop
               controls
               playsinline
-              preload="metadata"
+              preload="auto"
               class="w-full aspect-video max-h-[520px] object-contain"
               aria-label="Vídeo do resultado final com a padronização técnica da A Portamóvel"
             ></video>
@@ -153,7 +161,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 
 const currentSlide = ref(0)
+const antesVideoRef = ref<HTMLVideoElement | null>(null)
+const resultadoVideoRef = ref<HTMLVideoElement | null>(null)
+
+function playActiveSlide() {
+  if (currentSlide.value === 0) {
+    if (antesVideoRef.value) {
+      antesVideoRef.value.muted = true
+      const p = antesVideoRef.value.play()
+      if (p !== undefined) p.catch(() => {})
+    }
+    if (resultadoVideoRef.value) {
+      resultadoVideoRef.value.pause()
+    }
+  } else {
+    if (resultadoVideoRef.value) {
+      resultadoVideoRef.value.muted = true
+      const p = resultadoVideoRef.value.play()
+      if (p !== undefined) p.catch(() => {})
+    }
+    if (antesVideoRef.value) {
+      antesVideoRef.value.pause()
+    }
+  }
+}
+
+onMounted(() => {
+  playActiveSlide()
+})
+
+watch(currentSlide, () => {
+  nextTick(() => {
+    playActiveSlide()
+  })
+})
 </script>

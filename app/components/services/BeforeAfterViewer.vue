@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import type { PublicMediaItem } from '~/../shared/types/publications'
 import MediaPreview from '~/components/media/MediaPreview.vue'
 
@@ -27,6 +27,33 @@ const displayedMedias = computed(() => {
 const activeMedia = computed(() => {
   return displayedMedias.value[activeIndex.value] || displayedMedias.value[0]
 })
+
+const mainVideoRef = ref<HTMLVideoElement | null>(null)
+
+function playActiveVideo() {
+  if (mainVideoRef.value && activeMedia.value?.media_type === 'video') {
+    mainVideoRef.value.muted = true
+    const p = mainVideoRef.value.play()
+    if (p !== undefined) {
+      p.catch(() => {
+        // Política de autoplay tratada pelo navegador
+      })
+    }
+  }
+}
+
+onMounted(() => {
+  playActiveVideo()
+})
+
+watch(
+  () => activeMedia.value?.id,
+  () => {
+    nextTick(() => {
+      playActiveVideo()
+    })
+  }
+)
 
 function switchTab(tab: 'before' | 'after' | 'all') {
   currentTab.value = tab
@@ -70,15 +97,19 @@ function switchTab(tab: 'before' | 'after' | 'all') {
     <!-- Mídia Ativa em Destaque (Apenas uma renderizada por vez) -->
     <div v-if="activeMedia" class="space-y-4">
       <div class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden bg-black shadow-xl border border-slate-200 flex items-center justify-center relative">
-        <!-- Vídeo -->
+        <!-- Vídeo com Autoplay e Loop -->
         <video
           v-if="activeMedia.media_type === 'video'"
+          ref="mainVideoRef"
           :key="activeMedia.id"
           :src="activeMedia.url"
           :poster="activeMedia.thumbnail_url"
+          autoplay
+          muted
+          loop
           controls
           playsinline
-          preload="none"
+          preload="auto"
           class="w-full max-h-[580px] object-contain"
           :aria-label="activeMedia.alt_text"
         />
@@ -120,7 +151,7 @@ function switchTab(tab: 'before' | 'after' | 'all') {
         <MediaPreview
           :src="media.thumbnail_url || media.url"
           :media-type="media.media_type"
-          :mime-type="media.mime_type"
+          :mime-type="media.thumbnail_url ? 'image/webp' : media.mime_type"
           :alt-text="media.alt_text"
           :poster-url="media.thumbnail_url"
           size="full"

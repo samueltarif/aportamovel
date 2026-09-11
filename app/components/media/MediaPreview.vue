@@ -47,14 +47,52 @@ const resolvedSrc = computed(() => {
   return s
 })
 
-// Determinar tipo de mídia com base em: 1) mediaType, 2) mimeType, 3) extensão
-const isVideo = computed(() => {
+// Verifica se a URL aponta para arquivo de imagem
+const isImageFile = computed(() => {
+  if (props.mimeType?.startsWith('image/')) return true
+  const clean = resolvedSrc.value.split('?')[0]?.toLowerCase() || ''
+  return (
+    clean.endsWith('.webp') ||
+    clean.endsWith('.jpg') ||
+    clean.endsWith('.jpeg') ||
+    clean.endsWith('.png') ||
+    clean.endsWith('.gif') ||
+    clean.endsWith('.svg') ||
+    clean.endsWith('.avif') ||
+    clean.endsWith('.jfif')
+  )
+})
+
+// Verifica se a URL aponta para arquivo de vídeo
+const isVideoFile = computed(() => {
+  if (isImageFile.value) return false
+  if (props.mimeType?.startsWith('video/')) return true
+  const clean = resolvedSrc.value.split('?')[0]?.toLowerCase() || ''
+  return (
+    clean.endsWith('.mp4') ||
+    clean.endsWith('.webm') ||
+    clean.endsWith('.mov') ||
+    clean.endsWith('.ogg') ||
+    clean.endsWith('.m4v')
+  )
+})
+
+// Renderiza elemento <video> apenas se o arquivo for efetivamente um vídeo executável
+const shouldRenderVideo = computed(() => {
+  if (isImageFile.value) return false
+  if (props.mimeType?.startsWith('image/')) return false
+  if (isVideoFile.value) return true
+  if (props.mediaType === 'image') return false
+  return props.mediaType === 'video'
+})
+
+// Representa semanticamente um vídeo (para badges e indicador de play)
+const representsVideo = computed(() => {
   if (props.mediaType === 'video') return true
   if (props.mediaType === 'image') return false
   if (props.mimeType?.startsWith('video/')) return true
   if (props.mimeType?.startsWith('image/')) return false
-  const clean = resolvedSrc.value.split('?')[0]!.toLowerCase()
-  return clean.endsWith('.mp4') || clean.endsWith('.webm') || clean.endsWith('.mov') || clean.endsWith('.ogg')
+  return isVideoFile.value
 })
 
 watch(
@@ -132,17 +170,17 @@ const roundedClasses = computed(() => {
   >
     <!-- Placeholder / Fallback quando URL vazia ou com erro -->
     <div v-if="!resolvedSrc || hasError" class="w-full h-full flex flex-col items-center justify-center text-slate-400 p-2 text-center select-none bg-slate-50">
-      <svg v-if="isVideo" class="w-5 h-5 opacity-60 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg v-if="representsVideo" class="w-5 h-5 opacity-60 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
       </svg>
       <svg v-else class="w-5 h-5 opacity-60 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
-      <span class="text-[10px] font-semibold text-slate-400 leading-tight">{{ isVideo ? 'Vídeo Indisponível' : 'Sem Imagem' }}</span>
+      <span class="text-[10px] font-semibold text-slate-400 leading-tight">{{ representsVideo ? 'Vídeo Indisponível' : 'Sem Imagem' }}</span>
     </div>
 
     <!-- Renderização de Vídeo -->
-    <template v-else-if="isVideo">
+    <template v-else-if="shouldRenderVideo">
       <video
         ref="videoRef"
         :src="resolvedSrc"
@@ -164,17 +202,26 @@ const roundedClasses = computed(() => {
       </div>
     </template>
 
-    <!-- Renderização de Imagem -->
-    <img
-      v-else
-      :src="resolvedSrc"
-      :alt="altText || 'Prévia da mídia'"
-      loading="lazy"
-      decoding="async"
-      class="w-full h-full object-cover"
-      @load="onImageLoad"
-      @error="onImageError"
-    />
+    <!-- Renderização de Imagem (ou Thumbnail de Vídeo) -->
+    <template v-else>
+      <img
+        :src="resolvedSrc"
+        :alt="altText || 'Prévia da mídia'"
+        loading="lazy"
+        decoding="async"
+        class="w-full h-full object-cover"
+        @load="onImageLoad"
+        @error="onImageError"
+      />
+      <!-- Se a mídia for um vídeo com imagem de thumbnail, exibe o indicador de Play sobre a miniatura -->
+      <div v-if="representsVideo" class="absolute inset-0 bg-black/25 flex items-center justify-center pointer-events-none transition-opacity group-hover:bg-black/15">
+        <div class="w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center shadow-sm backdrop-blur-xs">
+          <svg class="w-3.5 h-3.5 fill-current ml-0.5" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+      </div>
+    </template>
 
     <!-- Badges Opcionais -->
     <div v-if="showBadges" class="absolute top-1 left-1 right-1 flex items-center justify-between gap-1 pointer-events-none">
