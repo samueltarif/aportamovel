@@ -60,7 +60,7 @@ function handleWhatsAppClick() {
 
           <!-- Título Principal -->
           <div class="space-y-3">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase leading-tight">
+            <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase leading-tight">
               Contrato de Manutenção Mensal
             </h2>
             <p class="text-base sm:text-lg text-red-300 font-extrabold leading-snug">
@@ -123,7 +123,7 @@ function handleWhatsAppClick() {
             <!-- CTA Principal: Solicitar Proposta -->
             <button
               type="button"
-              class="inline-flex items-center justify-center space-x-2.5 px-6 py-4 rounded-xl bg-[#b91c1c] hover:bg-[#991b1b] text-white text-xs sm:text-sm font-black uppercase tracking-wider transition-all shadow-xl hover:shadow-red-900/40 active:scale-[0.99] cursor-pointer"
+              class="inline-flex items-center justify-center space-x-2 px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-[#b91c1c] hover:bg-[#991b1b] text-white text-xs sm:text-sm font-black uppercase tracking-wider transition-all shadow-xl hover:shadow-red-900/40 active:scale-[0.99] cursor-pointer min-h-[48px]"
               @click="handleQuoteClick"
             >
               <FileCheck class="w-4 h-4" />
@@ -134,7 +134,7 @@ function handleWhatsAppClick() {
             <!-- CTA Secundário: WhatsApp Comercial -->
             <button
               type="button"
-              class="inline-flex items-center justify-center space-x-2 px-5 py-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer"
+              class="inline-flex items-center justify-center space-x-2 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-bold tracking-wide transition-all cursor-pointer min-h-[48px]"
               @click="handleWhatsAppClick"
             >
               <MessageSquare class="w-4 h-4 text-emerald-400" />

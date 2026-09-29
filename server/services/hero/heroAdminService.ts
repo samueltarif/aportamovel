@@ -30,7 +30,7 @@ export async function getAdminHeroSlidesList(): Promise<AdminHeroSlideItem[]> {
     const media = row.service_media
     const pub = media?.service_publications
     const srv = pub?.services
-    const automaticTitle = srv?.name || ''
+    const automaticTitle = pub?.title || srv?.name || ''
     const override = row.title_override?.trim()
     const effectiveTitle = override && override.length >= 2 ? override : automaticTitle
 
@@ -40,7 +40,7 @@ export async function getAdminHeroSlidesList(): Promise<AdminHeroSlideItem[]> {
       sort_order: row.sort_order,
       is_active: row.is_active,
       title_override: row.title_override,
-      service_name: automaticTitle,
+      service_name: srv?.name || '',
       service_slug: srv?.slug || '',
       publication_title: pub?.title || '',
       publication_slug: pub?.slug || '',

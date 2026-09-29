@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
   const page = query.page ? parseInt(String(query.page), 10) : 1
   const limit = query.limit ? parseInt(String(query.limit), 10) : 6
 
-  return await getPublicPublicationsList({ serviceSlug, page, limit })
+  return await getPublicPublicationsList({ serviceSlug, page, limit, home: query.home === 'true' })
 })

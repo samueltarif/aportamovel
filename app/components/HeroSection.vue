@@ -17,7 +17,7 @@
           </div>
 
           <!-- Main Title -->
-          <h1 class="text-2xl sm:text-4xl lg:text-4xl font-extrabold text-[#09357a] leading-tight tracking-tight uppercase">
+          <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-[#09357a] leading-tight tracking-tight uppercase">
             MANUTENÇÃO • REFORMA • RECUPERAÇÃO • REPINTURA
           </h1>
 

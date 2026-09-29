@@ -18,6 +18,7 @@ export async function getPublicHeroSlidesList(): Promise<PublicHeroSlide[]> {
         alt_text,
         service_publications!inner (
           id,
+          title,
           status,
           services!inner (
             id,
@@ -45,7 +46,7 @@ export async function getPublicHeroSlidesList(): Promise<PublicHeroSlide[]> {
     const pub = media?.service_publications
     const srv = pub?.services
 
-    const automaticTitle = srv?.name || ''
+    const automaticTitle = pub?.title || srv?.name || ''
     const override = row.title_override?.trim()
     const effectiveTitle = override && override.length >= 2 ? override : automaticTitle
 

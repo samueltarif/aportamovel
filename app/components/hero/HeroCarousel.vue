@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { ChevronLeft, ChevronRight } from '@lucide/vue'
 import type { PublicHeroSlide } from '~/../shared/types/heroSlides'
 
@@ -42,7 +42,7 @@ function startAutoplay() {
     if (!isHovered.value && !isPausedByTab.value) {
       nextSlide()
     }
-  }, 5000)
+  }, 3500)
 }
 
 function stopAutoplay() {
@@ -114,6 +114,10 @@ onMounted(() => {
   }
   document.addEventListener('visibilitychange', handleVisibilityChange)
   startAutoplay()
+  watch(() => props.slides, () => {
+    currentIndex.value = 0
+    startAutoplay()
+  })
 })
 
 onUnmounted(() => {

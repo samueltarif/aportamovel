@@ -65,6 +65,7 @@ export interface PublicPublicationCard {
   summary: string
   published_at: string
   cover_url: string
+  cover_media_type?: MediaType
   cover_alt: string
   media_count: number
   has_video: boolean

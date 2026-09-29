@@ -31,12 +31,12 @@ function getWhatsappUrl(serviceTitle: string): string {
     class="bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1"
   >
     <!-- Imagem Superior com MediaPreview -->
-    <div class="relative w-full aspect-[16/9] overflow-hidden bg-gray-100">
+    <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
       <MediaPreview
         :src="service.card_image_url"
         media-type="image"
         :alt-text="service.card_image_alt || service.name"
-        aspect-ratio="video"
+        aspect-ratio="auto"
         rounded="none"
         class="group-hover:scale-105 transition-transform duration-500"
       />
@@ -97,7 +97,7 @@ function getWhatsappUrl(serviceTitle: string): string {
     v-else
     class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1"
   >
-    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
+    <div class="relative w-full aspect-[4/3] overflow-hidden bg-slate-100">
       <MediaPreview
         :src="service.card_image_url"
         media-type="image"
@@ -109,7 +109,7 @@ function getWhatsappUrl(serviceTitle: string): string {
       <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </div>
 
-    <div class="p-6 flex flex-col justify-between flex-1 space-y-4">
+    <div class="p-5 sm:p-6 flex flex-col justify-between flex-1 space-y-4">
       <div>
         <h4 class="text-base sm:text-lg font-black text-[#09357a] group-hover:text-red-700 transition-colors uppercase tracking-tight leading-snug">
           {{ service.name }}
@@ -125,7 +125,7 @@ function getWhatsappUrl(serviceTitle: string): string {
           :href="getWhatsappUrl(service.name)"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex-1 inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm min-h-[44px]"
+          class="flex-1 inline-flex items-center justify-center space-x-1.5 px-3 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wide transition-colors shadow-sm min-h-[44px] text-center"
         >
           <span>Solicitar Orçamento</span>
         </a>
@@ -133,7 +133,7 @@ function getWhatsappUrl(serviceTitle: string): string {
         <NuxtLink
           v-if="service.has_publications"
           :to="`/servicos?categoria=${service.slug}#trabalhos-realizados`"
-          class="inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-[#09357a] font-bold text-xs border border-slate-200 min-h-[44px]"
+          class="shrink-0 inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-[#09357a] font-bold text-xs border border-slate-200 min-h-[44px]"
         >
           <span>Trabalhos</span>
         </NuxtLink>

@@ -5,7 +5,7 @@ const { trackWhatsAppClick } = useAnalytics()
 </script>
 
 <template>
-  <footer id="contato" class="bg-blue-50/80 border-t border-blue-100 py-10 md:py-16 text-gray-700">
+  <footer id="contato" class="bg-blue-50/80 border-t border-blue-100 py-10 md:py-16 pb-24 sm:pb-16 text-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
         <!-- Col 1: Brand & Address -->

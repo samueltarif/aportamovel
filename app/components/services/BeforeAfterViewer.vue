@@ -64,13 +64,13 @@ function switchTab(tab: 'before' | 'after' | 'all') {
 <template>
   <div class="bg-white rounded-2xl p-5 sm:p-8 border border-blue-100 shadow-lg space-y-6">
     <!-- Abas Segmentadas Antes & Depois (se aplicável) -->
-    <div v-if="hasBeforeAfter" class="flex items-center justify-center gap-3">
+    <div v-if="hasBeforeAfter" class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3">
       <button
         type="button"
         :class="[
-          'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 border min-h-[44px]',
+          'w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center space-x-2 border min-h-[44px]',
           currentTab === 'before'
-            ? 'bg-amber-500 text-white border-amber-600 shadow-md scale-105'
+            ? 'bg-amber-500 text-white border-amber-600 shadow-md scale-102 sm:scale-105'
             : 'bg-white text-gray-700 border-gray-200 hover:bg-amber-50'
         ]"
         @click="switchTab('before')"
@@ -82,9 +82,9 @@ function switchTab(tab: 'before' | 'after' | 'all') {
       <button
         type="button"
         :class="[
-          'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 border min-h-[44px]',
+          'w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center space-x-2 border min-h-[44px]',
           currentTab === 'after'
-            ? 'bg-emerald-600 text-white border-emerald-700 shadow-md scale-105'
+            ? 'bg-emerald-600 text-white border-emerald-700 shadow-md scale-102 sm:scale-105'
             : 'bg-white text-gray-700 border-gray-200 hover:bg-emerald-50'
         ]"
         @click="switchTab('after')"

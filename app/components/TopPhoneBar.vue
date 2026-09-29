@@ -7,13 +7,13 @@ const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
 <template>
   <div class="bg-[#002d6b] text-white border-b border-blue-900/40">
     <!-- Mobile: WhatsApp primary + phones folded -->
-    <div class="sm:hidden px-4 py-2 flex items-center justify-between gap-2">
+    <div class="sm:hidden px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-between gap-1.5 sm:gap-2">
       <!-- WhatsApp CTA - primary on mobile -->
       <a
         href="https://wa.me/5511912984416?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento%20via%20WhatsApp."
         target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center space-x-1.5 text-emerald-400 font-bold text-xs min-h-[36px]"
+        class="flex items-center space-x-1.5 text-emerald-400 font-bold text-xs min-h-[36px] shrink-0"
         aria-label="WhatsApp: (11) 91298-4416"
         @click="trackWhatsAppClick({ cta_location: 'topbar', channel_type: 'commercial' })"
       >
@@ -22,11 +22,11 @@ const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
           </svg>
         </span>
-        <span>(11) 91298-4416</span>
+        <span class="tracking-tight sm:tracking-normal">(11) 91298-4416</span>
       </a>
 
       <!-- Fixed phones compact row -->
-      <div class="flex items-center gap-2 text-blue-200 text-[10px] font-semibold">
+      <div class="flex items-center gap-1.5 sm:gap-2 text-blue-200 text-[10px] sm:text-xs font-semibold">
         <a
           href="tel:1139910279"
           class="hover:text-white transition-colors min-h-[36px] flex items-center"

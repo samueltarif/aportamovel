@@ -7,6 +7,7 @@
     <main>
       <HeroSection />
       <ServicesSection />
+      <RecentWorksSection />
       <MonthlyMaintenanceSection @request-quote="openQuoteModal" />
       <SolutionsShowcaseSection />
       <TechComplementarySection />
@@ -37,6 +38,7 @@ import { ref } from 'vue'
 import AppHeader from '~/components/AppHeader.vue'
 import HeroSection from '~/components/HeroSection.vue'
 import ServicesSection from '~/components/ServicesSection.vue'
+import RecentWorksSection from '~/components/home/RecentWorksSection.vue'
 import MonthlyMaintenanceSection from '~/components/home/MonthlyMaintenanceSection.vue'
 import SolutionsShowcaseSection from '~/components/services/SolutionsShowcaseSection.vue'
 import TechComplementarySection from '~/components/TechComplementarySection.vue'

@@ -6,6 +6,7 @@ export async function getPublicPublicationsList(params: {
   serviceSlug?: string
   page?: number
   limit?: number
+  home?: boolean
 }): Promise<PaginatedPublicationsResponse> {
   const supabase = getPrivateSupabaseClient()
   const page = Math.max(1, params.page || 1)
@@ -50,8 +51,13 @@ export async function getPublicPublicationsList(params: {
     dbQuery = dbQuery.eq('services.slug', params.serviceSlug)
   }
 
+  if (params.home) {
+    dbQuery = dbQuery.order('display_order', { ascending: true })
+  }
+
   dbQuery = dbQuery
     .order('published_at', { ascending: false })
+    .order('id', { ascending: true })
     .range(offset, rangeTo)
 
   const { data, count, error } = await dbQuery
@@ -64,12 +70,13 @@ export async function getPublicPublicationsList(params: {
   const items: PublicPublicationCard[] = (data || []).map((row: any) => {
     const srv = row.services
     const medias = Array.isArray(row.service_media) ? row.service_media : []
-    const coverMedia = medias.find((m: any) => m.is_cover) || medias[0]
+    medias.sort((a: any, b: any) => a.sort_order - b.sort_order)
+    const coverMedia = (params.home ? medias.find((m: any) => m.is_cover) : undefined)
+      || medias.find((m: any) => m.media_type === 'video')
+      || medias.find((m: any) => m.is_cover) || medias[0]
 
     // Fallback dinâmico de capa/poster
-    const coverKey = coverMedia?.media_type === 'image'
-      ? coverMedia.storage_key
-      : (coverMedia?.thumbnail_storage_key || srv?.card_image_storage_key)
+    const coverKey = coverMedia?.storage_key || srv?.card_image_storage_key
 
     const hasVideo = medias.some((m: any) => m.media_type === 'video')
     const hasBeforeAfter = medias.some((m: any) => m.media_stage === 'before' || m.media_stage === 'after')
@@ -84,6 +91,7 @@ export async function getPublicPublicationsList(params: {
       summary: row.summary,
       published_at: row.published_at || '',
       cover_url: getR2PublicUrl(coverKey),
+      cover_media_type: coverMedia?.media_type || 'image',
       cover_alt: coverMedia?.alt_text || row.title,
       media_count: medias.length,
       has_video: hasVideo,

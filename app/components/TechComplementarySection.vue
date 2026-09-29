@@ -2,14 +2,15 @@
   <section class="py-16 bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider mb-3">
+      <div class="text-left sm:text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider mb-2.5">
           <span>Segurança Eletrônica &amp; Automação</span>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-[#09357a] tracking-tight">
           Sistemas Integrados de Segurança
         </h3>
-        <p class="mt-2 text-sm sm:text-base text-gray-600 font-medium">
+        <div class="w-16 h-1 bg-gradient-to-r from-[#09357a] to-[#b91c1c] rounded-full mx-0 sm:mx-auto mt-2.5 mb-3" />
+        <p class="text-sm sm:text-base text-gray-600 font-medium leading-relaxed">
           Tecnologia e automação integradas à serralheria e à proteção física do condomínio.
         </p>
       </div>

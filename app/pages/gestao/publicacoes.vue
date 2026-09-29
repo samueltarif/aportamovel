@@ -7,6 +7,7 @@ import type { ServicePublication } from '~/../shared/types/publications'
 import PublicationsTable from '~/components/admin/publications/PublicationsTable.vue'
 import PublicationMobileCard from '~/components/admin/publications/PublicationMobileCard.vue'
 import PublicationFormSheet from '~/components/admin/publications/PublicationFormSheet.vue'
+import HomeWorksOrder from '~/components/admin/publications/HomeWorksOrder.vue'
 import ConfirmArchiveDialog from '~/components/admin/common/ConfirmArchiveDialog.vue'
 
 definePageMeta({
@@ -62,6 +63,10 @@ function openNewSheet() {
   selectedPub.value = null
   currentPublication.value = null
   isSheetOpen.value = true
+}
+
+function handleHomeOrderSaved(updated: ServicePublication) {
+  publications.value = publications.value.map(p => p.id === updated.id ? { ...p, ...updated } : p)
 }
 
 async function openEditSheet(pub: ServicePublication) {
@@ -180,6 +185,8 @@ async function handleConfirmDelete() {
         <span>Nova Publicação</span>
       </button>
     </div>
+
+    <HomeWorksOrder :publications="publications" :services="services" :loading="loading" @edit="openEditSheet" @saved="handleHomeOrderSaved" />
 
     <div v-if="loading && publications.length === 0" class="py-16 text-center">
       <div class="inline-block w-8 h-8 border-4 border-[#09357a] border-t-transparent rounded-full animate-spin" />

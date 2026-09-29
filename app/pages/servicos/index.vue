@@ -43,16 +43,16 @@ const openQuoteModal = (service: PublicServiceItem) => {
     <AppHeader @open-emergency="isEmergencyOpen = true" />
 
     <!-- Seção de Serviços Principais (5 cards na grade de catálogo) -->
-    <section class="py-16 md:py-24 bg-white">
+    <section class="py-10 sm:py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-14">
+        <div class="text-left sm:text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <span class="inline-block bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 border border-blue-100">
             Nossas Especialidades
           </span>
-          <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#09357a] tracking-tight">
+          <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#09357a] tracking-tight">
             Serviços para Condomínios
           </h1>
-          <div class="w-16 h-1 bg-gradient-to-r from-[#09357a] to-[#b91c1c] rounded-full mx-auto mt-3 mb-4" />
+          <div class="w-16 h-1 bg-gradient-to-r from-[#09357a] to-[#b91c1c] rounded-full mx-0 sm:mx-auto mt-3 mb-4" />
           <p class="text-sm sm:text-base text-gray-600 font-medium leading-relaxed">
             Soluções completas com atendimento de emergência em até 6 horas, garantia técnica e tecnologia de ponta.
           </p>

@@ -51,11 +51,11 @@ function handleReset() {
 
       <div class="space-y-4 text-xs">
         <div>
-          <label class="block font-semibold text-slate-600 mb-1">Título Automático (do Serviço)</label>
+          <label class="block font-semibold text-slate-600 mb-1">Título Automático (do Trabalho)</label>
           <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-bold">
-            {{ slide.service_name || 'Sem serviço vinculado' }}
+            {{ slide.publication_title || 'Sem trabalho vinculado' }}
           </div>
-          <p class="text-[11px] text-slate-400 mt-1">Este é o nome padrão obtido automaticamente do catálogo de serviços.</p>
+          <p class="text-[11px] text-slate-400 mt-1">Este é o título obtido automaticamente do trabalho vinculado à foto.</p>
         </div>
 
         <div>

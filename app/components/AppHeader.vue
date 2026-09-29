@@ -154,7 +154,7 @@
   <Transition enter-active-class="transition-opacity duration-200" leave-active-class="transition-opacity duration-150">
     <div
       v-if="mobileMenuOpen"
-      class="md:hidden fixed inset-0 z-40 bg-black/20"
+      class="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-xs"
       @click="closeMobileMenu"
       aria-hidden="true"
     />

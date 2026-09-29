@@ -25,6 +25,8 @@ const summary = ref('')
 const description = ref('')
 const displayOrder = ref(0)
 const localMedias = ref<ServiceMedia[]>([])
+const mediaSaving = ref(false)
+const mediaError = ref('')
 
 // Estado inicial para detecção de alterações pendentes (dirty state)
 const initialServiceId = ref('')
@@ -61,6 +63,7 @@ watch(
       description.value = p?.description || ''
       displayOrder.value = p?.display_order || 0
       localMedias.value = p ? [...p.medias] : []
+      mediaError.value = ''
       saveSuccess.value = false
       showUnsavedDialog.value = false
       resetInitialState()
@@ -143,9 +146,7 @@ async function handleMoveUp(index: number) {
   const [current, prev] = [newArr[index]!, newArr[index - 1]!]
   newArr[index] = prev
   newArr[index - 1] = current
-  localMedias.value = newArr
-  await reorderPublicationMedia(props.publication.id, newArr.map((m) => m.id))
-  emit('refresh-detail', props.publication.id)
+  await saveMediaChange(() => reorderPublicationMedia(props.publication!.id, newArr.map((m) => m.id)), newArr)
 }
 
 async function handleMoveDown(index: number) {
@@ -154,15 +155,29 @@ async function handleMoveDown(index: number) {
   const [current, next] = [newArr[index]!, newArr[index + 1]!]
   newArr[index] = next
   newArr[index + 1] = current
-  localMedias.value = newArr
-  await reorderPublicationMedia(props.publication.id, newArr.map((m) => m.id))
-  emit('refresh-detail', props.publication.id)
+  await saveMediaChange(() => reorderPublicationMedia(props.publication!.id, newArr.map((m) => m.id)), newArr)
 }
 
 async function handleSetCover(mediaId: string) {
   if (!props.publication) return
-  await setPublicationCover(props.publication.id, mediaId)
-  emit('refresh-detail', props.publication.id)
+  await saveMediaChange(() => setPublicationCover(props.publication!.id, mediaId),
+    localMedias.value.map(m => ({ ...m, is_cover: m.id === mediaId })))
+}
+
+async function saveMediaChange(action: () => Promise<unknown>, medias: ServiceMedia[]) {
+  if (mediaSaving.value || !props.publication) return
+  const publicationId = props.publication.id
+  mediaSaving.value = true
+  mediaError.value = ''
+  try {
+    await action()
+    localMedias.value = medias
+    emit('refresh-detail', publicationId)
+  } catch (err: any) {
+    mediaError.value = err?.data?.statusMessage || 'Não foi possível salvar as mídias. Tente novamente.'
+  } finally {
+    mediaSaving.value = false
+  }
 }
 
 async function handleDeleteMedia(mediaId: string) {
@@ -258,7 +273,10 @@ async function handleDeleteMedia(mediaId: string) {
         <!-- Seção de Mídias (se já salva) -->
         <div v-if="publication" class="pt-6 border-t border-slate-200 space-y-6">
           <MediaUploader :publication-id="publication.id" :current-media-count="localMedias.length" @uploaded="emit('refresh-detail', publication.id)" />
-          <MediaReorderList :medias="localMedias" @move-up="handleMoveUp" @move-down="handleMoveDown" @set-cover="handleSetCover" @delete-media="handleDeleteMedia" />
+          <p v-if="mediaError" role="alert" class="text-sm text-red-700">{{ mediaError }}</p>
+          <fieldset :disabled="mediaSaving" :class="{ 'opacity-60': mediaSaving }">
+            <MediaReorderList :medias="localMedias" @move-up="handleMoveUp" @move-down="handleMoveDown" @set-cover="handleSetCover" @delete-media="handleDeleteMedia" />
+          </fieldset>
         </div>
       </div>
 

@@ -234,7 +234,7 @@ const roundedClasses = computed(() => {
         </span>
       </div>
       <span class="px-1.5 py-0.5 rounded-md bg-white/90 text-slate-700 text-[9px] font-extrabold uppercase shadow-xs">
-        {{ isVideo ? 'Vídeo' : 'Foto' }}
+        {{ representsVideo ? 'Vídeo' : 'Foto' }}
       </span>
     </div>
   </div>

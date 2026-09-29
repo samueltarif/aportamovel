@@ -17,6 +17,7 @@ defineEmits<{
 <template>
   <div class="space-y-3">
     <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Mídias Vinculadas</h4>
+    <p class="text-xs text-slate-500">A mídia marcada como Capa é a prévia deste trabalho na home, seja foto ou vídeo. As setas alteram a ordem das mídias na página do trabalho.</p>
 
     <div v-if="medias.length === 0" class="p-6 text-center bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-500">
       Nenhuma mídia cadastrada ainda. Adicione fotos ou vídeos acima.

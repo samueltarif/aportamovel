@@ -10,10 +10,10 @@ defineProps<{
 <template>
   <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
     <!-- Imagem de Capa / Poster com MediaPreview -->
-    <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+    <div class="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
       <MediaPreview
         :src="publication.cover_url"
-        :media-type="publication.cover_url?.includes('.mp4') || publication.cover_url?.includes('.webm') ? 'video' : 'image'"
+        :media-type="publication.cover_media_type"
         :alt-text="publication.cover_alt || publication.title"
         aspect-ratio="auto"
         rounded="none"

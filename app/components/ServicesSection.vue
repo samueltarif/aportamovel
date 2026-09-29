@@ -27,12 +27,16 @@ function handleRequestQuote(service: PublicServiceItem) {
   <section id="servicos" class="py-16 md:py-24 bg-slate-50 border-y border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section Title -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h3 class="text-2xl sm:text-3xl font-extrabold text-[#09357a]">
+      <div class="text-left sm:text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-100/70 text-[#09357a] text-xs font-bold uppercase tracking-wider mb-2.5">
+          <span>Especialidades Condominiais</span>
+        </div>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-[#09357a] tracking-tight">
           Serviços de Manutenção &amp; Serralheria Condominial
         </h3>
-        <p class="mt-2 text-sm sm:text-base text-slate-600 font-medium">
-          Soluções técnicas para preservar a segurança do seu condominio
+        <div class="w-16 h-1 bg-[#b91c1c] rounded-full mx-0 sm:mx-auto mt-2.5 mb-3" />
+        <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+          Soluções técnicas para preservar a segurança do seu condomínio.
         </p>
       </div>
 

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import type { PaginatedPublicationsResponse, PublicPublicationCard } from '~/../shared/types/publications'
 
-export function usePublicPublications() {
+export function usePublicPublications(options: { home?: boolean } = {}) {
   const publications = ref<PublicPublicationCard[]>([])
   const loading = ref(false)
   const loadingMore = ref(false)
@@ -28,6 +28,7 @@ export function usePublicPublications() {
           service_slug: serviceSlug !== 'all' ? serviceSlug : undefined,
           page: page.value,
           limit: 6,
+          home: options.home ? 'true' : undefined,
         },
       })
 

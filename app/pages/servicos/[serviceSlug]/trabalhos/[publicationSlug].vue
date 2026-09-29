@@ -51,10 +51,10 @@ onMounted(async () => {
     <AppHeader @open-emergency="isEmergencyOpen = true" />
 
     <!-- Conteúdo Principal -->
-    <main class="py-12 md:py-20">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <main class="py-8 sm:py-12 md:py-20 pb-24 sm:pb-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         <!-- Breadcrumb de Navegação -->
-        <nav class="flex items-center space-x-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <nav class="flex items-center space-x-1.5 sm:space-x-2 text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider flex-wrap gap-y-1">
           <NuxtLink to="/" class="hover:text-[#09357a]">Início</NuxtLink>
           <span>/</span>
           <NuxtLink to="/servicos" class="hover:text-[#09357a]">Serviços</NuxtLink>
@@ -70,22 +70,22 @@ onMounted(async () => {
         </div>
 
         <!-- Estado de Erro / Não Encontrado -->
-        <div v-else-if="error || !publication" class="py-16 text-center bg-white rounded-3xl p-8 border border-slate-200 shadow-sm max-w-lg mx-auto">
+        <div v-else-if="error || !publication" class="py-16 text-center bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm max-w-lg mx-auto">
           <h2 class="text-xl font-bold text-slate-800">Trabalho não encontrado</h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-2">{{ error }}</p>
-          <NuxtLink to="/servicos" class="inline-block mt-6 px-6 py-2.5 rounded-xl bg-[#09357a] text-white text-xs font-bold uppercase">
+          <NuxtLink to="/servicos" class="inline-block mt-6 px-6 py-2.5 rounded-xl bg-[#09357a] text-white text-xs font-bold uppercase min-h-[44px]">
             Voltar aos Serviços
           </NuxtLink>
         </div>
 
         <!-- Detalhes do Trabalho -->
-        <article v-else class="space-y-8">
+        <article v-else class="space-y-6 sm:space-y-8">
           <!-- Cabeçalho -->
-          <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xs space-y-4">
-            <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-[#09357a] text-xs font-bold uppercase border border-blue-100">
+          <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 border border-slate-200/80 shadow-xs space-y-3 sm:space-y-4">
+            <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-[#09357a] text-[11px] sm:text-xs font-bold uppercase border border-blue-100">
               {{ publication.service_name }}
             </span>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#09357a] tracking-tight leading-snug">
+            <h1 class="text-xl sm:text-3xl md:text-4xl font-extrabold text-[#09357a] tracking-tight leading-snug">
               {{ publication.title }}
             </h1>
             <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">

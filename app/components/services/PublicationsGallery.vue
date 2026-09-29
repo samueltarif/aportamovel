@@ -58,32 +58,32 @@ watch(
 </script>
 
 <template>
-  <section id="trabalhos-realizados" class="py-16 md:py-24 bg-slate-50 border-t border-slate-200/80">
+  <section id="trabalhos-realizados" class="py-12 sm:py-16 md:py-24 bg-slate-50 border-t border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Cabeçalho da Seção -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
-        <span class="inline-block bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 border border-blue-100">
+      <div class="text-left sm:text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <span class="inline-block bg-blue-50 text-[#09357a] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2.5 border border-blue-100">
           Portfólio &amp; Casos Reais
         </span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-[#09357a] tracking-tight">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#09357a] tracking-tight">
           Trabalhos Realizados
         </h2>
-        <div class="w-16 h-1 bg-gradient-to-r from-[#09357a] to-[#b91c1c] rounded-full mx-auto mt-3 mb-4" />
+        <div class="w-16 h-1 bg-gradient-to-r from-[#09357a] to-[#b91c1c] rounded-full mx-0 sm:mx-auto mt-2.5 mb-3" />
         <p class="text-sm sm:text-base text-gray-600 font-medium leading-relaxed">
           Veja exemplos reais de manutenções, reformas estruturais e soluções executadas pela equipe A Portamóvel.
         </p>
       </div>
 
       <!-- Barra de Filtros por Categoria -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar justify-start sm:justify-center">
+      <div class="-mx-4 px-4 sm:mx-0 sm:px-0 flex items-center gap-2 overflow-x-auto pb-4 mb-8 sm:mb-10 no-scrollbar justify-start sm:justify-center scroll-smooth snap-x">
         <button
           v-for="filter in availableFilters"
           :key="filter.slug"
           type="button"
           :class="[
-            'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center space-x-1.5 border min-h-[44px]',
+            'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center space-x-1.5 border min-h-[44px] shrink-0 snap-start',
             currentServiceSlug === filter.slug
-              ? 'bg-[#09357a] text-white border-[#09357a] shadow-md scale-105'
+              ? 'bg-[#09357a] text-white border-[#09357a] shadow-md scale-102'
               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           ]"
           @click="selectCategory(filter.slug)"
