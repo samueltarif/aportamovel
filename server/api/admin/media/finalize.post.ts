@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
   const media = await finalizePublicationMedia({
     userId: user.id,
     intentId: validated.intent_id,
+    replaceMediaId: validated.replace_media_id,
     altText: validated.alt_text,
     caption: validated.caption,
     mediaStage: validated.media_stage,

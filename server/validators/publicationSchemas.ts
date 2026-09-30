@@ -78,6 +78,7 @@ export const mediaPresignSchema = z
 export const mediaFinalizeSchema = z
   .object({
     intent_id: z.string().uuid(),
+    replace_media_id: z.string().uuid().optional(),
     alt_text: z
       .string()
       .trim()
@@ -98,6 +99,12 @@ export const mediaReorderSchema = z
     media_ids: z.array(z.string().uuid()).min(1).max(6),
   })
   .strict()
+
+export const mediaUpdateSchema = z.object({
+  alt_text: z.string().trim().min(3).max(200),
+  caption: z.string().trim().max(500),
+  media_stage: z.enum(['before', 'after', 'general']),
+}).strict()
 
 export const mediaCoverSchema = z
   .object({

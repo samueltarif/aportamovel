@@ -126,12 +126,9 @@ function switchTab(tab: 'before' | 'after' | 'all') {
       </div>
 
       <!-- Legenda e Descrição da Etapa -->
-      <div class="max-w-4xl mx-auto text-center space-y-1">
+      <div v-if="activeMedia.caption" class="max-w-4xl mx-auto text-center space-y-1">
         <p v-if="activeMedia.caption" class="text-sm font-semibold text-slate-800">
           {{ activeMedia.caption }}
-        </p>
-        <p class="text-xs text-slate-500">
-          {{ activeMedia.alt_text }}
         </p>
       </div>
     </div>

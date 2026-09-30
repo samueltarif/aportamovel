@@ -40,6 +40,7 @@ export async function presignPublicationMedia(params: {
 export async function finalizePublicationMedia(params: {
   userId: string
   intentId: string
+  replaceMediaId?: string
   altText: string
   caption?: string
   mediaStage?: 'before' | 'after' | 'general'
@@ -53,9 +54,20 @@ export async function finalizePublicationMedia(params: {
   if (intentErr || !intentData) throw createError({ statusCode: 404, statusMessage: 'Intenção de upload não encontrada.' })
   const intent = intentData as any
 
+  if (intent.target_type !== 'publication_media') {
+    throw createError({ statusCode: 400, statusMessage: 'Tipo de intenção incompatível.' })
+  }
+
   if (intent.status === 'completed') {
     const { data: existingMedia } = await supabase.from('service_media').select('*').eq('storage_key', intent.storage_key).single()
-    if (existingMedia) return { ...(existingMedia as any), url: getR2PublicUrl(existingMedia.storage_key) }
+    if (existingMedia && (!params.replaceMediaId || existingMedia.id === params.replaceMediaId)) {
+      return { ...(existingMedia as any), url: getR2PublicUrl(existingMedia.storage_key) }
+    }
+    throw createError({ statusCode: 400, statusMessage: 'Este upload já foi utilizado.' })
+  }
+
+  if (intent.status !== 'pending' || Date.parse(intent.expires_at) <= Date.now()) {
+    throw createError({ statusCode: 400, statusMessage: 'Intenção de upload expirada ou inválida.' })
   }
 
   const head = await checkR2ObjectHead(intent.storage_key).catch(() => null)
@@ -72,7 +84,7 @@ export async function finalizePublicationMedia(params: {
     throw createError({ statusCode: 400, statusMessage: 'Assinatura binária do arquivo inválida ou adulterada.' })
   }
 
-  const { data: media, error: rpcErr } = await supabase.rpc('finalize_media_upload_atomic' as any, {
+  const rpcParams = {
     p_intent_id: intent.id,
     p_user_id: params.userId,
     p_alt_text: params.altText,
@@ -83,7 +95,12 @@ export async function finalizePublicationMedia(params: {
     p_height: params.height || null,
     p_duration_seconds: params.durationSeconds || null,
     p_actual_size_bytes: actualSizeBytes,
-  } as any)
+  }
+  const { data: media, error: rpcErr } = params.replaceMediaId
+    ? await supabase.rpc('replace_media_upload_atomic' as any, {
+        ...rpcParams, p_media_id: params.replaceMediaId,
+      } as any)
+    : await supabase.rpc('finalize_media_upload_atomic' as any, rpcParams as any)
 
   if (rpcErr || !media) {
     const inUse = await supabase.rpc('is_storage_key_in_use' as any, { p_key: intent.storage_key } as any)

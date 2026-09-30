@@ -11,6 +11,7 @@ defineEmits<{
   (e: 'move-down', index: number): void
   (e: 'set-cover', mediaId: string): void
   (e: 'delete-media', mediaId: string): void
+  (e: 'edit-media', media: ServiceMedia): void
 }>()
 </script>
 
@@ -27,7 +28,7 @@ defineEmits<{
       <div
         v-for="(media, index) in medias"
         :key="media.id"
-        class="bg-white p-3 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 shadow-2xs"
+        class="bg-white p-3 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-2xs"
       >
         <div class="flex items-center space-x-3 min-w-0">
           <MediaPreview
@@ -57,6 +58,7 @@ defineEmits<{
         </div>
 
         <div class="flex items-center space-x-1.5 flex-shrink-0">
+          <button type="button" class="px-2.5 py-2 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold hover:bg-blue-100" @click="$emit('edit-media', media)">Editar</button>
           <!-- Reordenar para cima -->
           <button
             type="button"

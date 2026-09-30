@@ -40,7 +40,7 @@ async function handleUpload() {
 
   const resolvedAltText = altText.value.trim().length >= 3
     ? altText.value.trim()
-    : (selectedFile.value.name.replace(/\.[^/.]+$/, '').slice(0, 100) || 'Foto do serviço')
+    : (selectedFile.value.type.startsWith('video/') ? 'Vídeo do serviço' : 'Foto do serviço')
 
   try {
     const media = await uploadPublicationMedia({

@@ -5,6 +5,7 @@ import type { Service } from '~/../shared/types/services'
 import { useMediaUpload } from '~/composables/useMediaUpload'
 import MediaUploader from './MediaUploader.vue'
 import MediaReorderList from './MediaReorderList.vue'
+import MediaEditor from './MediaEditor.vue'
 
 const props = defineProps<{
   show: boolean
@@ -27,6 +28,15 @@ const displayOrder = ref(0)
 const localMedias = ref<ServiceMedia[]>([])
 const mediaSaving = ref(false)
 const mediaError = ref('')
+const editingMedia = ref<ServiceMedia | null>(null)
+const editorBusy = ref(false)
+const mediaSuccess = ref('')
+
+function handleMediaEdited(media: ServiceMedia) {
+  localMedias.value = localMedias.value.map(item => item.id === media.id ? media : item)
+  editingMedia.value = null
+  mediaSuccess.value = 'Mídia atualizada com sucesso!'
+}
 
 // Estado inicial para detecção de alterações pendentes (dirty state)
 const initialServiceId = ref('')
@@ -64,6 +74,8 @@ watch(
       displayOrder.value = p?.display_order || 0
       localMedias.value = p ? [...p.medias] : []
       mediaError.value = ''
+      editingMedia.value = null
+      mediaSuccess.value = ''
       saveSuccess.value = false
       showUnsavedDialog.value = false
       resetInitialState()
@@ -84,6 +96,7 @@ const isDirty = computed(() => {
 })
 
 function requestClose() {
+  if (editorBusy.value) return
   showUnsavedDialog.value = true
 }
 
@@ -117,7 +130,7 @@ function autoSlug() {
 }
 
 async function handleSaveInfo() {
-  if (isSaving.value) return
+  if (isSaving.value || editingMedia.value) return
   isSaving.value = true
   saveSuccess.value = false
 
@@ -261,7 +274,7 @@ async function handleDeleteMedia(mediaId: string) {
           </div>
           <button
             type="button"
-            :disabled="isSaving"
+            :disabled="isSaving || !!editingMedia"
             class="w-full py-3 px-4 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all min-h-[44px] flex items-center justify-center space-x-2 active:scale-[0.99] shadow-sm cursor-pointer disabled:opacity-50"
             @click="handleSaveInfo"
           >
@@ -272,11 +285,15 @@ async function handleDeleteMedia(mediaId: string) {
 
         <!-- Seção de Mídias (se já salva) -->
         <div v-if="publication" class="pt-6 border-t border-slate-200 space-y-6">
-          <MediaUploader :publication-id="publication.id" :current-media-count="localMedias.length" @uploaded="emit('refresh-detail', publication.id)" />
-          <p v-if="mediaError" role="alert" class="text-sm text-red-700">{{ mediaError }}</p>
-          <fieldset :disabled="mediaSaving" :class="{ 'opacity-60': mediaSaving }">
-            <MediaReorderList :medias="localMedias" @move-up="handleMoveUp" @move-down="handleMoveDown" @set-cover="handleSetCover" @delete-media="handleDeleteMedia" />
+          <fieldset :disabled="!!editingMedia">
+            <MediaUploader :publication-id="publication.id" :current-media-count="localMedias.length" @uploaded="emit('refresh-detail', publication.id)" />
           </fieldset>
+          <p v-if="mediaError" role="alert" class="text-sm text-red-700">{{ mediaError }}</p>
+          <p v-if="mediaSuccess" role="status" class="text-sm text-emerald-700">{{ mediaSuccess }}</p>
+          <fieldset :disabled="mediaSaving || !!editingMedia" :class="{ 'opacity-60': mediaSaving }">
+            <MediaReorderList :medias="localMedias" @edit-media="editingMedia = $event; mediaSuccess = ''" @move-up="handleMoveUp" @move-down="handleMoveDown" @set-cover="handleSetCover" @delete-media="handleDeleteMedia" />
+          </fieldset>
+          <MediaEditor v-if="editingMedia" :key="editingMedia.id" :media="editingMedia" @busy="editorBusy = $event" @saved="handleMediaEdited" @cancel="editingMedia = null" />
         </div>
       </div>
 
@@ -295,7 +312,7 @@ async function handleDeleteMedia(mediaId: string) {
 
         <button
           type="button"
-          :disabled="isSaving"
+          :disabled="isSaving || !!editingMedia"
           class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-xl bg-[#09357a] hover:bg-[#07285c] text-white text-xs font-bold uppercase tracking-wider transition-all min-h-[44px] shadow-md cursor-pointer active:scale-95 disabled:opacity-50"
           @click="handleSaveInfo"
         >
@@ -348,4 +365,3 @@ async function handleDeleteMedia(mediaId: string) {
     </div>
   </div>
 </template>
-

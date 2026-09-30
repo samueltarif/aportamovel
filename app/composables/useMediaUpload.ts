@@ -81,6 +81,7 @@ export function useMediaUpload() {
 
   const uploadPublicationMedia = async (params: {
     publicationId: string
+    replaceMediaId?: string
     file: File
     altText: string
     caption?: string
@@ -127,6 +128,7 @@ export function useMediaUpload() {
         body: {
           intent_id: presignRes.intent_id,
           alt_text: params.altText,
+          replace_media_id: params.replaceMediaId,
           caption: params.caption,
           media_stage: params.mediaStage || 'general',
           is_cover: params.isCover || false,
