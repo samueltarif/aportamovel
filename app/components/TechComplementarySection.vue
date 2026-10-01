@@ -15,8 +15,27 @@
         </p>
       </div>
 
-      <!-- Grid of 4 Tech Feature Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Smart Sampa em destaque -->
+      <div class="mb-6">
+        <!-- Smart Sampa -->
+        <TechFeatureCard
+          title="Smart Sampa" featured
+          :items="[
+            'Sistema integrado ao videomonitoramento da Prefeitura de SP',
+            'Conexão com a segurança pública da Polícia Militar',
+            'Auxílio na segurança e monitoramento das áreas externas do condomínio'
+          ]"
+        >
+          <template #icon>
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l5.59-5.59L18 8l-7 7z"/>
+            </svg>
+          </template>
+        </TechFeatureCard>
+      </div>
+
+      <!-- Demais sistemas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Automação de Portões -->
         <TechFeatureCard
           title="Automação &amp; Motorização"
@@ -65,21 +84,7 @@
           </template>
         </TechFeatureCard>
 
-        <!-- Smart Sampa -->
-        <TechFeatureCard
-          title="Smart Sampa"
-          :items="[
-            'Sistema integrado ao videomonitoramento da Prefeitura de SP',
-            'Conexão com a segurança pública da Polícia Militar',
-            'Auxílio na segurança e monitoramento das áreas externas do condomínio'
-          ]"
-        >
-          <template #icon>
-            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l5.59-5.59L18 8l-7 7z"/>
-            </svg>
-          </template>
-        </TechFeatureCard>
+
       </div>
     </div>
   </section>

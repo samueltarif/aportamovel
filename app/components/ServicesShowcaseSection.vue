@@ -110,7 +110,7 @@ const services: ServiceItem[] = [
     slug: 'serralheria-geral',
   },
   {
-    title: 'RECUPERAÇÃO E REPINTURA DE GRADIS',
+    title: 'FABRICAÇÃO, RECUPERAÇÃO E REPINTURA DE GRADIS',
     description: 'Mais beleza, proteção e valorização',
     image: '/images/services/recuperacao-gradis.webp',
     alt: 'Gradil metálico de condomínio recuperado e repintado',

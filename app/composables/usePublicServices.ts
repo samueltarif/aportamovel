@@ -20,7 +20,7 @@ const STATIC_FALLBACK_SERVICES: PublicServiceItem[] = [
   },
   {
     id: '2',
-    name: 'Recuperação, Fabricação e Repintura de Gradis',
+    name: 'Fabricação, Recuperação e Repintura de Gradis',
     slug: 'recuperacao-gradis',
     short_description: 'Mais beleza, proteção e valorização',
     description: 'Recuperamos e fabricamos gradis danificados por ferrugem, impactos ou desgaste do tempo, com repintura profissional que devolve a beleza, proteção e durabilidade.',

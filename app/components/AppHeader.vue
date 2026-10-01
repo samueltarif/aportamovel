@@ -70,6 +70,7 @@
             <span class="text-[10px] sm:text-[11px] font-medium normal-case text-red-100 tracking-normal leading-tight mt-0.5">
               Portão de garagem e Pedestre
             </span>
+            <span class="text-[10px] sm:text-[11px] font-semibold text-white leading-tight mt-0.5">Atendimento em até 6 horas</span>
           </div>
         </button>
 
@@ -142,6 +143,7 @@
               <div class="flex flex-col items-center justify-center text-center">
                 <span class="text-sm font-bold uppercase tracking-wider leading-tight">Atendimento Emergencial</span>
                 <span class="text-xs font-medium normal-case text-red-100 tracking-normal leading-tight mt-0.5">Portão de garagem e Pedestre</span>
+                <span class="text-xs font-semibold text-white leading-tight mt-0.5">Atendimento em até 6 horas</span>
               </div>
             </button>
           </div>

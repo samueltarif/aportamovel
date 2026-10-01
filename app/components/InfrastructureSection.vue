@@ -9,7 +9,7 @@
               <span>ESTRUTURA &amp; AGILIDADE</span>
             </div>
             <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white mb-4">
-              Frota Própria &amp; Sede Operacional
+              Sede Operacional &amp; Frota Própria
             </h2>
             <p class="text-sm sm:text-base text-blue-100/90 leading-relaxed font-normal">
               Nossa capacidade de resposta é garantida por investimentos contínuos em infraestrutura própria de serralheria e veículos de apoio, sem terceirizações que comprometam a qualidade e o prazo do seu condomínio.
@@ -58,7 +58,7 @@
           <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 group">
             <img
               src="/images/real_fleet.jpg"
-              alt="A Portamóvel Instalações, Frota Própria e Sede Operacional"
+              alt="A Portamóvel Instalações, Sede Operacional e Frota Própria"
               loading="lazy"
               class="w-full h-72 sm:h-96 object-cover object-center group-hover:scale-103 transition-transform duration-700"
             />

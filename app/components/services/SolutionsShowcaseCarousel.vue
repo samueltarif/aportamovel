@@ -27,7 +27,7 @@ const slides: ShowcaseSlide[] = [
   },
   {
     id: 'recuperacao-gradis',
-    title: 'Recuperação, Fabricação e Repintura de Gradis',
+    title: 'Fabricação, Recuperação e Repintura de Gradis',
     subtitle: 'Beleza, proteção e valorização do patrimônio do condomínio com tratamento antiferrugem especializado, soldas reforçadas e pintura industrial de alta resistência ao tempo.',
     image: '/images/services/recuperacao-gradis.webp',
     alt: 'Recuperação e repintura de gradis',
