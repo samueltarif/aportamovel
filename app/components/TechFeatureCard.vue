@@ -1,6 +1,8 @@
 <template>
-  <div class="rounded-2xl border transition-all duration-300 flex flex-col justify-between" :class="featured ? 'bg-[#09357a] p-6 sm:p-8 border-blue-800 shadow-lg' : 'bg-blue-50/70 hover:bg-blue-50 p-6 border-blue-100/80 shadow-sm hover:shadow-md'">
-    <div>
+  <div class="relative overflow-hidden rounded-2xl border transition-all duration-300 flex flex-col justify-between" :class="featured ? 'bg-[#09357a] p-6 sm:p-8 border-blue-800 shadow-lg' : 'bg-blue-50/70 hover:bg-blue-50 p-6 border-blue-100/80 shadow-sm hover:shadow-md'">
+    <img v-if="backgroundImage" :src="backgroundImage" alt="" aria-hidden="true" loading="lazy" class="absolute inset-0 w-full h-full object-cover object-center" />
+    <div v-if="backgroundImage" aria-hidden="true" class="absolute inset-0 bg-gradient-to-r from-[#031337]/90 via-[#031337]/75 to-[#031337]/70" />
+    <div class="relative z-10">
       <!-- Icon Badge -->
       <div class="rounded-xl flex items-center justify-center mb-6 shadow-md" :class="featured ? 'w-16 h-16 bg-white/15 text-white' : 'w-12 h-12 bg-[#09357a] text-white'">
         <slot name="icon">
@@ -38,5 +40,6 @@ defineProps<{
   title: string
   items: string[]
   featured?: boolean
+  backgroundImage?: string
 }>()
 </script>

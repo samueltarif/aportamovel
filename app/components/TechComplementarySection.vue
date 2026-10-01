@@ -20,6 +20,7 @@
         <!-- Smart Sampa -->
         <TechFeatureCard
           title="Smart Sampa" featured
+          background-image="/images/smart-sampa-background.png"
           :items="[
             'Sistema integrado ao videomonitoramento da Prefeitura de SP',
             'Conexão com a segurança pública da Polícia Militar',
