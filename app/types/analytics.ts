@@ -11,6 +11,12 @@ export type CtaLocation =
   | 'quote_modal'
   | 'emergency_modal'
   | 'footer'
+  | 'lp_header'
+  | 'lp_hero'
+  | 'lp_emergency'
+  | 'lp_contract'
+  | 'lp_final'
+  | 'lp_sticky'
 
 export type ChannelType = 'commercial' | 'emergency'
 

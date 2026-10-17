@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { getAdClickLines, getAdContext } from '~/utils/adClickId'
 
 export interface SubmitLeadPayload {
   form_id: 'contact_form' | 'quote_modal'
@@ -41,9 +42,11 @@ export function useLeadSubmission() {
       resetIdempotencyKey()
     }
 
-    const utmSource = typeof route.query.utm_source === 'string' ? route.query.utm_source : undefined
-    const utmMedium = typeof route.query.utm_medium === 'string' ? route.query.utm_medium : undefined
-    const utmCampaign = typeof route.query.utm_campaign === 'string' ? route.query.utm_campaign : undefined
+    // UTMs da URL atual; se não houver, usa as guardadas na chegada pelo anúncio
+    const adCtx = getAdContext()
+    const utmSource = typeof route.query.utm_source === 'string' ? route.query.utm_source : adCtx?.utm_source
+    const utmMedium = typeof route.query.utm_medium === 'string' ? route.query.utm_medium : adCtx?.utm_medium
+    const utmCampaign = typeof route.query.utm_campaign === 'string' ? route.query.utm_campaign : adCtx?.utm_campaign
 
     try {
       await $fetch('/api/public/leads', {
@@ -54,7 +57,7 @@ export function useLeadSubmission() {
           phone: payload.phone,
           company_or_condominium: payload.company_or_condominium || undefined,
           email: payload.email || undefined,
-          message: payload.message || undefined,
+          message: [payload.message, ...getAdClickLines()].filter(Boolean).join('\n').slice(0, 3000) || undefined,
           service_slug: payload.service_slug || undefined,
           service_name: payload.service_name || undefined,
           form_id: payload.form_id,

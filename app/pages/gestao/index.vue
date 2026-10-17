@@ -42,6 +42,10 @@ onMounted(() => {
   else greeting.value = 'Boa noite'
 })
 
+const trendPoints = computed(() => dashboardData.value?.trend?.data || [])
+const spark = (key: 'uniqueVisitors' | 'pageviews' | 'whatsappClicks' | 'quoteSubmissions') =>
+  trendPoints.value.map(p => p[key] ?? 0)
+
 const lastUpdated = computed(() => {
   if (!dashboardData.value?.meta?.generatedAt) return null
   return new Date(dashboardData.value.meta.generatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -49,19 +53,20 @@ const lastUpdated = computed(() => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-5">
     <!-- Header com Saudação, Seletor de Período e Atualização -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-[#09357a] tracking-tight">
-          {{ greeting }}, {{ adminData?.email?.split('@')[0] || 'Administrador' }}!
+        <h1 class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
+          {{ greeting }}, <span class="text-[#09357a]">{{ adminData?.email?.split('@')[0] || 'Administrador' }}</span>
         </h1>
-        <p class="text-xs text-slate-500 mt-1">
-          Indicadores analíticos de produção da A Portamóvel.
+        <p class="mt-1 flex items-center gap-2 text-xs text-slate-500">
+          <span class="relative flex h-1.5 w-1.5"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" /><span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
+          Indicadores de produção da A Portamóvel
         </p>
       </div>
 
-      <div class="flex items-center gap-3 self-start sm:self-auto bg-white p-1.5 rounded-xl border border-slate-200/80 shadow-xs">
+      <div class="flex items-center gap-3 self-start sm:self-auto bg-white/80 p-1 rounded-xl border border-slate-200/70 backdrop-blur">
         <PeriodSelector
           :model-value="selectedPeriod"
           :disabled="isPending"
@@ -109,13 +114,15 @@ const lastUpdated = computed(() => {
 
     <!-- Seção 1: Indicadores Principais (5 Cards) -->
     <section aria-label="Indicadores principais" class="space-y-3">
-      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Métricas do Site Público</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
+      <h2 class="text-[11px] font-medium text-slate-400 uppercase tracking-[0.12em]">Métricas do Site Público</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         <MetricCard
           title="Visitantes Únicos"
           description="Pessoas que navegaram no site no período."
           :value="dashboardData?.summary?.uniqueVisitors?.current"
           :change="dashboardData?.summary?.uniqueVisitors?.changePercent"
+          :spark="spark('uniqueVisitors')"
+          accent="#2563eb"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.summary?.uniqueVisitors?.status || 'ready'))"
           :icon="Users"
         />
@@ -125,6 +132,8 @@ const lastUpdated = computed(() => {
           description="Total de páginas visualizadas."
           :value="dashboardData?.summary?.pageviews?.current"
           :change="dashboardData?.summary?.pageviews?.changePercent"
+          :spark="spark('pageviews')"
+          accent="#818cf8"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.summary?.pageviews?.status || 'ready'))"
           :icon="Eye"
         />
@@ -134,6 +143,8 @@ const lastUpdated = computed(() => {
           description="Cliques nos botões de atendimento."
           :value="dashboardData?.summary?.whatsappClicks?.current"
           :change="dashboardData?.summary?.whatsappClicks?.changePercent"
+          :spark="spark('whatsappClicks')"
+          accent="#10b981"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.summary?.whatsappClicks?.status || 'ready'))"
           :icon="MessageCircle"
         />
@@ -143,6 +154,7 @@ const lastUpdated = computed(() => {
           description="Ligações iniciadas via links diretos."
           :value="dashboardData?.summary?.phoneClicks?.current"
           :change="dashboardData?.summary?.phoneClicks?.changePercent"
+          accent="#06b6d4"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.summary?.phoneClicks?.status || 'ready'))"
           :icon="Phone"
         />
@@ -152,6 +164,8 @@ const lastUpdated = computed(() => {
           description="Formulários de orçamento submetidos."
           :value="dashboardData?.summary?.quoteSubmissions?.current"
           :change="dashboardData?.summary?.quoteSubmissions?.changePercent"
+          :spark="spark('quoteSubmissions')"
+          accent="#f59e0b"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.summary?.quoteSubmissions?.status || 'ready'))"
           :icon="Send"
         />
@@ -168,8 +182,8 @@ const lastUpdated = computed(() => {
 
     <!-- Seção 3: Detalhamentos em Grid 2x2 -->
     <section aria-label="Detalhamentos analíticos" class="space-y-3">
-      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Detalhamentos e Comportamento</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <h2 class="text-[11px] font-medium text-slate-400 uppercase tracking-[0.12em]">Detalhamentos e Comportamento</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TopPagesTable
           :pages="dashboardData?.topPages?.data || []"
           :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.topPages?.status || 'ready'))"
@@ -194,8 +208,8 @@ const lastUpdated = computed(() => {
 
     <!-- Seção 4: Leads Recentes e Status da Aplicação -->
     <section aria-label="Status do sistema e leads" class="space-y-3">
-      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cadastros e Conectividade</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <h2 class="text-[11px] font-medium text-slate-400 uppercase tracking-[0.12em]">Cadastros e Conectividade</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RecentLeadsCard />
 
         <SystemStatusCard

@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   ChartNoAxesCombined,
   Settings,
+  Megaphone,
 } from '@lucide/vue'
 
 export interface NavItem {
@@ -61,6 +62,14 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     icon: Users,
     disabled: false,
     tooltip: 'Gestão de Leads e Orçamentos',
+  },
+  {
+    id: 'campanha',
+    title: 'Campanha Google Ads',
+    to: '/gestao/campanha',
+    icon: Megaphone,
+    disabled: false,
+    tooltip: 'Leads da landing page de condomínios',
   },
   {
     id: 'administradores',

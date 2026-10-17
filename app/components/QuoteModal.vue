@@ -11,7 +11,7 @@ const props = defineProps<{
   serviceSlug?: string
 }>()
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'submitted'])
 
 const { trackServiceView, trackQuoteFormStarted, resetFormStarted } = useAnalytics()
 const { isSubmitting, errorMessage, isFallbackActive, submitLead } = useLeadSubmission()
@@ -89,6 +89,7 @@ const handleSubmit = async () => {
   })
 
   if (res.success) {
+    emit('submitted')
     window.open(getWhatsAppUrl(), '_blank')
     setTimeout(() => {
       emit('close')

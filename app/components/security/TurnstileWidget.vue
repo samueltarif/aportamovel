@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   action: 'contact_form' | 'quote_modal'
-}>()
+  /** 'interaction-only' esconde o widget e só aparece se o Cloudflare pedir interação */
+  appearance?: 'always' | 'interaction-only'
+}>(), {
+  appearance: 'always',
+})
 
 const emit = defineEmits<{
   (e: 'verify', token: string): void
@@ -36,6 +40,7 @@ const renderWidget = () => {
       sitekey: siteKey,
       action: props.action,
       theme: 'light',
+      appearance: props.appearance,
       callback: (token: string) => {
         emit('verify', token)
       },

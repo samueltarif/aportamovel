@@ -214,3 +214,24 @@ async function getLeadCounts(): Promise<LeadCounters> {
 
   return counters
 }
+
+/**
+ * Leads que chegaram pela landing page de campanha (source_path /lp/...),
+ * incluindo arquivados, para a área "Campanha Google Ads". Limite de 1000 linhas.
+ */
+export async function listCampaignLeads(period: '7' | '30' | '90' | 'all'): Promise<Lead[]> {
+  const supabase = getSupabaseAdminClient()
+  let dbQuery = supabase
+    .from('leads')
+    .select('*')
+    .like('source_path', '/lp/%')
+
+  if (period !== 'all') {
+    const sinceDate = new Date(Date.now() - Number(period) * 86400000).toISOString()
+    dbQuery = dbQuery.gte('created_at', sinceDate)
+  }
+
+  const { data, error } = await dbQuery.order('created_at', { ascending: false }).limit(1000)
+  if (error) throw createError({ statusCode: 500, message: 'Erro ao carregar leads da campanha.' })
+  return (data || []) as Lead[]
+}

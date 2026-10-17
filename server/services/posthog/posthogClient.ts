@@ -59,8 +59,8 @@ export async function executeHogQLQuery<T = any[]>(
         },
         name: queryName,
       },
-      timeout: 8000,
-      retry: 1,
+      timeout: 30000,
+      retry: 0,
     })
 
     return response

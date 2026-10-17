@@ -4,7 +4,7 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <WhatsAppFloat v-if="!$route.path.startsWith('/gestao')" />
+    <WhatsAppFloat v-if="!$route.path.startsWith('/gestao') && !$route.path.startsWith('/lp/')" />
   </div>
 </template>
 

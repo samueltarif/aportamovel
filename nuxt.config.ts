@@ -88,6 +88,12 @@ export default defineNuxtConfig({
     public: {
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
       dynamicServicesEnabled: process.env.NUXT_PUBLIC_DYNAMIC_SERVICES_ENABLED || 'false',
+
+      // Google Ads (opcional): ID da conta de conversão (AW-XXXXXXXXX) e rótulos de cada conversão
+      googleAdsId: process.env.NUXT_PUBLIC_GOOGLE_ADS_ID || '',
+      googleAdsLabelCall: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_CALL || '',
+      googleAdsLabelWhatsapp: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_WHATSAPP || '',
+      googleAdsLabelForm: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_FORM || '',
     },
   },
 
