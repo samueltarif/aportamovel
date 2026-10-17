@@ -6,6 +6,8 @@ import {
   Building2,
   CheckCircle2,
   Clock,
+  Cog,
+  Hammer,
   HardHat,
   MapPin,
   ShieldCheck,
@@ -33,7 +35,7 @@ useHead({
     {
       name: 'description',
       content:
-        'Portão do condomínio quebrado ou aberto? Técnico no local em até 6 horas. Atendimento exclusivo para síndicos, zeladores e administradoras de condomínios em São Paulo e Grande SP. Desde 1986.',
+        'Portão do condomínio quebrado ou aberto? Técnico no local em até 6 horas. Atendimento exclusivo para síndicos, zeladores e administradoras de condomínios na capital de São Paulo. Desde 1986.',
     },
     { name: 'robots', content: 'noindex, follow' },
   ],
@@ -146,7 +148,7 @@ const faqs = [
   },
   {
     q: 'Quais regiões vocês atendem?',
-    a: 'Atendemos condomínios em São Paulo e na Grande São Paulo. Chame no WhatsApp e informe o endereço para confirmarmos.',
+    a: 'Atendemos condomínios na capital de São Paulo, onde garantimos técnico em até 6 horas. Chame no WhatsApp e informe o endereço para confirmarmos.',
   },
   {
     q: 'Como funciona o atendimento de emergência?',
@@ -191,49 +193,36 @@ const faqs = [
 
     <main>
       <!-- HERO -->
-      <section class="relative overflow-hidden bg-gradient-to-br from-[#07285c] via-[#09357a] to-[#002d6b] text-white">
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative">
-          <div class="lg:col-span-7 space-y-5 sm:space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-              <Building2 class="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Para síndicos, zeladores e administradoras · Grande SP</span>
-            </div>
+      <section class="relative overflow-hidden bg-slate-50 border-b border-slate-200">
+        <Wrench class="pointer-events-none absolute -right-10 -top-6 h-72 w-72 sm:h-[26rem] sm:w-[26rem] -rotate-12 text-slate-200/70" :stroke-width="1.25" aria-hidden="true" />
+        <Cog class="pointer-events-none absolute -left-12 bottom-0 h-40 w-40 sm:h-56 sm:w-56 text-slate-200/60" :stroke-width="1.25" aria-hidden="true" />
+        <Hammer class="pointer-events-none absolute right-1/3 -bottom-8 hidden h-40 w-40 rotate-12 text-slate-200/50 lg:block" :stroke-width="1.25" aria-hidden="true" />
 
-            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-              Portão do condomínio <span class="text-red-300">quebrado ou aberto?</span>
-              Técnico no local em até 6 horas.
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+          <div class="max-w-2xl space-y-4 sm:space-y-5">
+            <span class="inline-flex items-center gap-2 rounded-full bg-red-700 px-3 py-1.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.14em] text-white">
+              <Building2 class="w-3.5 h-3.5" aria-hidden="true" />
+              Só condomínios · Capital de SP
+            </span>
+
+            <h1 class="text-[28px] sm:text-5xl font-black leading-[1.08] tracking-tight text-[#09357a]">
+              Portão do condomínio quebrado ou aberto?
+              <span class="block text-red-700">Técnico no local em até 6 horas.</span>
             </h1>
 
-            <p class="text-base sm:text-lg text-blue-100/95 leading-relaxed max-w-xl">
-              Atendimento <strong class="text-white">exclusivo para condomínios</strong> (prediais e residenciais). Ligue agora, informe o endereço e enviamos um técnico para consertar e deixar o portão funcionando. Desde 1986.
+            <p class="text-sm sm:text-lg text-slate-600 leading-relaxed">
+              Para <strong class="text-slate-900">síndicos, zeladores e administradoras</strong>. Ligue, informe o endereço e enviamos a equipe. Desde 1986.
             </p>
 
-            <LpContactButtons location="lp_hero" tone="dark" />
+            <LpContactButtons location="lp_hero" tone="light" />
 
-            <p class="flex items-center gap-2 text-xs sm:text-sm text-blue-100/90 font-semibold">
+            <p class="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-semibold">
               <span class="relative flex h-2.5 w-2.5">
-                <span v-if="isPlantao" class="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-60 motion-safe:animate-ping" />
-                <span class="relative inline-flex h-2.5 w-2.5 rounded-full" :class="isPlantao ? 'bg-red-400' : 'bg-emerald-400'" />
+                <span v-if="isPlantao" class="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60 motion-safe:animate-ping" />
+                <span class="relative inline-flex h-2.5 w-2.5 rounded-full" :class="isPlantao ? 'bg-red-600' : 'bg-emerald-500'" />
               </span>
               {{ contact.statusLabel }} · {{ contact.phoneDisplay }}
             </p>
-          </div>
-
-          <div class="lg:col-span-5">
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20">
-              <img
-                src="/images/services/manutencao-portoes.webp"
-                alt="Técnico da A Portamóvel fazendo manutenção em portão de condomínio"
-                class="w-full h-64 sm:h-80 lg:h-96 object-cover"
-                width="640"
-                height="480"
-                fetchpriority="high"
-              />
-              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <p class="text-sm font-bold">Atendimento de emergência em até 6 horas</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -325,6 +314,32 @@ const faqs = [
               <p class="mt-1 text-sm text-slate-600 leading-relaxed">{{ step.text }}</p>
             </li>
           </ol>
+        </div>
+      </section>
+
+      <!-- FROTA PRÓPRIA -->
+      <section class="bg-slate-50 py-12 sm:py-16" aria-label="Frota própria">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 space-y-6">
+          <div class="text-center space-y-2">
+            <p class="text-xs font-bold uppercase tracking-wider text-blue-600">Equipe e veículos próprios</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-[#09357a] leading-tight">
+              Por isso chegamos rápido: a frota é nossa
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Veículos e motos próprios, com técnicos da casa, prontos para sair para o seu condomínio. Atendemos a capital de São Paulo desde 1986.
+            </p>
+          </div>
+          <figure class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-slate-200 bg-white">
+            <img
+              src="/images/real_fleet.jpg"
+              alt="Frota de veículos e motos da A Portamóvel estacionada, com a identidade visual da empresa"
+              class="w-full h-auto"
+              width="1024"
+              height="576"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
         </div>
       </section>
 
