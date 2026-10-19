@@ -107,8 +107,8 @@ const services = [
   {
     title: 'Manutenção de portões',
     text: 'Corretiva e preventiva em portões de garagem e de pedestres, deslizantes e basculantes.',
-    image: '/images/services/manutencao-portoes.webp',
-    alt: 'Técnico fazendo manutenção em portão de condomínio',
+    image: '/images/lp/lp-portao-condominio.webp',
+    alt: 'Portão deslizante de condomínio com motor automatizador e cremalheira',
     slug: 'manutencao-portoes-condominio',
   },
   {
@@ -121,15 +121,15 @@ const services = [
   {
     title: 'Troca de trilhos e roldanas',
     text: 'Reparo de trilhos e roldanas duplas para portões pesados e de alto fluxo.',
-    image: '/images/services/troca-trilhos.webp',
-    alt: 'Troca de trilhos de portão de condomínio',
+    image: '/images/lp/lp-roldana-trilho.webp',
+    alt: 'Roldana dupla de aço sobre o trilho de um portão deslizante de condomínio',
     slug: 'troca-trilhos-roldanas',
   },
   {
     title: 'Recuperação e repintura de gradis',
     text: 'Remoção de ferrugem, solda, reforço estrutural e pintura que renova a fachada.',
-    image: '/images/services/recuperacao-gradis.webp',
-    alt: 'Recuperação e repintura de gradil de condomínio',
+    image: '/images/lp/lp-gradil-condominio.webp',
+    alt: 'Portão e gradil metálico na entrada de um prédio residencial',
     slug: 'recuperacao-repintura-gradis',
   },
 ]
