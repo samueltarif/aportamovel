@@ -26,3 +26,7 @@ logs
 
 # kit do Google Ads (tem credenciais no .env)
 google-ads-kit-aluno-main/
+
+# Playwright artifacts
+.playwright-mcp/
+

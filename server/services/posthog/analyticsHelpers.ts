@@ -1,8 +1,9 @@
 import type {
-  AnalyticsPeriod,
   AnalyticsTrendPoint,
   TrafficSourceItem,
 } from '~~/shared/types/adminAnalytics'
+import type { ResolvedAnalyticsRange } from './analyticsRange'
+import { addDays, currentHourInSaoPaulo, todayInSaoPaulo } from './analyticsRange'
 
 const KNOWN_SERVICES: Record<string, string> = {
   'manutencao-de-portoes': 'Manutenção de Portões',
@@ -37,13 +38,22 @@ export function calcPercentChange(current: number, previous: number | null): num
   return Math.round(change * 10) / 10
 }
 
-export function fillMissingTrendDays(results: any[][], days: AnalyticsPeriod): AnalyticsTrendPoint[] {
+/**
+ * Preenche lacunas da série temporal com zeros, percorrendo o intervalo no fuso de São Paulo.
+ * - Granularidade 'day': um ponto por dia (YYYY-MM-DD) de from a to
+ * - Granularidade 'hour': um ponto por hora (YYYY-MM-DD HH); se o dia for hoje, para na hora atual
+ */
+export function fillMissingTrendPoints(
+  results: any[][],
+  range: Pick<ResolvedAnalyticsRange, 'from' | 'to' | 'granularity'>,
+  now: Date = new Date(),
+): AnalyticsTrendPoint[] {
   const map = new Map<string, AnalyticsTrendPoint>()
   for (const row of results) {
     if (!row || !row[0]) continue
-    const dateKey = String(row[0])
-    map.set(dateKey, {
-      date: dateKey,
+    const key = String(row[0])
+    map.set(key, {
+      date: key,
       uniqueVisitors: Number(row[1]) || 0,
       pageviews: Number(row[2]) || 0,
       whatsappClicks: Number(row[3]) || 0,
@@ -51,23 +61,28 @@ export function fillMissingTrendDays(results: any[][], days: AnalyticsPeriod): A
     })
   }
 
-  const points: AnalyticsTrendPoint[] = []
-  const now = new Date()
+  const empty = (date: string): AnalyticsTrendPoint => ({
+    date,
+    uniqueVisitors: 0,
+    pageviews: 0,
+    whatsappClicks: 0,
+    quoteSubmissions: 0,
+  })
 
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(now)
-    d.setDate(d.getDate() - i)
-    const dateStr = d.toISOString().slice(0, 10)
-    points.push(map.get(dateStr) || {
-      date: dateStr,
-      uniqueVisitors: 0,
-      pageviews: 0,
-      whatsappClicks: 0,
-      quoteSubmissions: 0,
-    })
+  const keys: string[] = []
+  if (range.granularity === 'hour') {
+    const lastHour = range.from === todayInSaoPaulo(now) ? currentHourInSaoPaulo(now) : 23
+    for (let h = 0; h <= lastHour; h++) {
+      keys.push(`${range.from} ${String(h).padStart(2, '0')}`)
+    }
+  }
+  else {
+    for (let d = range.from; d <= range.to; d = addDays(d, 1)) {
+      keys.push(d)
+    }
   }
 
-  return points
+  return keys.map(k => map.get(k) || empty(k))
 }
 
 const INTERNAL_DOMAINS = [

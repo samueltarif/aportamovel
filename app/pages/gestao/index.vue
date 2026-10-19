@@ -46,6 +46,19 @@ const trendPoints = computed(() => dashboardData.value?.trend?.data || [])
 const spark = (key: 'uniqueVisitors' | 'pageviews' | 'whatsappClicks' | 'quoteSubmissions') =>
   trendPoints.value.map(p => p[key] ?? 0)
 
+const formatBR = (iso?: string) => {
+  if (!iso) return ''
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
+}
+
+const periodLabel = computed(() => {
+  const p = dashboardData.value?.period
+  if (!p) return null
+  if (p.from === p.to) return p.key === 'today' ? `Hoje, ${formatBR(p.from)}` : formatBR(p.from)
+  return `${formatBR(p.from)} a ${formatBR(p.to)}`
+})
+
 const lastUpdated = computed(() => {
   if (!dashboardData.value?.meta?.generatedAt) return null
   return new Date(dashboardData.value.meta.generatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -60,13 +73,14 @@ const lastUpdated = computed(() => {
         <h1 class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
           {{ greeting }}, <span class="text-[#09357a]">{{ adminData?.email?.split('@')[0] || 'Administrador' }}</span>
         </h1>
-        <p class="mt-1 flex items-center gap-2 text-xs text-slate-500">
+        <p class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
           <span class="relative flex h-1.5 w-1.5"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" /><span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
           Indicadores de produção da A Portamóvel
+          <span v-if="periodLabel" class="font-semibold text-slate-600">· {{ periodLabel }}</span>
         </p>
       </div>
 
-      <div class="flex items-center gap-3 self-start sm:self-auto bg-white/80 p-1 rounded-xl border border-slate-200/70 backdrop-blur">
+      <div class="flex flex-wrap items-center gap-3 self-start sm:self-auto bg-white/80 p-1.5 rounded-xl border border-slate-200/70 backdrop-blur">
         <PeriodSelector
           :model-value="selectedPeriod"
           :disabled="isPending"
@@ -176,6 +190,7 @@ const lastUpdated = computed(() => {
     <section aria-label="Tendência de acessos">
       <TrendChart
         :points="dashboardData?.trend?.data || []"
+        :granularity="dashboardData?.trend?.granularity"
         :status="isPending ? 'loading' : (error ? 'error' : (dashboardData?.trend?.status || 'ready'))"
       />
     </section>

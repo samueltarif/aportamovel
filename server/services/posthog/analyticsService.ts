@@ -1,9 +1,9 @@
 import type { H3Event } from 'h3'
 import type {
   AdminAnalyticsDashboard,
-  AnalyticsPeriod,
   MetricResult,
 } from '~~/shared/types/adminAnalytics'
+import type { ResolvedAnalyticsRange } from './analyticsRange'
 import { executeHogQLQuery } from './posthogClient'
 import { getCachedAnalytics, setCachedAnalytics } from './analyticsCache'
 import {
@@ -16,13 +16,13 @@ import {
 } from './analyticsQueries'
 import {
   calcPercentChange,
-  fillMissingTrendDays,
+  fillMissingTrendPoints,
   categorizeTrafficSources,
   formatServiceName,
 } from './analyticsHelpers'
 
-export async function getDashboardAnalytics(days: AnalyticsPeriod, event?: H3Event): Promise<AdminAnalyticsDashboard> {
-  const cached = getCachedAnalytics(days)
+export async function getDashboardAnalytics(range: ResolvedAnalyticsRange, event?: H3Event): Promise<AdminAnalyticsDashboard> {
+  const cached = getCachedAnalytics(range.cacheKey)
   if (cached && !cached.isStale) {
     return { ...cached.data, meta: { cached: true, stale: false, generatedAt: cached.data.meta.generatedAt } }
   }
@@ -36,12 +36,12 @@ export async function getDashboardAnalytics(days: AnalyticsPeriod, event?: H3Eve
       trafficRes,
       locationsRes,
     ] = await Promise.allSettled([
-      executeHogQLQuery(buildSummaryQuery(days), 'admin_summary', event),
-      executeHogQLQuery(buildTrendQuery(days), 'admin_trend', event),
-      executeHogQLQuery(buildTopPagesQuery(days), 'admin_top_pages', event),
-      executeHogQLQuery(buildTopServicesQuery(days), 'admin_top_services', event),
-      executeHogQLQuery(buildTrafficSourcesQuery(days), 'admin_traffic_sources', event),
-      executeHogQLQuery(buildLocationsQuery(days), 'admin_locations', event),
+      executeHogQLQuery(buildSummaryQuery(range), 'admin_summary', event),
+      executeHogQLQuery(buildTrendQuery(range), 'admin_trend', event),
+      executeHogQLQuery(buildTopPagesQuery(range), 'admin_top_pages', event),
+      executeHogQLQuery(buildTopServicesQuery(range), 'admin_top_services', event),
+      executeHogQLQuery(buildTrafficSourcesQuery(range), 'admin_traffic_sources', event),
+      executeHogQLQuery(buildLocationsQuery(range), 'admin_locations', event),
     ])
 
     if (summaryRes.status === 'rejected') {
@@ -71,18 +71,15 @@ export async function getDashboardAnalytics(days: AnalyticsPeriod, event?: H3Eve
       status: 'ready',
     })
 
-    const now = new Date()
-    const fromDate = new Date(now.getTime() - days * 86400000).toISOString().slice(0, 10)
-    const toDate = now.toISOString().slice(0, 10)
-    const prevFromDate = new Date(now.getTime() - days * 2 * 86400000).toISOString().slice(0, 10)
-
     const dashboard: AdminAnalyticsDashboard = {
       period: {
-        days,
-        from: fromDate,
-        to: toDate,
-        previousFrom: prevFromDate,
-        previousTo: fromDate,
+        key: range.key,
+        days: range.days,
+        granularity: range.granularity,
+        from: range.from,
+        to: range.to,
+        previousFrom: range.previousFrom,
+        previousTo: range.previousTo,
       },
       summary: {
         uniqueVisitors: makeMetric(curVis, prevVis),
@@ -93,7 +90,8 @@ export async function getDashboardAnalytics(days: AnalyticsPeriod, event?: H3Eve
       },
       trend: {
         status: trendRes.status === 'fulfilled' ? 'ready' : 'unavailable',
-        data: trendRes.status === 'fulfilled' ? fillMissingTrendDays(trendRes.value.results, days) : [],
+        granularity: range.granularity,
+        data: trendRes.status === 'fulfilled' ? fillMissingTrendPoints(trendRes.value.results, range) : [],
       },
       topPages: {
         status: pagesRes.status === 'fulfilled' ? 'ready' : 'unavailable',
@@ -132,7 +130,7 @@ export async function getDashboardAnalytics(days: AnalyticsPeriod, event?: H3Eve
       },
     }
 
-    setCachedAnalytics(days, dashboard)
+    setCachedAnalytics(range.cacheKey, dashboard)
     return dashboard
   }
   catch (err: any) {

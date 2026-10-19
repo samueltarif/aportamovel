@@ -5,6 +5,7 @@ import type { AnalyticsTrendPoint, SectionStatus } from '~~/shared/types/adminAn
 const props = defineProps<{
   points: AnalyticsTrendPoint[]
   status: SectionStatus
+  granularity?: 'day' | 'hour'
 }>()
 
 type SeriesKey = 'uniqueVisitors' | 'pageviews' | 'whatsappClicks' | 'quoteSubmissions'
@@ -68,6 +69,8 @@ const onMove = (e: PointerEvent) => {
 
 const formatDate = (iso?: string): string => {
   if (!iso) return ''
+  // Granularidade por hora: 'YYYY-MM-DD HH' → 'HHh'
+  if (iso.includes(' ')) return `${iso.split(' ')[1]}h`
   const parts = iso.split('-')
   return parts.length < 3 ? iso : `${parts[2]}/${parts[1]}`
 }
@@ -88,7 +91,7 @@ const tickIdx = computed(() => {
     <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h3 class="text-sm font-semibold tracking-tight text-slate-900">Tendência de acessos e ações</h3>
-        <p class="mt-0.5 text-xs text-slate-500">Evolução diária no período. Clique na legenda para ocultar uma série.</p>
+        <p class="mt-0.5 text-xs text-slate-500">Evolução {{ granularity === 'hour' ? 'por hora' : 'diária' }} no período. Clique na legenda para ocultar uma série.</p>
       </div>
       <div class="flex flex-wrap items-center gap-1.5">
         <button

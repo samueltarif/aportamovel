@@ -1,4 +1,18 @@
-export type AnalyticsPeriod = 7 | 30 | 90
+/** Atalhos de período disponíveis no painel. */
+export type AnalyticsPreset = 'today' | '7' | '30' | '90'
+
+/** Chave de período: um atalho ou um intervalo personalizado (from/to). */
+export type AnalyticsPeriodKey = AnalyticsPreset | 'custom'
+
+/** Seleção de período feita no painel (from/to obrigatórios apenas em 'custom'). */
+export interface AnalyticsPeriodSelection {
+  key: AnalyticsPeriodKey
+  from?: string // YYYY-MM-DD (fuso America/Sao_Paulo)
+  to?: string // YYYY-MM-DD (inclusivo)
+}
+
+/** Granularidade da série temporal: por hora (período de 1 dia) ou por dia. */
+export type AnalyticsGranularity = 'day' | 'hour'
 
 export type SectionStatus = 'ready' | 'loading' | 'unavailable' | 'error'
 
@@ -10,7 +24,7 @@ export interface MetricResult {
 }
 
 export interface AnalyticsTrendPoint {
-  date: string // YYYY-MM-DD
+  date: string // YYYY-MM-DD (granularidade 'day') ou 'YYYY-MM-DD HH' (granularidade 'hour')
   uniqueVisitors: number
   pageviews: number
   whatsappClicks: number
@@ -46,7 +60,9 @@ export interface LocationItem {
 
 export interface AdminAnalyticsDashboard {
   period: {
-    days: AnalyticsPeriod
+    key: AnalyticsPeriodKey
+    days: number
+    granularity: AnalyticsGranularity
     from: string
     to: string
     previousFrom: string
@@ -61,6 +77,7 @@ export interface AdminAnalyticsDashboard {
   }
   trend: {
     status: SectionStatus
+    granularity: AnalyticsGranularity
     data: AnalyticsTrendPoint[]
   }
   topPages: {

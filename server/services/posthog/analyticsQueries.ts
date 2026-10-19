@@ -1,4 +1,15 @@
-import type { AnalyticsPeriod } from '~~/shared/types/adminAnalytics'
+import type { ResolvedAnalyticsRange } from './analyticsRange'
+
+type QueryRange = Pick<ResolvedAnalyticsRange, 'startUtc' | 'endUtc' | 'prevStartUtc' | 'granularity'>
+
+/**
+ * Os limites vêm de resolveAnalyticsRange (datas validadas e geradas no servidor),
+ * nunca de texto livre do usuário.
+ */
+const inCurrent = (r: QueryRange) =>
+  `timestamp >= toDateTime('${r.startUtc}', 'UTC') AND timestamp < toDateTime('${r.endUtc}', 'UTC')`
+const inPrevious = (r: QueryRange) =>
+  `timestamp >= toDateTime('${r.prevStartUtc}', 'UTC') AND timestamp < toDateTime('${r.startUtc}', 'UTC')`
 
 /**
  * Cláusula padrão de filtro de segurança e ambiente:
@@ -14,43 +25,50 @@ const PRODUCTION_FILTER = `
   AND (properties.page_path NOT LIKE '%/gestao%' OR properties.page_path IS NULL)
 `
 
-export function buildSummaryQuery(days: AnalyticsPeriod): string {
+export function buildSummaryQuery(r: QueryRange): string {
+  const cur = inCurrent(r)
+  const prev = inPrevious(r)
   return `
     SELECT
-      uniqIf(distinct_id, event = '$pageview' AND timestamp >= now() - INTERVAL ${days} DAY) AS current_visitors,
-      countIf(event = '$pageview' AND timestamp >= now() - INTERVAL ${days} DAY) AS current_pageviews,
-      countIf(event = 'whatsapp_click' AND timestamp >= now() - INTERVAL ${days} DAY) AS current_whatsapp,
-      countIf(event = 'phone_click' AND timestamp >= now() - INTERVAL ${days} DAY) AS current_phone,
-      countIf(event = 'quote_form_submitted' AND timestamp >= now() - INTERVAL ${days} DAY) AS current_quotes,
+      uniqIf(distinct_id, event = '$pageview' AND ${cur}) AS current_visitors,
+      countIf(event = '$pageview' AND ${cur}) AS current_pageviews,
+      countIf(event = 'whatsapp_click' AND ${cur}) AS current_whatsapp,
+      countIf(event = 'phone_click' AND ${cur}) AS current_phone,
+      countIf(event = 'quote_form_submitted' AND ${cur}) AS current_quotes,
 
-      uniqIf(distinct_id, event = '$pageview' AND timestamp < now() - INTERVAL ${days} DAY AND timestamp >= now() - INTERVAL ${days * 2} DAY) AS prev_visitors,
-      countIf(event = '$pageview' AND timestamp < now() - INTERVAL ${days} DAY AND timestamp >= now() - INTERVAL ${days * 2} DAY) AS prev_pageviews,
-      countIf(event = 'whatsapp_click' AND timestamp < now() - INTERVAL ${days} DAY AND timestamp >= now() - INTERVAL ${days * 2} DAY) AS prev_whatsapp,
-      countIf(event = 'phone_click' AND timestamp < now() - INTERVAL ${days} DAY AND timestamp >= now() - INTERVAL ${days * 2} DAY) AS prev_phone,
-      countIf(event = 'quote_form_submitted' AND timestamp < now() - INTERVAL ${days} DAY AND timestamp >= now() - INTERVAL ${days * 2} DAY) AS prev_quotes
+      uniqIf(distinct_id, event = '$pageview' AND ${prev}) AS prev_visitors,
+      countIf(event = '$pageview' AND ${prev}) AS prev_pageviews,
+      countIf(event = 'whatsapp_click' AND ${prev}) AS prev_whatsapp,
+      countIf(event = 'phone_click' AND ${prev}) AS prev_phone,
+      countIf(event = 'quote_form_submitted' AND ${prev}) AS prev_quotes
     FROM events
     WHERE ${PRODUCTION_FILTER}
-      AND timestamp >= now() - INTERVAL ${days * 2} DAY
+      AND timestamp >= toDateTime('${r.prevStartUtc}', 'UTC')
+      AND timestamp < toDateTime('${r.endUtc}', 'UTC')
   `
 }
 
-export function buildTrendQuery(days: AnalyticsPeriod): string {
+export function buildTrendQuery(r: QueryRange): string {
+  // Período de um dia (ex.: "Hoje"): série por hora; demais: série diária
+  const bucket = r.granularity === 'hour'
+    ? `formatDateTime(toStartOfHour(timestamp, 'America/Sao_Paulo'), '%Y-%m-%d %H')`
+    : `formatDateTime(toStartOfDay(timestamp, 'America/Sao_Paulo'), '%Y-%m-%d')`
   return `
     SELECT
-      formatDateTime(toStartOfDay(timestamp, 'America/Sao_Paulo'), '%Y-%m-%d') AS day,
+      ${bucket} AS bucket,
       uniqIf(distinct_id, event = '$pageview') AS unique_visitors,
       countIf(event = '$pageview') AS pageviews,
       countIf(event = 'whatsapp_click') AS whatsapp_clicks,
       countIf(event = 'quote_form_submitted') AS quote_submissions
     FROM events
     WHERE ${PRODUCTION_FILTER}
-      AND timestamp >= now() - INTERVAL ${days} DAY
-    GROUP BY day
-    ORDER BY day ASC
+      AND ${inCurrent(r)}
+    GROUP BY bucket
+    ORDER BY bucket ASC
   `
 }
 
-export function buildTopPagesQuery(days: AnalyticsPeriod): string {
+export function buildTopPagesQuery(r: QueryRange): string {
   return `
     SELECT
       coalesce(properties.page_path, properties.$pathname, '/') AS path,
@@ -59,14 +77,14 @@ export function buildTopPagesQuery(days: AnalyticsPeriod): string {
     FROM events
     WHERE event = '$pageview'
       AND ${PRODUCTION_FILTER}
-      AND timestamp >= now() - INTERVAL ${days} DAY
+      AND ${inCurrent(r)}
     GROUP BY path
     ORDER BY pageviews DESC
     LIMIT 10
   `
 }
 
-export function buildTopServicesQuery(days: AnalyticsPeriod): string {
+export function buildTopServicesQuery(r: QueryRange): string {
   return `
     SELECT
       properties.service_slug AS service_slug,
@@ -79,14 +97,14 @@ export function buildTopServicesQuery(days: AnalyticsPeriod): string {
       AND properties.service_slug != ''
       AND properties.service_slug != 'null'
       AND properties.service_slug != 'undefined'
-      AND timestamp >= now() - INTERVAL ${days} DAY
+      AND ${inCurrent(r)}
     GROUP BY service_slug
     ORDER BY views DESC
     LIMIT 10
   `
 }
 
-export function buildTrafficSourcesQuery(days: AnalyticsPeriod): string {
+export function buildTrafficSourcesQuery(r: QueryRange): string {
   return `
     SELECT
       coalesce(properties.$session_entry_referring_domain, properties.$referring_domain, '') AS referring_domain,
@@ -98,14 +116,14 @@ export function buildTrafficSourcesQuery(days: AnalyticsPeriod): string {
     FROM events
     WHERE event = '$pageview'
       AND ${PRODUCTION_FILTER}
-      AND timestamp >= now() - INTERVAL ${days} DAY
+      AND ${inCurrent(r)}
     GROUP BY referring_domain, utm_source, utm_medium, utm_campaign
     ORDER BY sessions DESC
     LIMIT 50
   `
 }
 
-export function buildLocationsQuery(days: AnalyticsPeriod): string {
+export function buildLocationsQuery(r: QueryRange): string {
   return `
     SELECT
       coalesce(properties.$geoip_city_name, 'Não identificado') AS city,
@@ -115,7 +133,7 @@ export function buildLocationsQuery(days: AnalyticsPeriod): string {
     FROM events
     WHERE event = '$pageview'
       AND ${PRODUCTION_FILTER}
-      AND timestamp >= now() - INTERVAL ${days} DAY
+      AND ${inCurrent(r)}
     GROUP BY city, state, country
     ORDER BY visitors DESC
     LIMIT 10
