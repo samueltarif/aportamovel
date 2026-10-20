@@ -94,6 +94,9 @@ export default defineNuxtConfig({
       googleAdsLabelCall: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_CALL || '',
       googleAdsLabelWhatsapp: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_WHATSAPP || '',
       googleAdsLabelForm: process.env.NUXT_PUBLIC_GOOGLE_ADS_LABEL_FORM || '',
+
+      // Microsoft Clarity (gravação anônima de navegação e mapa de calor)
+      clarityId: process.env.NUXT_PUBLIC_CLARITY_ID || 'z0fj3kkwv5',
     },
   },
 

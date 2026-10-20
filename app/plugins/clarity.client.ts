@@ -2,14 +2,10 @@
  * Microsoft Clarity (mapa de calor e gravação de sessão) — projeto "A porta Movel".
  *
  * Regras:
- * - Só carrega depois que o visitante clica em "Aceitar" no aviso de cookies (LGPD),
- *   o mesmo 'pm_consent' usado pelo Consent Mode do Google.
+ * - Carrega diretamente em todo o site público.
  * - Nunca carrega no painel administrativo (/gestao), igual ao filtro do PostHog.
  */
-const CLARITY_ID = 'z0fj3kkwv5'
-const STORAGE_KEY = 'pm_consent'
-
-function loadClarity() {
+function loadClarity(clarityId: string) {
   const w = window as any
   if (w.__pmClarityLoaded) return
   if (window.location.pathname.startsWith('/gestao')) return
@@ -21,17 +17,11 @@ function loadClarity() {
     t.src = `https://www.clarity.ms/tag/${i}`
     const y = l.getElementsByTagName(r)[0]
     y.parentNode?.insertBefore(t, y)
-  })(w, document, 'clarity', 'script', CLARITY_ID)
+  })(w, document, 'clarity', 'script', clarityId)
 }
 
 export default defineNuxtPlugin(() => {
-  try {
-    if (window.localStorage.getItem(STORAGE_KEY) === 'granted') loadClarity()
-  }
-  catch {
-    // sem armazenamento: só carrega se aceitar nesta visita
-  }
-  window.addEventListener('pm-consent', (e) => {
-    if ((e as CustomEvent).detail === 'granted') loadClarity()
-  })
+  const config = useRuntimeConfig()
+  const clarityId = (config.public.clarityId as string) || 'z0fj3kkwv5'
+  loadClarity(clarityId)
 })

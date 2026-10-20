@@ -27,7 +27,7 @@ const updatedAt = 'outubro de 2026'
         <h2 class="text-lg font-extrabold text-slate-900">2. Quais dados coletamos</h2>
         <ul class="mt-2 list-disc pl-5 space-y-1">
           <li>Dados que você informa nos formulários: nome, telefone, nome do condomínio e, opcionalmente, e-mail e mensagem.</li>
-          <li>Dados de navegação: páginas visitadas, dispositivo, origem do acesso (inclusive identificador de clique em anúncio) e interações com botões.</li>
+          <li>Dados de navegação: páginas visitadas, dispositivo, origem do acesso (inclusive identificador de clique em anúncio), dados anônimos de interação e mapa de calor (Microsoft Clarity, com mascaramento de dados sensíveis) e interações com botões.</li>
           <li>Conversas iniciadas por telefone ou WhatsApp.</li>
         </ul>
       </section>
@@ -37,7 +37,7 @@ const updatedAt = 'outubro de 2026'
         <ul class="mt-2 list-disc pl-5 space-y-1">
           <li>Responder ao seu pedido de atendimento, vistoria ou orçamento (execução de contrato e procedimentos preliminares).</li>
           <li>Proteger o site contra fraudes e robôs (legítimo interesse).</li>
-          <li>Medir o resultado dos nossos anúncios e melhorar o site, somente com o seu consentimento para cookies de anúncio e medição.</li>
+          <li>Medir o resultado dos nossos anúncios e entender o comportamento de navegação para aprimorar a experiência do site (legítimo interesse).</li>
         </ul>
       </section>
 
@@ -45,7 +45,7 @@ const updatedAt = 'outubro de 2026'
         <h2 class="text-lg font-extrabold text-slate-900">4. Com quem compartilhamos</h2>
         <p class="mt-2">
           Usamos fornecedores que tratam dados em nosso nome: hospedagem e banco de dados, proteção contra robôs (Cloudflare),
-          análise de uso do site, Google (anúncios e medição de conversões) e WhatsApp (Meta), quando você escolhe falar por lá.
+          análise e gravação anônima de navegação (Microsoft Clarity), Google (anúncios e medição de conversões) e WhatsApp (Meta), quando você escolhe falar por lá.
           Não vendemos dados pessoais.
         </p>
       </section>
@@ -53,8 +53,7 @@ const updatedAt = 'outubro de 2026'
       <section>
         <h2 class="text-lg font-extrabold text-slate-900">5. Cookies</h2>
         <p class="mt-2">
-          Cookies de anúncio e medição, incluindo o Microsoft Clarity (mapas de calor e gravação anônima de navegação, com mascaramento de dados sensíveis), só são ativados se você clicar em “Aceitar” no aviso de cookies. Você pode mudar a escolha
-          a qualquer momento limpando os dados do site no seu navegador.
+          Utilizamos cookies e tecnologias semelhantes (como Google Ads, Google Analytics e Microsoft Clarity) para o correto funcionamento da página, medição de campanhas e melhoria contínua da navegação. Você pode gerenciar ou desativar cookies a qualquer momento nas preferências do seu navegador.
         </p>
       </section>
 
