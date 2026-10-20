@@ -27,6 +27,7 @@ function applyChoice(choice: 'granted' | 'denied') {
       analytics_storage: choice,
     })
   }
+  window.dispatchEvent(new CustomEvent('pm-consent', { detail: choice }))
   visible.value = false
 }
 

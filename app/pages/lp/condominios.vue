@@ -17,7 +17,6 @@ import {
 } from '@lucide/vue'
 import QuoteModal from '~/components/QuoteModal.vue'
 import LpContactButtons from '~/components/lp/LpContactButtons.vue'
-import LpConsentBanner from '~/components/lp/LpConsentBanner.vue'
 import LpWhatsAppPopup from '~/components/lp/LpWhatsAppPopup.vue'
 import { useWhatsAppPopup } from '~/composables/useWhatsAppPopup'
 import { captureAdClickId } from '~/utils/adClickId'
@@ -429,7 +428,6 @@ const faqs = [
       <LpContactButtons location="lp_sticky" layout="row" :show-numbers="false" class="!flex-row" />
     </div>
 
-    <LpConsentBanner />
     <LpWhatsAppPopup />
 
     <QuoteModal

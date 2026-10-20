@@ -53,7 +53,7 @@ const updatedAt = 'outubro de 2026'
       <section>
         <h2 class="text-lg font-extrabold text-slate-900">5. Cookies</h2>
         <p class="mt-2">
-          Cookies de anúncio e medição só são ativados se você clicar em “Aceitar” no aviso de cookies. Você pode mudar a escolha
+          Cookies de anúncio e medição, incluindo o Microsoft Clarity (mapas de calor e gravação anônima de navegação, com mascaramento de dados sensíveis), só são ativados se você clicar em “Aceitar” no aviso de cookies. Você pode mudar a escolha
           a qualquer momento limpando os dados do site no seu navegador.
         </p>
       </section>
