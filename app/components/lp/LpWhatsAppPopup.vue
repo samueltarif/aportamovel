@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { MessageCircle, X } from '@lucide/vue'
 import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 import { useWhatsAppPopup } from '~/composables/useWhatsAppPopup'
@@ -10,10 +10,11 @@ import { buildWhatsAppLink } from '~/utils/contactNumbers'
 import { buildTrackingLines, formatBrPhone, isValidBrPhone, normalizeBrPhone } from '~~/shared/utils/leadTracking'
 
 /**
- * Pop-up da landing page: antes de abrir o WhatsApp, pede só o número do visitante,
- * salva o lead no painel (/gestao/campanha) e então abre a conversa com a mensagem pronta.
- * Se o salvamento falhar ou demorar, o visitante segue para o WhatsApp mesmo assim:
- * nunca perdemos o contato por causa de erro técnico.
+ * Pop-up da landing page. Nunca bloqueia o visitante:
+ * - "Falar no WhatsApp agora": abre a conversa direto, sem pedir nada.
+ * - Número opcional: se o visitante deixar o WhatsApp, o lead é salvo no painel
+ *   (/gestao/campanha) e a conversa abre em seguida.
+ * Se o salvamento falhar ou demorar, o visitante segue para o WhatsApp mesmo assim.
  */
 const { isOpen, origin, closeWhatsAppPopup } = useWhatsAppPopup()
 const { contact } = useContactShift()
@@ -25,16 +26,12 @@ const touched = ref(false)
 const sending = ref(false)
 const hp = ref('')
 const turnstileToken = ref('')
-const inputRef = ref<HTMLInputElement | null>(null)
-
-watch(isOpen, async (open) => {
+watch(isOpen, (open) => {
   if (import.meta.client) document.body.style.overflow = open ? 'hidden' : ''
   if (open) {
     resetIdempotencyKey()
     touched.value = false
     sending.value = false
-    await nextTick()
-    inputRef.value?.focus()
   }
 })
 
@@ -64,15 +61,40 @@ function waitForToken(ms: number): Promise<string> {
   })
 }
 
+function openWhatsApp(win: Window | null) {
+  const link = buildWhatsAppLink(contact.value.whatsappNumber, whatsappText())
+  trackWhatsAppConversion()
+  if (win && !win.closed) {
+    win.location.href = link
+  }
+  else {
+    window.location.href = link
+  }
+  sending.value = false
+  phone.value = ''
+  closeWhatsAppPopup()
+}
+
+// No computador, abre a aba já no clique (evita bloqueio de pop-up); no celular, redireciona.
+function preOpenTab(): Window | null {
+  const isTouch = window.matchMedia?.('(pointer: coarse)').matches
+  return isTouch ? null : window.open('', '_blank')
+}
+
+/** Botão "Falar no WhatsApp agora": vai direto, sem pedir número. */
+function goDirect() {
+  if (sending.value) return
+  // Se o visitante já digitou um número válido, aproveita e salva o lead.
+  if (isValidBrPhone(phone.value)) return submit()
+  sending.value = true
+  openWhatsApp(preOpenTab())
+}
+
 async function submit() {
   touched.value = true
   if (!isValidBrPhone(phone.value) || sending.value) return
   sending.value = true
-
-  const link = buildWhatsAppLink(contact.value.whatsappNumber, whatsappText())
-  // No computador, abre a aba já no clique (evita bloqueio de pop-up); no celular, redireciona.
-  const isTouch = window.matchMedia?.('(pointer: coarse)').matches
-  const win = isTouch ? null : window.open('', '_blank')
+  const win = preOpenTab()
 
   try {
     const token = await waitForToken(4000)
@@ -93,17 +115,7 @@ async function submit() {
     // segue para o WhatsApp mesmo assim
   }
 
-  trackWhatsAppConversion()
-
-  if (win && !win.closed) {
-    win.location.href = link
-  }
-  else {
-    window.location.href = link
-  }
-  sending.value = false
-  phone.value = ''
-  closeWhatsAppPopup()
+  openWhatsApp(win)
 }
 </script>
 
@@ -139,26 +151,44 @@ async function submit() {
           </div>
         </div>
 
-        <form class="mt-5 space-y-3" novalidate @submit.prevent="submit">
+        <button
+          type="button"
+          class="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-70 text-white font-extrabold text-base min-h-[52px] px-5 shadow-lg"
+          :disabled="sending"
+          @click="goDirect"
+        >
+          <MessageCircle class="w-5 h-5" aria-hidden="true" />
+          {{ sending ? 'Abrindo o WhatsApp...' : 'Falar no WhatsApp agora' }}
+        </button>
+
+        <form class="mt-5 pt-4 border-t border-slate-100 space-y-3" novalidate @submit.prevent="submit">
           <label for="wa-popup-phone" class="block text-sm font-bold text-slate-800">
-            Seu WhatsApp, para retornarmos se a conversa cair
+            Prefere garantir o retorno? Deixe seu WhatsApp <span class="font-normal text-slate-500">(opcional)</span>
           </label>
-          <input
-            id="wa-popup-phone"
-            ref="inputRef"
-            :value="phone"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel-national"
-            placeholder="(11) 91234-5678"
-            class="w-full px-4 py-3.5 border rounded-xl text-lg tracking-wide outline-none focus:ring-2 focus:ring-emerald-500"
-            :class="touched && !isValidBrPhone(phone) ? 'border-red-400' : 'border-slate-300'"
-            :aria-invalid="touched && !isValidBrPhone(phone)"
-            aria-describedby="wa-popup-help"
-            @input="onInput"
-          >
+          <div class="flex gap-2">
+            <input
+              id="wa-popup-phone"
+              :value="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel-national"
+              placeholder="(11) 91234-5678"
+              class="flex-1 min-w-0 px-3.5 py-3 border rounded-xl text-base tracking-wide outline-none focus:ring-2 focus:ring-emerald-500"
+              :class="touched && !isValidBrPhone(phone) ? 'border-red-400' : 'border-slate-300'"
+              :aria-invalid="touched && !isValidBrPhone(phone)"
+              aria-describedby="wa-popup-help"
+              @input="onInput"
+            >
+            <button
+              type="submit"
+              class="shrink-0 rounded-xl border-2 border-emerald-500 text-emerald-700 hover:bg-emerald-50 disabled:opacity-70 font-bold text-sm px-4 min-h-[48px]"
+              :disabled="sending"
+            >
+              Enviar
+            </button>
+          </div>
           <p v-if="touched && !isValidBrPhone(phone)" id="wa-popup-help" class="text-xs font-semibold text-red-600">
-            Informe o número com DDD, por exemplo (11) 91234-5678.
+            Informe o número com DDD, por exemplo (11) 91234-5678, ou use o botão verde acima.
           </p>
 
           <!-- Honeypot anti-robô (invisível) -->
@@ -171,17 +201,8 @@ async function submit() {
             @expire="turnstileToken = ''"
           />
 
-          <button
-            type="submit"
-            class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-70 text-white font-extrabold text-base min-h-[52px] px-5 shadow-lg"
-            :disabled="sending"
-          >
-            <MessageCircle class="w-5 h-5" aria-hidden="true" />
-            {{ sending ? 'Abrindo o WhatsApp...' : 'Enviar e abrir o WhatsApp' }}
-          </button>
-
           <p class="text-[11px] text-slate-500 leading-snug">
-            Ao enviar, você concorda em ser contatado pela A Portamóvel sobre este atendimento, conforme a
+            Ao enviar seu número, você concorda em ser contatado pela A Portamóvel sobre este atendimento, conforme a
             <NuxtLink to="/politica-de-privacidade" class="underline underline-offset-2">política de privacidade</NuxtLink>.
           </p>
         </form>

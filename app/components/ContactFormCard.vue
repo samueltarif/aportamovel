@@ -160,6 +160,7 @@ const handleSubmit = async () => {
       <TurnstileWidget
         ref="turnstileWidgetRef"
         action="contact_form"
+        appearance="interaction-only"
         @verify="turnstileToken = $event"
         @expire="turnstileToken = ''"
         @error="turnstileToken = ''"

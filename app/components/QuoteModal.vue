@@ -3,6 +3,9 @@ import { reactive, watch, ref } from 'vue'
 import { useAnalytics } from '~/composables/useAnalytics'
 import { useLeadSubmission } from '~/composables/useLeadSubmission'
 import { buildCommercialWhatsAppUrl } from '~/utils/whatsappUrl'
+import { buildWhatsAppLink } from '~/utils/contactNumbers'
+import { useAdsConversion } from '~/composables/useAdsConversion'
+import { useContactShift } from '~/composables/useContactShift'
 import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 
 const props = defineProps<{
@@ -15,6 +18,8 @@ const emit = defineEmits(['close', 'submitted'])
 
 const { trackServiceView, trackQuoteFormStarted, resetFormStarted } = useAnalytics()
 const { isSubmitting, errorMessage, isFallbackActive, submitLead } = useLeadSubmission()
+const { trackWhatsAppConversion } = useAdsConversion()
+const { contact } = useContactShift()
 
 const form = reactive({
   name: '',
@@ -72,9 +77,42 @@ const getWhatsAppUrl = () => {
   })
 }
 
-const handleSubmit = async () => {
-  if (!form.consent) return
+// No computador, abre a aba já no clique (evita bloqueio de pop-up); no celular, redireciona.
+const preOpenTab = (): Window | null => {
+  const isTouch = window.matchMedia?.('(pointer: coarse)').matches
+  return isTouch ? null : window.open('', '_blank')
+}
 
+const goTo = (win: Window | null, url: string) => {
+  if (win && !win.closed) win.location.href = url
+  else window.location.href = url
+}
+
+// A verificação anti-robô roda invisível; espera no máximo alguns segundos e nunca trava o envio.
+const waitForToken = (ms: number): Promise<string> => new Promise((resolve) => {
+  const start = Date.now()
+  const tick = () => {
+    if (turnstileToken.value || Date.now() - start > ms) return resolve(turnstileToken.value)
+    setTimeout(tick, 150)
+  }
+  tick()
+})
+
+/** "Falar no WhatsApp agora": abre a conversa direto, sem preencher nada (comercial ou plantão, conforme o horário). */
+const goDirect = () => {
+  const service = props.serviceName ? `um orçamento de ${props.serviceName}` : 'um orçamento'
+  const text = `Olá! Vim pelo site e preciso de ${service} para o portão do condomínio.\nCondomínio:\nBairro:`
+  const url = buildWhatsAppLink(contact.value.whatsappNumber, text)
+  trackWhatsAppConversion()
+  goTo(preOpenTab(), url)
+  emit('close')
+}
+
+const handleSubmit = async () => {
+  if (!form.consent || isSubmitting.value) return
+
+  const win = preOpenTab()
+  const token = await waitForToken(4000)
   const slug = getSlug()
   const res = await submitLead({
     form_id: 'quote_modal',
@@ -83,22 +121,21 @@ const handleSubmit = async () => {
     company_or_condominium: form.condo,
     service_name: props.serviceName,
     service_slug: slug,
-    turnstile_token: turnstileToken.value,
+    turnstile_token: token || 'sem-token',
     consent: true,
     _hp_company_title: form._hp_company_title,
   })
 
-  if (res.success) {
-    emit('submitted')
-    window.open(getWhatsAppUrl(), '_blank')
-    setTimeout(() => {
-      emit('close')
-    }, 400)
-  }
-  else if (!res.fallback) {
+  // Salvo ou não, o visitante segue para o WhatsApp: nunca perdemos o contato por erro técnico.
+  if (res.success) emit('submitted')
+  else {
     turnstileWidgetRef.value?.reset()
     turnstileToken.value = ''
   }
+  goTo(win, getWhatsAppUrl())
+  setTimeout(() => {
+    emit('close')
+  }, 400)
 }
 </script>
 
@@ -133,9 +170,24 @@ const handleSubmit = async () => {
             {{ serviceName ? `Solicitar: ${serviceName}` : 'Solicite um Orçamento' }}
           </h3>
           <p class="text-xs text-gray-500 mt-1">
-            Preencha seus dados para receber nosso atendimento técnico especializado.
+            Fale agora pelo WhatsApp ou deixe seus dados para retornarmos.
           </p>
         </div>
+
+        <button
+          type="button"
+          class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-base min-h-[52px] px-5 shadow-md mb-5"
+          @click="goDirect"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3z" />
+          </svg>
+          Falar no WhatsApp agora
+        </button>
+
+        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 text-center mb-4">
+          ou deixe seus dados para retornarmos
+        </p>
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <input
@@ -191,6 +243,7 @@ const handleSubmit = async () => {
           <TurnstileWidget
             ref="turnstileWidgetRef"
             action="quote_modal"
+            appearance="interaction-only"
             @verify="turnstileToken = $event"
             @expire="turnstileToken = ''"
             @error="turnstileToken = ''"
@@ -226,7 +279,7 @@ const handleSubmit = async () => {
             :disabled="isSubmitting || !form.consent"
             class="w-full py-3.5 bg-[#09357a] text-white font-bold text-sm uppercase tracking-wider rounded-xl hover:bg-[#07285c] transition-all shadow-md mt-2 flex items-center justify-center space-x-2 min-h-[52px] disabled:opacity-50"
           >
-            <span>{{ isSubmitting ? 'Preparando...' : 'Enviar via WhatsApp' }}</span>
+            <span>{{ isSubmitting ? 'Enviando...' : 'Enviar meus dados' }}</span>
           </button>
         </form>
       </div>
