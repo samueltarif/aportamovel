@@ -1,6 +1,7 @@
 import type { PublicLeadSubmissionInput } from '~~/server/validators/leadSchemas'
 import { getSupabaseAdminClient } from '~~/server/utils/supabasePrivate'
 import { verifyTurnstileToken } from '~~/server/services/turnstileService'
+import { sendLeadAlert } from '~~/server/services/notifications/leadAlerts'
 
 export async function createPublicLead(input: PublicLeadSubmissionInput): Promise<{ success: boolean }> {
   const config = useRuntimeConfig()
@@ -79,6 +80,9 @@ export async function createPublicLead(input: PublicLeadSubmissionInput): Promis
       message: 'Não foi possível registrar a solicitação no momento.',
     })
   }
+
+  // Aviso por e-mail para a equipe (no máximo alguns segundos; falhas não afetam o visitante)
+  await sendLeadAlert(leadToInsert).catch(() => {})
 
   return { success: true }
 }

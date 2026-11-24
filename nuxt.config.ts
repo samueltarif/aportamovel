@@ -80,7 +80,8 @@ export default defineNuxtConfig({
     r2BucketName: process.env.R2_BUCKET_NAME || '',
     r2PublicBaseUrl: process.env.R2_PUBLIC_BASE_URL || '',
 
-    // Variáveis privadas (server-only) para Gestão Segura de Administradores
+    // Gestão de Administradores e E-mails (server-only)
+    resendApiKey: process.env.RESEND_API_KEY || '',
     adminAuthConfirmUrl: process.env.ADMIN_AUTH_CONFIRM_URL || 'http://localhost:3000/auth/confirm',
     allowedOrigins: process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000,https://www.aportamovel.com.br,https://aportamovel.com.br',
     idempotencyHmacSecret: process.env.ADMIN_IDEMPOTENCY_HMAC_SECRET || 'dev_secret_hmac_must_be_at_least_32_bytes_long_1234567890',

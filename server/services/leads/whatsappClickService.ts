@@ -4,6 +4,7 @@ import { getSupabaseAdminClient } from '~~/server/utils/supabasePrivate'
 import { buildTrackingLines } from '~~/shared/utils/leadTracking'
 import type { WhatsAppClick, WhatsAppClickListResponse } from '~~/shared/types/whatsappClicks'
 import type { WhatsAppClickInput } from '~~/server/validators/whatsappClickSchemas'
+import { MAX_CLICK_ALERTS_PER_DAY, sendClickAlert } from '~~/server/services/notifications/leadAlerts'
 
 const CHANNELS: Record<string, 'commercial' | 'emergency'> = {
   '5511912984416': 'commercial',
@@ -26,14 +27,28 @@ export async function recordWhatsAppClick(event: H3Event, input: WhatsAppClickIn
   const channel = CHANNELS[input.wa_number]
   if (!channel) return
   const supabase = getSupabaseAdminClient()
+  const city = header(event, 'x-vercel-ip-city', 80)
   const { error } = await supabase.from('whatsapp_clicks').insert({
     ...input,
     channel,
     service_slug: input.service_slug || null,
-    city: header(event, 'x-vercel-ip-city', 80),
+    city,
     region: header(event, 'x-vercel-ip-country-region', 10),
   })
-  if (error) console.error('[whatsapp-click] falha ao registrar', error.code)
+  if (error) {
+    console.error('[whatsapp-click] falha ao registrar', error.code)
+    return
+  }
+
+  // Aviso por e-mail, com teto diário para não estourar o limite do plano grátis do Resend.
+  const startOfDaySP = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }))
+  startOfDaySP.setHours(0, 0, 0, 0)
+  const offsetMs = Date.now() - new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).getTime()
+  const { count } = await supabase.from('whatsapp_clicks').select('id', { count: 'exact', head: true })
+    .gte('created_at', new Date(startOfDaySP.getTime() + offsetMs).toISOString())
+  if ((count ?? 0) <= MAX_CLICK_ALERTS_PER_DAY) {
+    await sendClickAlert({ ...input, channel, city }).catch(() => {})
+  }
 }
 
 /**
