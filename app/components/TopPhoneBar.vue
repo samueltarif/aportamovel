@@ -10,6 +10,7 @@ const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
     <div class="sm:hidden px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-between gap-1.5 sm:gap-2">
       <!-- WhatsApp CTA - primary on mobile -->
       <a
+        data-wa-cta="top_bar"
         href="https://wa.me/5511912984416?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento%20via%20WhatsApp."
         target="_blank"
         rel="noopener noreferrer"
@@ -71,6 +72,7 @@ const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
 
         <!-- WhatsApp CTA -->
         <a
+        data-wa-cta="top_bar"
           href="https://wa.me/5511912984416?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento%20via%20WhatsApp."
           target="_blank"
           rel="noopener noreferrer"

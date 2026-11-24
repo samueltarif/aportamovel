@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ChevronLeft, ChevronRight, MessageSquare, ArrowRight, ShieldCheck } from '@lucide/vue'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { tagWhatsAppUrl } from '~/utils/waTracking'
 
 interface ShowcaseSlide {
   id: string
@@ -175,7 +176,7 @@ function handleQuoteClick(slide: ShowcaseSlide) {
     service_slug: slide.serviceSlug,
   })
   const text = encodeURIComponent(`Olá! Gostaria de mais informações e um orçamento para o serviço: ${slide.title}.`)
-  window.open(`https://wa.me/5511912984416?text=${text}`, '_blank')
+  window.open(tagWhatsAppUrl(`https://wa.me/5511912984416?text=${text}`, { cta: 'solutions_carousel', service_slug: slide.serviceSlug }), '_blank')
 }
 
 onMounted(() => {

@@ -7,7 +7,7 @@ export type LeadStatus =
   | 'lost'
   | 'spam'
 
-export type FormId = 'contact_form' | 'quote_modal'
+export type FormId = 'contact_form' | 'quote_modal' | 'whatsapp_click'
 
 export interface Lead {
   id: string

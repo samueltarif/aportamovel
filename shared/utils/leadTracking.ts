@@ -3,7 +3,7 @@
  * Ex.: "canal=whatsapp_popup\nturno=plantao\ngclid=Cj0K...\nkw=conserto de portão eletrônico"
  * Usado pela landing page (gravação) e pelo painel da campanha (leitura).
  */
-export type LeadChannel = 'whatsapp_popup' | 'formulario'
+export type LeadChannel = 'whatsapp_popup' | 'whatsapp_direto' | 'formulario'
 
 export interface LeadTracking {
   canal?: LeadChannel
@@ -13,10 +13,12 @@ export interface LeadTracking {
   wbraid?: string
   kw?: string
   grupo?: string
+  /** Código de atendimento do clique no WhatsApp (ex.: PM-7K4QX). */
+  wa?: string
   [key: string]: string | undefined
 }
 
-const KNOWN = ['canal', 'turno', 'gclid', 'gbraid', 'wbraid', 'kw', 'grupo']
+const KNOWN = ['canal', 'turno', 'gclid', 'gbraid', 'wbraid', 'kw', 'grupo', 'wa']
 
 export function buildTrackingLines(data: LeadTracking): string[] {
   return Object.entries(data)

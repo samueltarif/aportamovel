@@ -9,6 +9,7 @@ import {
   ChartNoAxesCombined,
   Settings,
   Megaphone,
+  MessageCircle,
 } from '@lucide/vue'
 
 export interface NavItem {
@@ -62,6 +63,14 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     icon: Users,
     disabled: false,
     tooltip: 'Gestão de Leads e Orçamentos',
+  },
+  {
+    id: 'whatsapp',
+    title: 'Cliques no WhatsApp',
+    to: '/gestao/whatsapp',
+    icon: MessageCircle,
+    disabled: false,
+    tooltip: 'Códigos de atendimento dos cliques no WhatsApp',
   },
   {
     id: 'campanha',

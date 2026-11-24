@@ -91,7 +91,7 @@ const selectPreset = (val: AnalyticsPreset) => {
 </script>
 
 <template>
-  <div ref="root" class="relative">
+  <div ref="root" class="relative" :class="{ 'z-50': open }">
     <div
       class="flex flex-wrap gap-0.5 p-1 bg-slate-100/90 border border-slate-200/80 rounded-xl shadow-2xs"
       role="tablist"
@@ -140,7 +140,7 @@ const selectPreset = (val: AnalyticsPreset) => {
       v-if="open"
       role="dialog"
       aria-label="Período personalizado"
-      class="absolute right-0 top-full mt-2 z-30 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-4 shadow-lg space-y-3"
+      class="absolute right-0 top-full mt-2 z-50 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-4 shadow-xl space-y-3"
       @keydown.esc="open = false"
     >
       <p class="text-xs font-bold text-slate-700">Período personalizado</p>

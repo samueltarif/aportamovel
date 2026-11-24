@@ -15,6 +15,8 @@ export interface SubmitLeadPayload {
   turnstile_token: string
   consent: boolean
   _hp_company_title?: string
+  /** Código de atendimento que vai na mensagem do WhatsApp (liga o lead ao clique). */
+  wa_code?: string
 }
 
 export function useLeadSubmission() {
@@ -57,7 +59,7 @@ export function useLeadSubmission() {
           phone: payload.phone,
           company_or_condominium: payload.company_or_condominium || undefined,
           email: payload.email || undefined,
-          message: [payload.message, ...getAdClickLines()].filter(Boolean).join('\n').slice(0, 3000) || undefined,
+          message: [payload.message, ...getAdClickLines(), payload.wa_code ? `wa=${payload.wa_code}` : ''].filter(Boolean).join('\n').slice(0, 3000) || undefined,
           service_slug: payload.service_slug || undefined,
           service_name: payload.service_name || undefined,
           form_id: payload.form_id,

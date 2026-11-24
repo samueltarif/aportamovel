@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { tagWhatsAppUrl } from '~/utils/waTracking'
 import { usePublicServices } from '~/composables/usePublicServices'
 import ServiceCard from '~/components/services/ServiceCard.vue'
 import type { PublicServiceItem } from '~/../shared/types/services'
@@ -19,7 +20,7 @@ function handleRequestQuote(service: PublicServiceItem) {
     service_slug: service.slug,
   })
   const text = encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para o serviço: ${service.name}.`)
-  window.open(`https://wa.me/5511912984416?text=${text}`, '_blank')
+  window.open(tagWhatsAppUrl(`https://wa.me/5511912984416?text=${text}`, { cta: 'services_section', service_slug: service.slug }), '_blank')
 }
 </script>
 

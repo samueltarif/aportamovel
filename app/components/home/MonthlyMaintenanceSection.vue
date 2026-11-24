@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { CalendarCheck, ShieldCheck, CheckCircle2, MessageSquare, ArrowRight, Clock, FileCheck } from '@lucide/vue'
 import { useAnalytics } from '~/composables/useAnalytics'
+import { tagWhatsAppUrl } from '~/utils/waTracking'
 
 const emit = defineEmits<{
   (e: 'request-quote', serviceName: string, serviceSlug: string): void
@@ -38,7 +39,7 @@ function handleWhatsAppClick() {
     service_slug: 'contrato-manutencao-preventiva',
   })
   const text = encodeURIComponent('Olá! Gostaria de receber uma proposta de Contrato de Manutenção Preventiva Mensal para meu condomínio.')
-  window.open(`https://wa.me/5511912984416?text=${text}`, '_blank')
+  window.open(tagWhatsAppUrl(`https://wa.me/5511912984416?text=${text}`, { cta: 'monthly_maintenance', service_slug: 'contrato-manutencao-preventiva' }), '_blank')
 }
 </script>
 

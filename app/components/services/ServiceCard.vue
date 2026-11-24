@@ -122,6 +122,8 @@ function getWhatsappUrl(serviceTitle: string): string {
 
       <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
         <a
+          data-wa-cta="service_card"
+          :data-wa-service="service.slug"
           :href="getWhatsappUrl(service.name)"
           target="_blank"
           rel="noopener noreferrer"

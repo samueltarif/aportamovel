@@ -7,6 +7,7 @@ import { useContactShift } from '~/composables/useContactShift'
 import { useLeadSubmission } from '~/composables/useLeadSubmission'
 import { useAdsConversion } from '~/composables/useAdsConversion'
 import { buildWhatsAppLink } from '~/utils/contactNumbers'
+import { newWaCode, tagWhatsAppUrl } from '~/utils/waTracking'
 import { buildTrackingLines, formatBrPhone, isValidBrPhone, normalizeBrPhone } from '~~/shared/utils/leadTracking'
 
 /**
@@ -61,8 +62,11 @@ function waitForToken(ms: number): Promise<string> {
   })
 }
 
-function openWhatsApp(win: Window | null) {
-  const link = buildWhatsAppLink(contact.value.whatsappNumber, whatsappText())
+function openWhatsApp(win: Window | null, code?: string) {
+  const link = tagWhatsAppUrl(buildWhatsAppLink(contact.value.whatsappNumber, whatsappText()), {
+    cta: origin.value ? String(origin.value).slice(0, 60) : 'lp_popup',
+    code,
+  })
   trackWhatsAppConversion()
   if (win && !win.closed) {
     win.location.href = link
@@ -95,6 +99,7 @@ async function submit() {
   if (!isValidBrPhone(phone.value) || sending.value) return
   sending.value = true
   const win = preOpenTab()
+  const waCode = newWaCode()
 
   try {
     const token = await waitForToken(4000)
@@ -108,6 +113,7 @@ async function submit() {
       turnstile_token: token || 'sem-token',
       consent: true,
       _hp_company_title: hp.value,
+      wa_code: waCode,
     })
     await Promise.race([save, new Promise(r => setTimeout(r, 5000))])
   }
@@ -115,7 +121,7 @@ async function submit() {
     // segue para o WhatsApp mesmo assim
   }
 
-  openWhatsApp(win)
+  openWhatsApp(win, waCode)
 }
 </script>
 

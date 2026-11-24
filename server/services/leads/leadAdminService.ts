@@ -224,7 +224,8 @@ export async function listCampaignLeads(period: '7' | '30' | '90' | 'all'): Prom
   let dbQuery = supabase
     .from('leads')
     .select('*')
-    .like('source_path', '/lp/%')
+    // Landing page de campanha + contatos identificados pelo código do WhatsApp que vieram de anúncio
+    .or('source_path.like./lp/%,and(form_id.eq.whatsapp_click,message.ilike.%gclid=%)')
 
   if (period !== 'all') {
     const sinceDate = new Date(Date.now() - Number(period) * 86400000).toISOString()

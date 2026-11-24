@@ -37,7 +37,7 @@ export const leadListQuerySchema = z.object({
   page: z.preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1)).default(1),
   limit: z.preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1).max(50)).default(20),
   status: z.enum(['all', 'new', 'contacted', 'qualified', 'proposal_sent', 'won', 'lost', 'spam']).default('all'),
-  form_id: z.enum(['all', 'contact_form', 'quote_modal']).default('all'),
+  form_id: z.enum(['all', 'contact_form', 'quote_modal', 'whatsapp_click']).default('all'),
   period: z.enum(['7', '30', '90', 'all']).default('all'),
   archived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).default(false),
 })

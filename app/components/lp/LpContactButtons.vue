@@ -67,6 +67,7 @@ const btnBase = computed(() =>
       </span>
     </a>
     <a
+      data-wa-cta="lp_buttons"
       :href="whatsappHref"
       target="_blank"
       rel="noopener noreferrer"

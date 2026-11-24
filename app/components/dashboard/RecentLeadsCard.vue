@@ -55,7 +55,7 @@ const formatDate = (dateStr: string) => {
         <div>
           <h4 class="text-sm font-semibold text-gray-900">{{ lead.full_name }}</h4>
           <p class="text-xs text-gray-500">
-            {{ lead.company_or_condominium || lead.service_name || (lead.form_id === 'contact_form' ? 'Contato Geral' : 'Orçamento Rápido') }}
+            {{ lead.company_or_condominium || lead.service_name || (lead.form_id === 'contact_form' ? 'Contato Geral' : lead.form_id === 'whatsapp_click' ? 'WhatsApp (código)' : 'Orçamento Rápido') }}
           </p>
         </div>
         <div class="flex items-center space-x-3">

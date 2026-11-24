@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import { useAnalytics } from '~/composables/useAnalytics'
 import { useLeadSubmission } from '~/composables/useLeadSubmission'
 import { buildCommercialWhatsAppUrl } from '~/utils/whatsappUrl'
+import { newWaCode, tagWhatsAppUrl } from '~/utils/waTracking'
 import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 
 const { trackQuoteFormStarted } = useAnalytics()
@@ -42,6 +43,7 @@ const getWhatsAppUrl = () => {
 const handleSubmit = async () => {
   if (!form.consent) return
 
+  const waCode = newWaCode()
   const res = await submitLead({
     form_id: 'contact_form',
     name: form.name,
@@ -52,11 +54,12 @@ const handleSubmit = async () => {
     turnstile_token: turnstileToken.value,
     consent: true,
     _hp_company_title: form._hp_company_title,
+    wa_code: waCode,
   })
 
   if (res.success) {
     submitted.value = true
-    window.open(getWhatsAppUrl(), '_blank')
+    window.open(tagWhatsAppUrl(getWhatsAppUrl(), { cta: 'contact_form', code: waCode }), '_blank')
   }
   else if (!res.fallback) {
     turnstileWidgetRef.value?.reset()

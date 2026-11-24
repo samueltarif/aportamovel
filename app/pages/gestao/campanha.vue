@@ -55,7 +55,7 @@ interface Row {
 const rows = computed<Row[]>(() =>
   leads.value.map((lead) => {
     const { tracking } = parseLeadTracking(lead.message)
-    const isWa = tracking.canal === 'whatsapp_popup' || lead.service_slug === 'whatsapp-lp-condominios'
+    const isWa = tracking.canal === 'whatsapp_popup' || tracking.canal === 'whatsapp_direto' || lead.service_slug === 'whatsapp-lp-condominios'
     return {
       lead,
       canal: isWa ? 'WhatsApp' : 'Formulário',
@@ -76,7 +76,7 @@ const kpis = computed(() => {
   const avaliados = v.filter(r => r.lead.status !== 'new').length
   return [
     { label: 'Leads', value: v.length, hint: 'sem contar spam' },
-    { label: 'Pelo WhatsApp', value: v.filter(r => r.canal === 'WhatsApp').length, hint: 'deixaram o número no pop-up' },
+    { label: 'Pelo WhatsApp', value: v.filter(r => r.canal === 'WhatsApp').length, hint: 'número no pop-up ou código identificado' },
     { label: 'Pelo formulário', value: v.filter(r => r.canal === 'Formulário').length, hint: 'pedido de orçamento' },
     { label: 'Vindos do anúncio', value: v.filter(r => r.fromAds).length, hint: 'com clique do Google Ads' },
     { label: 'Qualificados', value: qualified, hint: avaliados ? `${Math.round((qualified / avaliados) * 100)}% dos já avaliados` : 'marque o status de cada lead' },

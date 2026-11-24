@@ -118,6 +118,7 @@ const handlePlantaoWhatsApp = () => {
           <div class="space-y-2">
             <!-- 1. WhatsApp Callout -->
             <a
+              data-wa-cta="emergency_modal"
               href="https://wa.me/5511912984416?text=EMERG%C3%8ANCIA%3A%20Preciso%20de%20atendimento%20t%C3%A9cnico%20urgente!"
               target="_blank"
               rel="noopener noreferrer"
@@ -203,6 +204,7 @@ const handlePlantaoWhatsApp = () => {
               </a>
               <!-- 5. Plantão WhatsApp Link -->
               <a
+              data-wa-cta="emergency_modal"
                 href="https://wa.me/5511940277438?text=EMERG%C3%8ANCIA%3A%20Preciso%20de%20atendimento%20t%C3%A9cnico%20de%20plant%C3%A3o!"
                 target="_blank"
                 rel="noopener noreferrer"

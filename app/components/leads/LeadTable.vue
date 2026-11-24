@@ -63,7 +63,7 @@ const formatDate = (dateStr: string) => {
             </td>
             <td class="px-4 py-3">
               <div v-if="lead.service_name" class="font-medium text-blue-900">{{ lead.service_name }}</div>
-              <div class="text-xs text-gray-500">{{ lead.form_id === 'contact_form' ? 'Formulário de Contato' : 'Modal de Orçamento' }}</div>
+              <div class="text-xs text-gray-500">{{ lead.form_id === 'contact_form' ? 'Formulário de Contato' : lead.form_id === 'whatsapp_click' ? 'WhatsApp (código)' : 'Modal de Orçamento' }}</div>
             </td>
             <td class="px-4 py-3">
               <LeadStatusBadge :status="lead.status" />

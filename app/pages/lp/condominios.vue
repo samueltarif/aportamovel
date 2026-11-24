@@ -362,6 +362,7 @@ const faqs = [
               Receber proposta do contrato <ArrowRight class="w-4 h-4" aria-hidden="true" />
             </button>
             <a
+              data-wa-cta="lp_contract"
               :href="contractWhatsapp"
               target="_blank"
               rel="noopener noreferrer"

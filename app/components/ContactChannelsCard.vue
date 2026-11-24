@@ -45,6 +45,7 @@ const { trackWhatsAppClick, trackPhoneClick } = useAnalytics()
       <!-- WhatsApp Direct Highlight Button -->
       <div class="mt-4 pt-2">
         <a
+          data-wa-cta="contact_page"
           href="https://wa.me/5511912984416?text=Ol%C3%A1%2C%20gostaria%20de%20atendimento%20t%C3%A9cnico%20via%20WhatsApp."
           target="_blank"
           rel="noopener noreferrer"

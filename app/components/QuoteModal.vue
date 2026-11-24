@@ -6,6 +6,7 @@ import { buildCommercialWhatsAppUrl } from '~/utils/whatsappUrl'
 import { buildWhatsAppLink } from '~/utils/contactNumbers'
 import { useAdsConversion } from '~/composables/useAdsConversion'
 import { useContactShift } from '~/composables/useContactShift'
+import { newWaCode, tagWhatsAppUrl } from '~/utils/waTracking'
 import TurnstileWidget from '~/components/security/TurnstileWidget.vue'
 
 const props = defineProps<{
@@ -102,7 +103,7 @@ const waitForToken = (ms: number): Promise<string> => new Promise((resolve) => {
 const goDirect = () => {
   const service = props.serviceName ? `um orçamento de ${props.serviceName}` : 'um orçamento'
   const text = `Olá! Vim pelo site e preciso de ${service} para o portão do condomínio.\nCondomínio:\nBairro:`
-  const url = buildWhatsAppLink(contact.value.whatsappNumber, text)
+  const url = tagWhatsAppUrl(buildWhatsAppLink(contact.value.whatsappNumber, text), { cta: 'quote_modal', service_slug: getSlug() })
   trackWhatsAppConversion()
   goTo(preOpenTab(), url)
   emit('close')
@@ -114,6 +115,7 @@ const handleSubmit = async () => {
   const win = preOpenTab()
   const token = await waitForToken(4000)
   const slug = getSlug()
+  const waCode = newWaCode()
   const res = await submitLead({
     form_id: 'quote_modal',
     name: form.name,
@@ -124,6 +126,7 @@ const handleSubmit = async () => {
     turnstile_token: token || 'sem-token',
     consent: true,
     _hp_company_title: form._hp_company_title,
+    wa_code: waCode,
   })
 
   // Salvo ou não, o visitante segue para o WhatsApp: nunca perdemos o contato por erro técnico.
@@ -132,7 +135,7 @@ const handleSubmit = async () => {
     turnstileWidgetRef.value?.reset()
     turnstileToken.value = ''
   }
-  goTo(win, getWhatsAppUrl())
+  goTo(win, tagWhatsAppUrl(getWhatsAppUrl(), { cta: 'quote_modal', service_slug: slug, code: waCode }))
   setTimeout(() => {
     emit('close')
   }, 400)

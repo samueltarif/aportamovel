@@ -19,6 +19,7 @@ const handleClick = () => {
   >
     <!-- Tooltip Label (desktop only) -->
     <a
+      data-wa-cta="floating_button"
       :href="whatsappUrl"
       target="_blank"
       rel="noopener noreferrer"
@@ -33,6 +34,7 @@ const handleClick = () => {
 
     <!-- Floating WhatsApp Button -->
     <a
+      data-wa-cta="floating_button"
       :href="whatsappUrl"
       target="_blank"
       rel="noopener noreferrer"

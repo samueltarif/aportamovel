@@ -68,7 +68,7 @@ const lastUpdated = computed(() => {
 <template>
   <div class="space-y-5">
     <!-- Header com Saudação, Seletor de Período e Atualização -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
           {{ greeting }}, <span class="text-[#09357a]">{{ adminData?.email?.split('@')[0] || 'Administrador' }}</span>
@@ -80,7 +80,7 @@ const lastUpdated = computed(() => {
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-3 self-start sm:self-auto bg-white/80 p-1.5 rounded-xl border border-slate-200/70 backdrop-blur">
+      <div class="relative z-20 flex flex-wrap items-center gap-3 self-start sm:self-auto bg-white/80 p-1.5 rounded-xl border border-slate-200/70 backdrop-blur">
         <PeriodSelector
           :model-value="selectedPeriod"
           :disabled="isPending"

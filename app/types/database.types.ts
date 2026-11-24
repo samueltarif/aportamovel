@@ -658,6 +658,98 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_clicks: {
+        Row: {
+          channel: string
+          city: string | null
+          code: string
+          created_at: string
+          cta_location: string
+          device: string
+          gbraid: string | null
+          gclid: string | null
+          id: string
+          identified_at: string | null
+          identified_by: string | null
+          landing_path: string | null
+          lead_id: string | null
+          page_path: string
+          referrer_host: string | null
+          region: string | null
+          service_slug: string | null
+          status: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          wa_number: string
+          wbraid: string | null
+        }
+        Insert: {
+          channel?: string
+          city?: string | null
+          code: string
+          created_at?: string
+          cta_location?: string
+          device?: string
+          gbraid?: string | null
+          gclid?: string | null
+          id?: string
+          identified_at?: string | null
+          identified_by?: string | null
+          landing_path?: string | null
+          lead_id?: string | null
+          page_path: string
+          referrer_host?: string | null
+          region?: string | null
+          service_slug?: string | null
+          status?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wa_number: string
+          wbraid?: string | null
+        }
+        Update: {
+          channel?: string
+          city?: string | null
+          code?: string
+          created_at?: string
+          cta_location?: string
+          device?: string
+          gbraid?: string | null
+          gclid?: string | null
+          id?: string
+          identified_at?: string | null
+          identified_by?: string | null
+          landing_path?: string | null
+          lead_id?: string | null
+          page_path?: string
+          referrer_host?: string | null
+          region?: string | null
+          service_slug?: string | null
+          status?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wa_number?: string
+          wbraid?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_clicks_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
